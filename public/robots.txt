@@ -7,4 +7,4 @@ Disallow: /dashboard/
 Disallow: /api/
 Disallow: /auth/
 
-Sitemap: https://settlr.in/sitemap.xml
+Sitemap: https://usesettlr.in/sitemap.xml

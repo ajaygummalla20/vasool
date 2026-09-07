@@ -105,19 +105,19 @@ git push -u origin main
    - `NEXT_PUBLIC_RAZORPAY_KEY_ID`
    - `RAZORPAY_KEY_ID`
    - `RAZORPAY_KEY_SECRET`
-   - `NEXT_PUBLIC_APP_URL` (e.g., `https://settlr.in`)
+   - `NEXT_PUBLIC_APP_URL` (e.g., `https://usesettlr.in`)
 4. Click **Deploy**.
 
 ### Step 4: Configure Custom Domain (Optional)
-1. In Vercel -> **Project Settings** -> **Domains**, add your domain (e.g., `settlr.in`).
+1. In Vercel -> **Project Settings** -> **Domains**, add your domain (e.g., `usesettlr.in`).
 2. Add DNS records at your domain registrar:
    - **Apex (`@`)**: `A` record pointing to `76.76.21.21`
    - **Subdomain (`www`)**: `CNAME` record pointing to `cname.vercel-dns.com`
 
 ### Step 5: Whitelist Auth URLs in Supabase
 In Supabase -> **Authentication** -> **URL Configuration**:
-- **Site URL**: `https://settlr.in` (or your Vercel URL)
-- **Redirect URLs**: Add `https://settlr.in/**` and `https://settlr.in/auth/callback`
+- **Site URL**: `https://usesettlr.in` (or your Vercel URL)
+- **Redirect URLs**: Add `https://usesettlr.in/**` and `https://usesettlr.in/auth/callback`
 
 ---
 

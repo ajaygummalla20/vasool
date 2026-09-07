@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://settlr.in"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://usesettlr.in"),
   title: {
     default: "Settlr — MSME Invoicing, GST & Payment Recovery OS",
     template: "%s | Settlr",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Settlr — MSME Invoicing, GST & Payment Recovery OS",
     description: "The modern financial operating system for Indian MSMEs, freelancers, and agencies.",
-    url: "https://settlr.in",
+    url: "https://usesettlr.in",
     siteName: "Settlr",
     locale: "en_IN",
     type: "website",
