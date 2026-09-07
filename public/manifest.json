@@ -1,0 +1,21 @@
+{
+  "name": "Settlr - MSME Financial OS",
+  "short_name": "Settlr",
+  "description": "The Financial Operating System for Indian MSMEs, Freelancers & Agencies. GST Invoicing, MSMED Act Late Fee Protection, and AI Cashflow.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0F1117",
+  "theme_color": "#185FA5",
+  "icons": [
+    {
+      "src": "/settlr-logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/settlr-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

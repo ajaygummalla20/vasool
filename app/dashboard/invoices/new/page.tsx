@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '../../settings/supabase-server'
+import { createClient } from '@/app/lib/supabase-server'
 import CreateInvoicePage from './CreateInvoicePage'
 
 export default async function NewInvoicePage({
@@ -37,11 +37,50 @@ export default async function NewInvoicePage({
     .order('created_at', { ascending: false })
 
   const params = await searchParams
-  const selectedClient = params.client
+  const selectedClient = params.client || params.clientId
   const preselectedClientId = typeof selectedClient === 'string' ? selectedClient : ''
   const invoicePrefix = profile?.invoice_prefix || 'INV'
   const invoiceCounter = profile?.invoice_counter || 1
   const previewInvoiceNumber = `${invoicePrefix}-${String(invoiceCounter).padStart(3, '0')}`
+
+  const initialDocType = (typeof params.type === 'string' && ['tax_invoice', 'proforma', 'credit_note'].includes(params.type))
+    ? (params.type as 'tax_invoice' | 'proforma' | 'credit_note')
+    : 'tax_invoice'
+  const initialOriginalInvRef = typeof params.ref === 'string' ? params.ref : ''
+
+  // ── Duplicate invoice support ──
+  const duplicateId = typeof params.duplicate === 'string' ? params.duplicate : ''
+  let duplicateData = null
+  if (duplicateId) {
+    const { data: srcInvoice } = await supabase
+      .from('invoices')
+      .select('*, invoice_items ( description, quantity, unit, unit_price, sort_order )')
+      .eq('id', duplicateId)
+      .eq('user_id', user.id)
+      .single()
+    if (srcInvoice) {
+      duplicateData = {
+        client_id: srcInvoice.client_id,
+        contract_id: srcInvoice.contract_id,
+        payment_terms: srcInvoice.payment_terms,
+        late_fee_terms: srcInvoice.late_fee_terms,
+        notes: srcInvoice.client_notes || srcInvoice.notes,
+        cgst_pct: srcInvoice.cgst_pct,
+        sgst_pct: srcInvoice.sgst_pct,
+        igst_pct: srcInvoice.igst_pct,
+        discount_pct: srcInvoice.discount_pct,
+        discount_amount: srcInvoice.discount_amount,
+        items: (srcInvoice.invoice_items || [])
+          .sort((a: { sort_order: number }, b: { sort_order: number }) => a.sort_order - b.sort_order)
+          .map((it: { description: string; quantity: number; unit: string; unit_price: number }) => ({
+            description: it.description,
+            qty: it.quantity,
+            unit: it.unit,
+            rate: it.unit_price,
+          })),
+      }
+    }
+  }
 
   return (
     <CreateInvoicePage
@@ -51,10 +90,13 @@ export default async function NewInvoicePage({
       senderGst={profile?.gst_number || ''}
       senderAddress={profile?.address || ''}
       previewInvoiceNumber={previewInvoiceNumber}
-      preselectedClientId={preselectedClientId}
+      preselectedClientId={duplicateData?.client_id || preselectedClientId}
       clients={clients || []}
       contracts={contracts || []}
       userId={user.id}
+      duplicateData={duplicateData}
+      initialDocType={initialDocType}
+      initialOriginalInvRef={initialOriginalInvRef}
     />
   )
 }

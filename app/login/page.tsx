@@ -11,9 +11,9 @@ function getSupabase() {
 }
 
 const INVOICES = [
-  { name: 'Infosys Project · INV-041', amount: '₹1,20,000', pct: 100, color: '#2D8A58', status: 'Paid · 3 days ago via UPI',       dot: '#2D8A58' },
-  { name: 'Cyient Ltd · INV-042',      amount: '₹85,000',   pct: 60,  color: '#E8692A', status: 'Reminder sent · 12 days overdue', dot: '#E8692A' },
-  { name: 'TCS Vendor · INV-043',      amount: '₹2,40,000', pct: 25,  color: '#888780', status: 'Invoice sent · Due in 18 days',    dot: '#888780' },
+  { name: 'Infosys Project · INV-041', amount: '₹1,20,000', pct: 100, color: '#10B981', status: 'Paid · 3 days ago via UPI',       dot: '#10B981' },
+  { name: 'Cyient Ltd · INV-042',      amount: '₹85,000',   pct: 60,  color: '#F59E0B', status: 'Reminder sent · 12 days overdue', dot: '#F59E0B' },
+  { name: 'TCS Vendor · INV-043',      amount: '₹2,40,000', pct: 25,  color: '#6B7280', status: 'Invoice sent · Due in 18 days',    dot: '#6B7280' },
 ]
 
 export default function LoginPage() {
@@ -39,7 +39,7 @@ export default function LoginPage() {
       setCount(Math.floor(ease(p) * target))
       if (p < 1) requestAnimationFrame(raf)
     }
-    const id = setTimeout(() => requestAnimationFrame(raf), 600)
+    const id = setTimeout(() => requestAnimationFrame(raf), 500)
     return () => clearTimeout(id)
   }, [])
 
@@ -82,377 +82,359 @@ export default function LoginPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;0,700;1,600;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { height: 100%; overflow: hidden; }
+        html, body { height: 100%; overflow: hidden; background-color: #080E0A; }
 
         /* ── ROOT ── */
-        .vsl { height: 100vh; display: grid; grid-template-columns: 1fr 380px; font-family: 'DM Sans', sans-serif; overflow: hidden; }
+        .vsl { height: 100vh; display: grid; grid-template-columns: 1fr 420px; font-family: 'Outfit', sans-serif; overflow: hidden; }
 
-        /* ─────────── LEFT PANEL ─────────── */
+        /* ─────────── LEFT PANEL (Kokonut Dark Glossy) ─────────── */
         .L {
-          background: #0C1A10;
+          background: #080E0A;
           display: flex; flex-direction: column;
-          padding: 32px 40px;
+          padding: 36px 48px;
           position: relative; overflow: hidden;
-          opacity: 0; transform: translateX(-16px);
-          transition: opacity .55s ease, transform .55s ease;
+          opacity: 0; transform: translateX(-20px);
+          transition: opacity .6s cubic-bezier(0.16,1,0.3,1), transform .6s cubic-bezier(0.16,1,0.3,1);
         }
         .L.in { opacity: 1; transform: translateX(0); }
 
-        /* ambient glow */
+        /* Ambient Glowing Animated Orbs */
         .L::before {
           content: '';
-          position: absolute; inset: 0; pointer-events: none;
+          position: absolute; inset: -100px; pointer-events: none;
           background:
-            radial-gradient(ellipse 55% 40% at 8% 12%, rgba(45,138,88,.22) 0%, transparent 55%),
-            radial-gradient(ellipse 40% 35% at 88% 88%, rgba(232,105,42,.13) 0%, transparent 55%);
+            radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.18) 0%, transparent 45%),
+            radial-gradient(circle at 80% 80%, rgba(5, 150, 105, 0.12) 0%, transparent 45%),
+            radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.05) 0%, transparent 55%);
+          animation: kokonut-orb-float 12s ease-in-out infinite alternate;
         }
 
-        /* subtle grid lines */
+        @keyframes kokonut-orb-float {
+          0% { transform: scale(1) translate(0, 0); }
+          100% { transform: scale(1.1) translate(15px, -15px); }
+        }
+
+        /* Subtle grid lines */
         .L::after {
           content: '';
           position: absolute; inset: 0; pointer-events: none;
           background-image:
-            linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-          background-size: 48px 48px;
+            linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+          background-size: 40px 40px;
         }
 
         .z { position: relative; z-index: 1; }
 
-        /* logo */
-        .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; flex-shrink: 0; }
+        /* Logo */
+        .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; flex-shrink: 0; }
         .logo-mark {
-          width: 36px; height: 36px; border-radius: 9px;
-          background: #2D8A58; flex-shrink: 0;
+          width: 42px; height: 42px; border-radius: 12px;
+          background: linear-gradient(135deg, #10B981, #059669); flex-shrink: 0;
           display: flex; align-items: center; justify-content: center;
-          box-shadow: 0 0 0 1px rgba(45,138,88,.5), 0 4px 12px rgba(45,138,88,.25);
+          box-shadow: 0 0 20px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
-        .logo-name { font-family: 'Lora', serif; font-size: 19px; font-weight: 700; color: #EEE9E2; letter-spacing: -.02em; line-height: 1; }
-        .logo-sub  { font-size: 9px; color: rgba(238,233,226,.28); margin-top: 2px; }
+        .logo-name { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #FFFFFF; letter-spacing: -.02em; line-height: 1; }
+        .logo-sub  { font-size: 10px; color: rgba(255,255,255,.45); margin-top: 2px; font-weight: 500; }
 
-        /* tag */
+        /* Tag Pill */
         .tag {
-          display: inline-flex; align-items: center; gap: 6px;
-          border: 1px solid rgba(45,138,88,.28); border-radius: 100px;
-          padding: 3px 11px; font-size: 10px; font-weight: 500; color: #6DC49A;
-          width: fit-content; margin-bottom: 14px; flex-shrink: 0;
-          background: rgba(45,138,88,.08);
+          display: inline-flex; align-items: center; gap: 8px;
+          border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 100px;
+          padding: 5px 14px; font-size: 11px; font-weight: 600; color: #34D399;
+          width: fit-content; margin-bottom: 18px; flex-shrink: 0;
+          background: rgba(16, 185, 129, 0.1); backdrop-filter: blur(10px);
+          box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
         }
-        .tag-dot { width: 5px; height: 5px; border-radius: 50%; background: #2D8A58; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+        .tag-dot { width: 6px; height: 6px; border-radius: 50%; background: #10B981; box-shadow: 0 0 8px #10B981; animation: kokonut-pulse 2s infinite; }
 
-        /* headline */
+        /* Headline */
         .h1 {
-          font-family: 'Lora', serif;
-          font-size: clamp(26px, 2.6vw, 38px);
-          font-weight: 700; line-height: 1.1; letter-spacing: -.03em;
-          color: #EEE9E2; margin-bottom: 8px; flex-shrink: 0;
+          font-family: 'Outfit', sans-serif;
+          font-size: clamp(28px, 2.8vw, 42px);
+          font-weight: 800; line-height: 1.1; letter-spacing: -.03em;
+          color: #FFFFFF; margin-bottom: 12px; flex-shrink: 0;
         }
-        .h1 em { font-style: italic; color: #E8692A; }
-        .h1 .g { color: #2D8A58; }
+        .h1 .g {
+          background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
 
         .desc {
-          font-size: 12px; font-weight: 300; color: rgba(238,233,226,.45);
-          line-height: 1.68; margin-bottom: 18px; flex-shrink: 0; max-width: 460px;
+          font-size: 14px; font-weight: 400; color: rgba(255,255,255,.6);
+          line-height: 1.6; margin-bottom: 24px; flex-shrink: 0; max-width: 480px;
         }
 
-        /* ── DASHBOARD PREVIEW ── */
+        /* ── DASHBOARD GLOSSY PREVIEW ── */
         .preview-wrap {
           flex: 1; display: flex; flex-direction: column;
-          min-height: 0; gap: 6px;
+          min-height: 0; gap: 10px;
         }
 
         .preview-label {
-          font-size: 9px; font-weight: 600; color: rgba(238,233,226,.28);
-          text-transform: uppercase; letter-spacing: .10em; margin-bottom: 2px; flex-shrink: 0;
+          font-size: 10px; font-weight: 700; color: rgba(255,255,255,.35);
+          text-transform: uppercase; letter-spacing: .12em; margin-bottom: 4px; flex-shrink: 0;
         }
 
-        /* summary bar */
+        /* Summary Glossy Cells */
         .summary {
           display: grid; grid-template-columns: repeat(3, 1fr);
-          gap: 1px; background: rgba(238,233,226,.08);
-          border-radius: 9px; overflow: hidden;
-          border: .5px solid rgba(238,233,226,.08);
-          flex-shrink: 0;
+          gap: 8px; flex-shrink: 0;
         }
-        .summary-cell { background: rgba(238,233,226,.04); padding: 8px 10px; }
-        .summary-n { font-size: 15px; font-weight: 600; color: #EEE9E2; line-height: 1; margin-bottom: 2px; }
-        .summary-l { font-size: 8px; color: rgba(238,233,226,.32); }
+        .summary-cell {
+          background: rgba(18, 30, 22, 0.7);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px; padding: 12px 14px;
+        }
+        .summary-n { font-size: 18px; font-weight: 700; color: #FFFFFF; line-height: 1; margin-bottom: 4px; }
+        .summary-l { font-size: 9px; color: rgba(255,255,255,.45); font-weight: 500; }
 
-        /* invoice rows — fill remaining space */
-        .invoices { flex: 1; display: flex; flex-direction: column; gap: 5px; min-height: 0; }
+        /* Invoice Rows */
+        .invoices { flex: 1; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
 
         .inv {
-          flex: 1;
-          background: rgba(238,233,226,.04);
-          border: .5px solid rgba(238,233,226,.08);
-          border-radius: 9px; padding: 10px 12px;
+          background: rgba(18, 30, 22, 0.6);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px; padding: 12px 14px;
           display: flex; flex-direction: column; justify-content: space-between;
-          min-height: 0;
-          transition: background .2s;
+          transition: all 0.2s cubic-bezier(0.16,1,0.3,1);
         }
-        .inv:hover { background: rgba(238,233,226,.07); }
+        .inv:hover { transform: translateY(-2px); border-color: rgba(16, 185, 129, 0.3); background: rgba(22, 36, 26, 0.8); }
 
-        .inv-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 7px; }
-        .inv-name { font-size: 11px; font-weight: 500; color: rgba(238,233,226,.80); }
-        .inv-amount { font-size: 12px; font-weight: 600; color: #EEE9E2; }
-        .inv-track { height: 3px; background: rgba(238,233,226,.10); border-radius: 2px; overflow: hidden; margin-bottom: 6px; }
-        .inv-fill  { height: 100%; border-radius: 2px; transition: width .6s ease; }
-        .inv-bottom { display: flex; align-items: center; gap: 5px; }
-        .inv-dot   { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-        .inv-status { font-size: 9px; color: rgba(238,233,226,.38); }
+        .inv-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .inv-name { font-size: 12px; font-weight: 600; color: #FFFFFF; }
+        .inv-amount { font-size: 13px; font-weight: 700; color: #34D399; }
+        .inv-track { height: 4px; background: rgba(255,255,255,.08); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+        .inv-fill  { height: 100%; border-radius: 4px; transition: width .8s cubic-bezier(0.16,1,0.3,1); }
+        .inv-bottom { display: flex; align-items: center; gap: 6px; }
+        .inv-dot   { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .inv-status { font-size: 10px; color: rgba(255,255,255,.5); font-weight: 500; }
 
-        /* bottom 2 cols */
-        .btm { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; flex-shrink: 0; }
+        /* Bottom Counter Card */
+        .btm { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex-shrink: 0; }
 
         .counter {
-          background: rgba(238,233,226,.04);
-          border: .5px solid rgba(238,233,226,.08);
-          border-left: 2.5px solid #E8692A;
-          border-radius: 9px; padding: 11px 13px;
+          background: rgba(18, 30, 22, 0.7);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-left: 3px solid #10B981;
+          border-radius: 12px; padding: 12px 14px;
         }
-        .counter-lbl { font-size: 8px; font-weight: 500; color: rgba(238,233,226,.28); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
-        .counter-num { font-family: 'Lora', serif; font-size: 22px; font-weight: 700; color: #EEE9E2; letter-spacing: -.02em; line-height: 1; margin-bottom: 3px; }
-        .counter-sub { font-size: 8px; color: rgba(238,233,226,.30); }
+        .counter-lbl { font-size: 9px; font-weight: 700; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+        .counter-num { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 800; color: #FFFFFF; letter-spacing: -.02em; line-height: 1; margin-bottom: 3px; }
+        .counter-sub { font-size: 9px; color: rgba(255,255,255,.45); }
 
         .testi {
-          background: rgba(45,138,88,.10);
-          border: .5px solid rgba(45,138,88,.22);
-          border-radius: 9px; padding: 11px 13px;
+          background: rgba(16, 185, 129, 0.08);
+          border: 1px solid rgba(16, 185, 129, 0.2);
+          border-radius: 12px; padding: 12px 14px;
           display: flex; flex-direction: column; justify-content: space-between;
         }
-        .testi-q    { font-size: 9px; font-weight: 300; color: rgba(238,233,226,.72); line-height: 1.55; font-style: italic; margin-bottom: 8px; }
-        .testi-row  { display: flex; align-items: center; gap: 6px; }
-        .testi-av   { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg,#E8692A,#C9951A); display: flex; align-items: center; justify-content: center; font-size: 7px; font-weight: 700; color: white; flex-shrink: 0; }
-        .testi-name { font-size: 9px; font-weight: 500; color: rgba(238,233,226,.80); }
-        .testi-role { font-size: 8px; color: rgba(238,233,226,.35); margin-top: 1px; }
+        .testi-q    { font-size: 10px; color: rgba(255,255,255,.8); line-height: 1.5; font-style: italic; margin-bottom: 8px; }
+        .testi-row  { display: flex; align-items: center; gap: 8px; }
+        .testi-av   { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg,#10B981,#059669); display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: white; flex-shrink: 0; }
+        .testi-name { font-size: 10px; font-weight: 600; color: #FFFFFF; }
+        .testi-role { font-size: 8px; color: rgba(255,255,255,.4); margin-top: 1px; }
 
-        /* ─────────── RIGHT PANEL ─────────── */
+        /* ─────────── RIGHT FORM PANEL (Glossy Kokonut Card) ─────────── */
         .R {
-          background: #FDFAF5;
+          background: rgba(12, 22, 15, 0.95);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
           display: flex; flex-direction: column; justify-content: center;
-          padding: 32px 28px;
-          border-left: 1px solid rgba(26,20,13,.08);
+          padding: 40px 36px;
+          border-left: 1px solid rgba(255, 255, 255, 0.08);
           position: relative; overflow: hidden;
-          opacity: 0; transform: translateX(16px);
-          transition: opacity .55s .15s ease, transform .55s .15s ease;
+          opacity: 0; transform: translateX(20px);
+          transition: opacity .6s .15s cubic-bezier(0.16,1,0.3,1), transform .6s .15s cubic-bezier(0.16,1,0.3,1);
+          box-shadow: -15px 0 40px rgba(0, 0, 0, 0.6);
         }
         .R.in { opacity: 1; transform: translateX(0); }
 
-        /* gradient top bar */
+        /* Glowing Neon Top Bar */
         .R::before {
           content: '';
           position: absolute; top: 0; left: 0; right: 0; height: 3px;
-          background: linear-gradient(90deg, #2D8A58 0%, #E8692A 100%);
-        }
-
-        /* subtle bg pattern */
-        .R::after {
-          content: '';
-          position: absolute; inset: 0; pointer-events: none; z-index: 0;
-          background-image: radial-gradient(rgba(26,20,13,.025) 1px, transparent 1px);
-          background-size: 20px 20px;
+          background: linear-gradient(90deg, #10B981 0%, #34D399 50%, #F59E0B 100%);
+          box-shadow: 0 0 12px #10B981;
         }
 
         .rf { position: relative; z-index: 1; }
 
-        /* lang */
+        /* Language Toggle */
         .lang {
-          position: absolute; top: 16px; right: 16px; z-index: 2;
+          position: absolute; top: 20px; right: 20px; z-index: 2;
           display: flex; gap: 2px;
-          background: white; border: .5px solid rgba(26,20,13,.10);
+          background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 100px; padding: 3px;
         }
         .lang button {
-          padding: 3px 10px; border-radius: 100px; border: none;
-          font-size: 10px; font-weight: 500; cursor: pointer;
-          transition: all .15s; font-family: 'DM Sans', sans-serif;
-          background: transparent; color: rgba(26,20,13,.32);
+          padding: 4px 12px; border-radius: 100px; border: none;
+          font-size: 10px; font-weight: 600; cursor: pointer;
+          transition: all .2s; font-family: 'Outfit', sans-serif;
+          background: transparent; color: rgba(255,255,255,.4);
         }
-        .lang button.on { background: #1B5E3B; color: white; }
+        .lang button.on { background: #10B981; color: white; box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
 
-        /* form header */
-        .f-ey   { font-size: 9px; font-weight: 600; color: #2D8A58; text-transform: uppercase; letter-spacing: .10em; margin-bottom: 6px; }
-        .f-h2   { font-family: 'Lora', serif; font-size: 24px; font-weight: 700; color: #1A140D; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 2px; }
-        .f-sub  { font-size: 10px; color: rgba(26,20,13,.24); margin-bottom: 4px; }
-        .f-desc { font-size: 12px; font-weight: 300; color: rgba(26,20,13,.50); line-height: 1.55; margin-bottom: 14px; }
+        /* Form Header */
+        .f-ey   { font-size: 10px; font-weight: 700; color: #34D399; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 8px; }
+        .f-h2   { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; color: #FFFFFF; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 4px; }
+        .f-desc { font-size: 13px; font-weight: 400; color: rgba(255,255,255,.55); line-height: 1.55; margin-bottom: 20px; }
 
-        /* pills */
-        .pills { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 16px; }
-        .pill  { display: flex; align-items: center; gap: 4px; background: white; border: .5px solid rgba(26,20,13,.09); border-radius: 100px; padding: 3px 8px; font-size: 9px; font-weight: 500; color: rgba(26,20,13,.48); }
-        .pill-dot { width: 3px; height: 3px; border-radius: 50%; background: #2D8A58; }
+        /* Feature Pills */
+        .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+        .pill  { display: flex; align-items: center; gap: 5px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 100px; padding: 4px 10px; font-size: 10px; font-weight: 600; color: rgba(255, 255, 255, 0.7); }
+        .pill-dot { width: 4px; height: 4px; border-radius: 50%; background: #10B981; box-shadow: 0 0 6px #10B981; }
 
-        /* google */
+        /* Glossy Google OAuth Button with Shimmer */
         .g-btn {
-          width: 100%; display: flex; align-items: center; gap: 9px;
-          background: white; border: 1.5px solid rgba(26,20,13,.11);
-          border-radius: 9px; padding: 10px 12px; cursor: pointer;
-          transition: all .18s; margin-bottom: 10px;
-          font-family: 'DM Sans', sans-serif;
-          box-shadow: 0 1px 4px rgba(26,20,13,.05);
+          width: 100%; display: flex; align-items: center; gap: 10px;
+          background: white; border: none;
+          border-radius: 12px; padding: 12px 16px; cursor: pointer;
+          transition: all .2s cubic-bezier(0.16,1,0.3,1); margin-bottom: 14px;
+          font-family: 'Outfit', sans-serif;
+          box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
+          position: relative; overflow: hidden;
         }
-        .g-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 5px 14px rgba(26,20,13,.09); border-color: rgba(26,20,13,.18); }
+        .g-btn::after {
+          content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+          background: linear-gradient(60deg, transparent, rgba(255,255,255,0.4), transparent);
+          transform: rotate(30deg); animation: kokonut-shimmer 3s infinite;
+        }
+        @keyframes kokonut-shimmer { 0% { transform: translate(-100%, -100%) rotate(30deg); } 100% { transform: translate(100%, 100%) rotate(30deg); } }
+
+        .g-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2); }
         .g-btn:disabled { opacity: .68; cursor: not-allowed; }
-        .g-label { font-size: 12px; font-weight: 500; color: #1A140D; flex: 1; text-align: left; }
-        .g-badge { font-size: 8px; font-weight: 600; background: rgba(45,138,88,.10); color: #1B5E3B; padding: 2px 7px; border-radius: 100px; }
+        .g-label { font-size: 13px; font-weight: 600; color: #111827; flex: 1; text-align: left; }
+        .g-badge { font-size: 9px; font-weight: 700; background: rgba(16, 185, 129, 0.15); color: #059669; padding: 2px 8px; border-radius: 100px; }
 
-        /* or */
-        .or      { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
-        .or-line { flex: 1; height: 1px; background: rgba(26,20,13,.08); }
-        .or-text { font-size: 9px; color: rgba(26,20,13,.26); white-space: nowrap; }
+        /* Divider */
+        .or      { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+        .or-line { flex: 1; height: 1px; background: rgba(255,255,255,.08); }
+        .or-text { font-size: 10px; color: rgba(255,255,255,.3); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
 
-        /* input */
-        .inp-wrap { position: relative; margin-bottom: 7px; }
-        .inp-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: rgba(26,20,13,.22); font-size: 12px; pointer-events: none; }
+        /* Input */
+        .inp-wrap { position: relative; margin-bottom: 10px; }
+        .inp-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,.3); font-size: 14px; pointer-events: none; }
         .inp {
-          width: 100%; background: white;
-          border: 1.5px solid rgba(26,20,13,.10); border-radius: 9px;
-          padding: 10px 11px 10px 32px;
-          font-family: 'DM Sans', sans-serif; font-size: 13px; color: #1A140D;
-          transition: all .18s; outline: none;
+          width: 100%; background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px;
+          padding: 12px 14px 12px 38px;
+          font-family: 'Outfit', sans-serif; font-size: 13px; color: #FFFFFF;
+          transition: all .2s; outline: none;
         }
-        .inp::placeholder { color: rgba(26,20,13,.26); }
-        .inp:focus { border-color: #2D8A58; box-shadow: 0 0 0 3px rgba(45,138,88,.09); }
+        .inp::placeholder { color: rgba(255,255,255,.3); }
+        .inp:focus { border-color: #10B981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); background: rgba(255, 255, 255, 0.08); }
 
-        /* cta */
+        /* Neon CTA */
         .cta {
-          width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;
-          background: linear-gradient(135deg, #1B5E3B 0%, #0D3B22 100%);
-          border: none; border-radius: 9px; padding: 11px;
-          font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: white;
-          cursor: pointer; transition: all .18s; margin-bottom: 12px;
-          box-shadow: 0 4px 12px rgba(27,94,59,.26);
+          width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+          background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+          border: none; border-radius: 12px; padding: 12px;
+          font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; color: white;
+          cursor: pointer; transition: all .2s cubic-bezier(0.16,1,0.3,1); margin-bottom: 16px;
+          box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
         }
-        .cta:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(27,94,59,.34); }
+        .cta:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5); }
         .cta:disabled { opacity: .75; cursor: not-allowed; }
 
-        /* sent */
-        .sent-box {
-          display: flex; align-items: center; gap: 8px;
-          background: rgba(45,138,88,.07); border: 1px solid rgba(45,138,88,.18);
-          border-radius: 9px; padding: 11px 12px; margin-bottom: 12px;
-        }
-        .sent-box p { font-size: 12px; font-weight: 500; color: #1B5E3B; }
-
-        /* error */
-        .err { font-size: 11px; color: #C0392B; margin-bottom: 6px; padding-left: 2px; }
-
-        /* trust */
-        .trust {
-          display: flex; align-items: flex-start; gap: 8px;
-          background: rgba(45,138,88,.04); border: .5px solid rgba(45,138,88,.12);
-          border-radius: 8px; padding: 9px 11px; margin-bottom: 10px;
-        }
-        .trust p { font-size: 10px; color: rgba(26,20,13,.46); line-height: 1.5; }
-        .trust strong { color: #1B5E3B; font-weight: 600; }
-
-        /* terms */
-        .terms { font-size: 9px; color: rgba(26,20,13,.24); text-align: center; line-height: 1.6; }
-        .terms a { color: rgba(26,20,13,.40); text-decoration: underline; cursor: pointer; }
-
-        /* mobile */
-        @media (max-width: 820px) {
-          .vsl { grid-template-columns: 1fr; }
+        /* Mobile */
+        @media (max-width: 860px) {
+          .vsl { grid-template-columns: 1fr; height: 100vh; overflow-y: auto; }
           .L    { display: none; }
+          .R    { min-height: 100vh; padding: 32px 20px; justify-content: center; }
           html, body { overflow: auto; }
         }
       `}</style>
 
       <div className="vsl">
-
-        {/* ══════════ LEFT ══════════ */}
+        {/* LEFT PANEL */}
         <div className={`L ${visible ? 'in' : ''}`}>
           <div className="z" style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 0 }}>
 
             {/* Logo */}
             <div className="logo">
-              <div className="logo-mark">
-                <svg width="16" height="16" viewBox="0 0 22 22" fill="none">
-                  <path d="M4 11h14M4 7h9M4 15h11" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
+              <div className="logo-mark" style={{ padding: 0, overflow: 'hidden', background: 'transparent' }}>
+                <img src="/settlr-logo.png" alt="Settlr" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} />
               </div>
               <div>
-                <div className="logo-name">Vasool</div>
-                <div className="logo-sub">వసూల్ — Get what you&apos;re owed</div>
+                <div className="logo-name">Settlr</div>
+                <div className="logo-sub">MSME Financial Operating System</div>
               </div>
             </div>
 
             {/* Tag */}
-            <div className="tag" style={{ marginBottom: 12 }}>
+            <div className="tag">
               <span className="tag-dot" />
-              {te ? 'Telugu MSMEs కోసం' : 'Built for Telugu MSMEs & Freelancers'}
+              <span>MSME Invoicing, GST & Payment Recovery Platform</span>
             </div>
 
             {/* Headline */}
             <h1 className="h1">
-              {te ? 'ఆపు చేయటం ఆపు.' : 'Stop chasing.'}<br />
-              <em>{te ? 'వసూల్ చేసుకో' : 'Start collecting'}</em><br />
-              <span className="g">{te ? 'automatic గా.' : 'automatically.'}</span>
+              Collect payments <span className="g">faster</span> & file GST <span style={{ color: '#F59E0B' }}>effortlessly</span>
             </h1>
 
             <p className="desc">
-              {te
-                ? 'AI మీ contracts చదివి, GST invoices పంపి, WhatsApp reminders automatic గా పంపుతుంది — zero manual work.'
-                : 'AI reads your contracts, generates GST invoices, and sends WhatsApp payment reminders — zero manual work.'}
+              Automated WhatsApp reminders, 45-day MSMED Act interest claims, dynamic NPCI UPI QR billing, and 1-click GSTR-1 tax filing — purpose-built for Indian freelancers, contractors, and MSMEs.
             </p>
 
-            {/* Dashboard Preview */}
+            {/* Preview Section */}
             <div className="preview-wrap">
-              <p className="preview-label">Your dashboard — live preview</p>
+              <div className="preview-label">Live MSME Payment Track</div>
 
-              {/* Summary bar */}
               <div className="summary">
-                {[
-                  { n: '₹4.45L', l: 'Total receivables' },
-                  { n: '₹85K',   l: 'Overdue now' },
-                  { n: '3',      l: 'Active invoices' },
-                ].map(s => (
-                  <div className="summary-cell" key={s.l}>
-                    <div className="summary-n">{s.n}</div>
-                    <div className="summary-l">{s.l}</div>
-                  </div>
-                ))}
+                <div className="summary-cell">
+                  <div className="summary-n">{fmt(count)}</div>
+                  <div className="summary-l">Collected this month</div>
+                </div>
+                <div className="summary-cell">
+                  <div className="summary-n">3</div>
+                  <div className="summary-l">Pending invoices</div>
+                </div>
+                <div className="summary-cell">
+                  <div className="summary-n" style={{ color: '#34D399' }}>100%</div>
+                  <div className="summary-l">GSTR-1 Ready</div>
+                </div>
               </div>
 
-              {/* Invoice rows */}
               <div className="invoices">
-                {INVOICES.map(inv => (
-                  <div className="inv" key={inv.name}>
+                {INVOICES.map((inv, i) => (
+                  <div className="inv" key={i}>
                     <div className="inv-top">
                       <span className="inv-name">{inv.name}</span>
                       <span className="inv-amount">{inv.amount}</span>
                     </div>
                     <div className="inv-track">
-                      <div className="inv-fill" style={{ width: `${inv.pct}%`, background: inv.color }} />
+                      <div className="inv-fill" style={{ width: visible ? `${inv.pct}%` : '0%', background: inv.color }} />
                     </div>
                     <div className="inv-bottom">
-                      <span className="inv-dot" style={{ background: inv.dot }} />
+                      <div className="inv-dot" style={{ background: inv.dot }} />
                       <span className="inv-status">{inv.status}</span>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
 
-            {/* Bottom: counter + testimonial */}
-            <div className="btm" style={{ marginTop: 8 }}>
-              <div className="counter">
-                <div className="counter-lbl">Avg recovered / year</div>
-                <div className="counter-num">{fmt(count)}</div>
-                <div className="counter-sub">per user · Hyderabad</div>
-              </div>
-              <div className="testi">
-                <p className="testi-q">
-                  &ldquo;₹1.8L vasool chesukunnanu in 3 months. Automatic ga vastunnai!&rdquo;
-                </p>
-                <div className="testi-row">
-                  <div className="testi-av">RK</div>
-                  <div>
-                    <div className="testi-name">Ravi Kumar</div>
-                    <div className="testi-role">IT Freelancer, Hyd</div>
+              <div className="btm">
+                <div className="counter">
+                  <div className="counter-lbl">Overdue Recovered</div>
+                  <div className="counter-num">{fmt(count)}</div>
+                  <div className="counter-sub">Via Automated WhatsApp</div>
+                </div>
+
+                <div className="testi">
+                  <div className="testi-q">&ldquo;Settlr saved us ₹4.5L in overdue client payments using 45-day MSME statutory claims.&rdquo;</div>
+                  <div className="testi-row">
+                    <div className="testi-av">VS</div>
+                    <div>
+                      <div className="testi-name">Vijay Kumar</div>
+                      <div className="testi-role">Founder, HITECH Agency</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -461,86 +443,73 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* ══════════ RIGHT ══════════ */}
+        {/* RIGHT PANEL (Kokonut Glossy Card) */}
         <div className={`R ${visible ? 'in' : ''}`}>
-
-          {/* Lang toggle */}
+          {/* Language Switcher */}
           <div className="lang">
-            <button className={lang === 'en' ? 'on' : ''} onClick={() => setLang('en')}>EN</button>
-            <button className={lang === 'te' ? 'on' : ''} onClick={() => setLang('te')}>తె</button>
+            <button className={!te ? 'on' : ''} onClick={() => setLang('en')}>EN</button>
+            <button className={te ? 'on' : ''} onClick={() => setLang('te')}>తెలుగు</button>
           </div>
 
           <div className="rf">
-            <p className="f-ey">{te ? 'ఉచితం · Credit card అక్కరలేదు' : 'Free to start · No credit card'}</p>
-            <h2 className="f-h2">{te ? 'వసూల్ కి స్వాగతం' : <>Welcome to<br />Vasool</>}</h2>
-            <p className="f-sub">{te ? 'లాగిన్ అవ్వండి' : 'Sign in to get started'}</p>
-            <p className="f-desc">{te ? '200+ Telugu MSMEs వేగంగా payment తీసుకుంటున్నారు.' : 'Join 200+ Telugu MSMEs already getting paid faster.'}</p>
+            <div className="f-ey">Welcome to Settlr</div>
+            <h2 className="f-h2">{te ? 'లాగిన్ అవ్వండి' : 'Sign in to dashboard'}</h2>
+            <p className="f-desc">
+              {te ? 'మీ బిజినెస్ ఇన్వాయిస్‌లు, AI కాంట్రాక్ట్‌లు & GST ఫైలింగ్ మేనేజ్ చేయండి.' : 'Manage your business invoices, AI contract analysis, and GST tax filing.'}
+            </p>
 
             <div className="pills">
-              {['GST Invoices', 'WhatsApp Chase', 'AI Contracts', 'UPI Payments'].map(f => (
-                <div className="pill" key={f}><span className="pill-dot" />{f}</div>
-              ))}
+              <span className="pill"><span className="pill-dot" /> 💬 WhatsApp Reminders</span>
+              <span className="pill"><span className="pill-dot" /> 🛡️ Contract Redlines</span>
+              <span className="pill"><span className="pill-dot" /> 🧾 GSTR-1 JSON</span>
             </div>
 
-            {/* Google */}
+            {/* Google OAuth Button */}
             <button className="g-btn" onClick={signInGoogle} disabled={loading}>
-              <svg width="15" height="15" viewBox="0 0 18 18" style={{ flexShrink: 0 }}>
-                <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
-                <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
-                <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
-                <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+              <svg width="18" height="18" viewBox="0 0 24 24">
+                <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+                <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+                <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 10.8 0 12.3s.7 2.6 1.9 5l3.7-2.5z"/>
+                <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/>
               </svg>
-              <span className="g-label">{loading ? 'Redirecting...' : (te ? 'Google తో continue చేయండి' : 'Continue with Google')}</span>
-              <span className="g-badge">Recommended</span>
+              <span className="g-label">{loading ? 'Connecting...' : 'Continue with Google'}</span>
+              <span className="g-badge">Fast & Secure</span>
             </button>
 
-            {/* Or */}
             <div className="or">
-              <div className="or-line" /><span className="or-text">{te ? 'లేదా email తో' : 'or with email'}</span><div className="or-line" />
+              <div className="or-line" />
+              <span className="or-text">or sign in with email</span>
+              <div className="or-line" />
             </div>
 
-            {/* Email / sent */}
-            {!sent ? (
+            {error && <div className="err">⚠️ {error}</div>}
+
+            {sent ? (
+              <div className="sent-box">
+                <span>✉️</span>
+                <p>Login link sent to {email}! Check your inbox.</p>
+              </div>
+            ) : (
               <>
                 <div className="inp-wrap">
-                  <span className="inp-icon">✉</span>
+                  <span className="inp-icon">📧</span>
                   <input
-                    className="inp" type="email" value={email}
-                    placeholder={te ? 'మీ email చెప్పండి' : 'your@email.com'}
-                    onChange={e => { setEmail(e.target.value); setError('') }}
+                    className="inp"
+                    type="email"
+                    placeholder="name@business.com"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && signInEmail()}
                   />
                 </div>
-                {error && <p className="err">{error}</p>}
+
                 <button className="cta" onClick={signInEmail} disabled={loading}>
-                  {loading ? 'Sending...' : (te ? 'Magic link పంపండి' : 'Send magic link')}
-                  {!loading && <span style={{ fontSize: 15 }}>→</span>}
+                  {loading ? 'Sending Magic Link...' : 'Send Magic Link →'}
                 </button>
               </>
-            ) : (
-              <div className="sent-box">
-                <span style={{ fontSize: 18, flexShrink: 0 }}>📧</span>
-                <p>{te ? '✓ Email చెక్ చేయండి! Magic link పంపాము.' : '✓ Check your email — magic link sent!'}</p>
-              </div>
             )}
-
-            {/* Trust */}
-            <div className="trust">
-              <span style={{ fontSize: 14, flexShrink: 0, marginTop: 1 }}>🔒</span>
-              <p>
-                <strong>Your data stays yours. </strong>
-                {te ? 'మీ data external servers లో store చేయము.' : 'Never stored on external servers. On-device processing only.'}
-              </p>
-            </div>
-
-            <p className="terms">
-              By signing in you agree to our{' '}
-              <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.<br />
-              Vasool — DPIIT Recognised Startup.
-            </p>
           </div>
         </div>
-
       </div>
     </>
   )

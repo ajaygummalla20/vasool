@@ -200,6 +200,20 @@ export default function ClientsPage() {
           border-radius: 8px; height: 130px;
         }
         @keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+
+        @media(max-width: 900px) {
+          .cl-main { margin-left: 0; padding-top: 56px; padding-bottom: 80px; }
+          .cl-top { padding: 14px 16px; flex-wrap: wrap; gap: 12px; }
+          .cl-top-right { width: 100%; justify-content: space-between; }
+          .cl-search { width: 100%; max-width: 220px; }
+          .cl-content { padding: 16px; }
+          .cl-grid { grid-template-columns: 1fr; }
+        }
+        @media(max-width: 540px) {
+          .cl-top-right { flex-direction: column; align-items: stretch; }
+          .cl-search { max-width: 100%; }
+          .cl-btn { justify-content: center; }
+        }
       `}</style>
 
       <div className="cl-wrap">

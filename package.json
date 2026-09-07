@@ -1,11 +1,13 @@
 {
-  "name": "vasool",
+  "name": "settlr",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "npx tsx tests/comprehensive-audit.ts",
+    "test:security": "npx tsx .agents/skills/strix/scripts/security-audit.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",

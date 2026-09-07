@@ -271,7 +271,23 @@ export default function InvoicesListPage({
         .il-skel{height:52px;background:linear-gradient(90deg,rgba(26,20,13,.04) 0%,rgba(26,20,13,.08) 50%,rgba(26,20,13,.04) 100%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:0;border-bottom:1px solid rgba(26,20,13,.05)}
         @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-        @media(max-width:900px){.il-main{margin-left:0}.il-metrics{grid-template-columns:1fr 1fr}.il-table-hdr,.il-row{grid-template-columns:1fr 80px 80px 80px}}
+        @media(max-width:900px){
+          .il-main{margin-left:0; padding-top:56px; padding-bottom:80px; height:auto; min-height:100vh; overflow:visible}
+          .il-top{padding:14px 16px; height:auto; flex-wrap:wrap; gap:12px}
+          .il-top-r{width:100%; justify-content:space-between}
+          .il-search{width:100%; max-width:240px}
+          .il-content{padding:16px}
+          .il-metrics{grid-template-columns:1fr 1fr}
+          .il-table-wrap{overflow-x:auto}
+          .il-table-hdr, .il-row{min-width:620px}
+          .il-filters{overflow-x:auto; padding-bottom:4px; width:100%}
+        }
+        @media(max-width:540px){
+          .il-metrics{grid-template-columns:1fr}
+          .il-top-r{flex-direction:column; align-items:stretch}
+          .il-search{max-width:100%}
+          .il-new-btn{justify-content:center}
+        }
       `}</style>
 
       <div className="il-root">

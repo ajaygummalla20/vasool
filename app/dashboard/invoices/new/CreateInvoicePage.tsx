@@ -22,11 +22,28 @@ interface LineItem {
   id: string; description: string; qty: number; unit: string; rate: number
 }
 
+interface DuplicateData {
+  client_id: string | null
+  contract_id: string | null
+  payment_terms: string | null
+  late_fee_terms: string | null
+  notes: string | null
+  cgst_pct: number | null
+  sgst_pct: number | null
+  igst_pct: number | null
+  discount_pct: number | null
+  discount_amount: number | null
+  items: { description: string; qty: number; unit: string; rate: number }[]
+}
+
 interface Props {
   userName: string; userEmail: string
   businessName: string; senderGst: string; senderAddress: string
   previewInvoiceNumber: string; preselectedClientId: string
   clients: Client[]; contracts: Contract[]; userId: string
+  duplicateData?: DuplicateData | null
+  initialDocType?: 'tax_invoice' | 'proforma' | 'credit_note'
+  initialOriginalInvRef?: string
 }
 
 const uid = () => Math.random().toString(36).slice(2, 8)
@@ -59,7 +76,8 @@ function clientColor(name: string) {
 
 export default function CreateInvoicePage({
   userName, userEmail, previewInvoiceNumber, preselectedClientId,
-  clients, contracts, userId,
+  clients, contracts, userId, duplicateData,
+  initialDocType = 'tax_invoice', initialOriginalInvRef = '',
 }: Props) {
   const router = useRouter()
 
@@ -90,8 +108,17 @@ export default function CreateInvoicePage({
   const [openSec,  setOpenSec]  = useState('client')
   const [saving,   setSaving]   = useState(false)
   const [sending,  setSending]  = useState(false)
-  const [saved,    setSaved]    = useState(false)
-  const [invNum,   setInvNum]   = useState(previewInvoiceNumber)
+  const [docType,          setDocType]          = useState<'tax_invoice' | 'proforma' | 'credit_note'>(initialDocType)
+  const [originalInvRef,   setOriginalInvRef]   = useState(initialOriginalInvRef)
+  const [creditNoteReason, setCreditNoteReason] = useState('Post-sale discount / rate difference')
+  const [saved,            setSaved]            = useState(false)
+  const [invNum,           setInvNum]           = useState(
+    initialDocType === 'proforma'
+      ? `PI-${previewInvoiceNumber.replace(/^[A-Z]+-/, '')}`
+      : initialDocType === 'credit_note'
+      ? `CN-${previewInvoiceNumber.replace(/^[A-Z]+-/, '')}`
+      : previewInvoiceNumber
+  )
 
   // Derived
   const selClient   = clients.find(c => c.id === clientId)
@@ -118,7 +145,46 @@ export default function CreateInvoicePage({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contractId])
 
-  useEffect(() => { setContractId('') }, [clientId])
+  // ── Initial DocType Notes ──
+  useEffect(() => {
+    if (initialDocType === 'proforma' && !clientNotes) {
+      setClientNotes('PROFORMA INVOICE: Advance payment request. Official GST Tax Invoice will be issued upon receipt of payment.')
+    } else if (initialDocType === 'credit_note' && !clientNotes) {
+      setClientNotes('GST CREDIT NOTE (Under Section 34 of CGST Act 2017). Issued to adjust value of previous supply.')
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // ── Pre-fill from duplicate invoice ──
+  useEffect(() => {
+    if (!duplicateData) return
+    if (duplicateData.payment_terms) setPaymentTerms(duplicateData.payment_terms)
+    if (duplicateData.late_fee_terms) setLateFeeTerms(duplicateData.late_fee_terms)
+    if (duplicateData.notes) setClientNotes(duplicateData.notes)
+    if (duplicateData.contract_id) setContractId(duplicateData.contract_id)
+    // GST
+    const hasCgstSgst = (duplicateData.cgst_pct || 0) > 0 || (duplicateData.sgst_pct || 0) > 0
+    const hasIgst = (duplicateData.igst_pct || 0) > 0
+    if (hasCgstSgst || hasIgst) {
+      setApplyGst(true)
+      if (hasIgst) { setGstType('igst'); setIgstPct(duplicateData.igst_pct || 18) }
+      else { setGstType('cgst_sgst'); setCgstPct(duplicateData.cgst_pct || 9); setSgstPct(duplicateData.sgst_pct || 9) }
+    } else {
+      setApplyGst(false)
+    }
+    // Discount
+    if (duplicateData.discount_pct && duplicateData.discount_pct > 0) {
+      setDiscType('pct'); setDiscVal(duplicateData.discount_pct)
+    } else if (duplicateData.discount_amount && duplicateData.discount_amount > 0) {
+      setDiscType('fixed'); setDiscVal(duplicateData.discount_amount)
+    }
+    // Line items
+    if (duplicateData.items && duplicateData.items.length > 0) {
+      setItems(duplicateData.items.map(it => ({ id: uid(), description: it.description, qty: it.qty, unit: it.unit, rate: it.rate })))
+    }
+    setOpenSec('items')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const addItem    = () => setItems(p => [...p, { id: uid(), description: '', qty: 1, unit: 'hrs', rate: 0 }])
   const removeItem = (id: string) => setItems(p => p.filter(i => i.id !== id))
@@ -126,23 +192,30 @@ export default function CreateInvoicePage({
     setItems(p => p.map(i => i.id === id ? { ...i, [field]: val } : i))
   const toggle = (s: string) => setOpenSec(p => p === s ? '' : s)
 
-  const buildPayload = useCallback((num: string, status: 'draft' | 'sent') => ({
-    user_id: userId, client_id: clientId, contract_id: contractId || null,
-    invoice_number: num, issue_date: issueDate, due_date: dueDate,
-    payment_terms: paymentTerms, late_fee_terms: lateFeeTerms || null,
-    client_notes: clientNotes || null, subtotal,
-    discount_pct: discType === 'pct' ? discVal : 0,
-    discount_amount: discAmt, taxable_amount: taxable,
-    cgst_pct: gstType === 'cgst_sgst' ? cgstPct : 0,
-    sgst_pct: gstType === 'cgst_sgst' ? sgstPct : 0,
-    igst_pct: gstType === 'igst' ? igstPct : 0,
-    cgst_amount: cgstAmt, sgst_amount: sgstAmt, igst_amount: igstAmt,
-    total_amount: total, status,
-    reminders_enabled: status === 'sent',
-    sent_at: status === 'sent' ? new Date().toISOString() : null,
-  }), [userId, clientId, contractId, issueDate, dueDate, paymentTerms, lateFeeTerms,
-       clientNotes, subtotal, discType, discVal, discAmt, taxable, gstType,
-       cgstPct, sgstPct, igstPct, cgstAmt, sgstAmt, igstAmt, total])
+  const buildPayload = useCallback((num: string, status: 'draft' | 'sent') => {
+    let finalNotes = clientNotes || ''
+    if (docType === 'credit_note' && originalInvRef) {
+      finalNotes = `[Credit Note for Invoice #${originalInvRef} | Reason: ${creditNoteReason}]\n${finalNotes}`.trim()
+    }
+    return {
+      user_id: userId, client_id: clientId, contract_id: contractId || null,
+      invoice_number: num, issue_date: issueDate, due_date: dueDate,
+      payment_terms: paymentTerms, late_fee_terms: lateFeeTerms || null,
+      notes: finalNotes || null, client_notes: finalNotes || null, subtotal,
+      discount_pct: discType === 'pct' ? discVal : 0,
+      discount_amount: discAmt, taxable_amount: taxable,
+      cgst_pct: gstType === 'cgst_sgst' ? cgstPct : 0,
+      sgst_pct: gstType === 'cgst_sgst' ? sgstPct : 0,
+      igst_pct: gstType === 'igst' ? igstPct : 0,
+      cgst_amount: cgstAmt, sgst_amount: sgstAmt, igst_amount: igstAmt,
+      total_amount: total, amount_due: total, status,
+      reminders_enabled: status === 'sent',
+      sent_at: status === 'sent' ? new Date().toISOString() : null,
+    }
+  }, [userId, clientId, contractId, docType, originalInvRef, creditNoteReason,
+      issueDate, dueDate, paymentTerms, lateFeeTerms,
+      clientNotes, subtotal, discType, discVal, discAmt, taxable, gstType,
+      cgstPct, sgstPct, igstPct, cgstAmt, sgstAmt, igstAmt, total])
 
   const saveInvoice = async (status: 'draft' | 'sent') => {
     if (!clientId)                                { alert('Please select a client'); return }
@@ -153,7 +226,12 @@ export default function CreateInvoicePage({
       const sb = getSupabase()
       const { data: num, error: numErr } = await sb.rpc('generate_invoice_number', { p_user_id: userId })
       if (numErr) throw numErr
-      const invoiceNumber = num as string
+      let invoiceNumber = num as string
+      if (docType === 'proforma') {
+        invoiceNumber = `PI-${invoiceNumber.replace(/^[A-Z]+-/, '')}`
+      } else if (docType === 'credit_note') {
+        invoiceNumber = `CN-${invoiceNumber.replace(/^[A-Z]+-/, '')}`
+      }
       setInvNum(invoiceNumber)
 
       const { data: inv, error: invErr } = await sb.from('invoices').insert(buildPayload(invoiceNumber, status)).select('id').single()
@@ -378,8 +456,25 @@ export default function CreateInvoicePage({
         @keyframes su{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
         @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-        @media(max-width:1100px){.bd{grid-template-columns:1fr}.rp{display:none}}
-        @media(max-width:820px){.m{margin-left:0}}
+        @media(max-width:1100px){
+          .bd{grid-template-columns:1fr; overflow:visible}
+          .rp{display:none}
+        }
+        @media(max-width:900px){
+          .m{margin-left:0; padding-top:56px; padding-bottom:80px; height:auto; min-height:100vh; overflow:visible}
+          .tp{padding:12px 16px; height:auto; flex-wrap:wrap; gap:10px}
+          .tp-r{width:100%; justify-content:flex-end; gap:6px}
+          .fc{padding:16px; overflow:visible}
+          .sc{margin-bottom:12px}
+          .sc-bd{padding:14px 16px; overflow-x:auto}
+          .items-hdr, .item-row{min-width:480px}
+        }
+        @media(max-width:600px){
+          .g2{grid-template-columns:1fr}
+          .tp-r{display:grid; grid-template-columns:1fr 1fr; width:100%}
+          .b-ghost{display:none}
+          .b-draft, .b-send{width:100%; justify-content:center; padding:9px 12px}
+        }
       `}</style>
 
       <div className="r">
@@ -527,9 +622,67 @@ export default function CreateInvoicePage({
                 </div>
                 {openSec === 'details' && (
                   <div className="sc-bd">
+                    {/* Document Type Selector */}
+                    <div style={{ marginBottom: 16 }}>
+                      <div className="lb">Document Type</div>
+                      <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+                        {([
+                          { id: 'tax_invoice', label: '🧾 Tax Invoice', desc: 'Standard GST' },
+                          { id: 'proforma',    label: '📑 Proforma Bill', desc: '0 GST Liability' },
+                          { id: 'credit_note', label: '📄 GST Credit Note', desc: 'Sec 34 CGST' },
+                        ] as const).map(dt => (
+                          <button
+                            key={dt.id}
+                            type="button"
+                            style={{
+                              flex: 1, padding: '8px 12px', borderRadius: 8,
+                              border: docType === dt.id ? '1.5px solid #1B5E3B' : '1px solid rgba(26,20,13,.12)',
+                              background: docType === dt.id ? 'rgba(27,94,59,.08)' : 'white',
+                              color: docType === dt.id ? '#1B5E3B' : '#1A140D',
+                              cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
+                            }}
+                            onClick={() => {
+                              setDocType(dt.id)
+                              if (dt.id === 'proforma') {
+                                setInvNum(`PI-${previewInvoiceNumber.replace(/^[A-Z]+-/, '')}`)
+                                setClientNotes('PROFORMA INVOICE: Advance payment request. Official GST Tax Invoice will be issued upon receipt of payment.')
+                              } else if (dt.id === 'credit_note') {
+                                setInvNum(`CN-${previewInvoiceNumber.replace(/^[A-Z]+-/, '')}`)
+                                setClientNotes('GST CREDIT NOTE (Under Section 34 of CGST Act 2017). Issued to adjust value of previous supply.')
+                              } else {
+                                setInvNum(previewInvoiceNumber)
+                                setClientNotes('')
+                              }
+                            }}
+                          >
+                            <div style={{ fontSize: 11, fontWeight: 700 }}>{dt.label}</div>
+                            <div style={{ fontSize: 9, color: 'rgba(26,20,13,.45)' }}>{dt.desc}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {docType === 'credit_note' && (
+                      <div className="g2" style={{ marginBottom: 14, background: 'rgba(239,68,68,.05)', border: '1px solid rgba(239,68,68,.2)', borderRadius: 10, padding: 12 }}>
+                        <div>
+                          <div className="lb">Original Invoice No.</div>
+                          <input className="in" value={originalInvRef} onChange={e => setOriginalInvRef(e.target.value)} placeholder="e.g. INV-001"/>
+                        </div>
+                        <div>
+                          <div className="lb">Reason for Credit Note</div>
+                          <select className="sl" value={creditNoteReason} onChange={e => setCreditNoteReason(e.target.value)}>
+                            <option value="Post-sale discount / rate difference">Post-sale discount / rate difference</option>
+                            <option value="Deficiency in services / Quality dispute">Deficiency in services / Quality dispute</option>
+                            <option value="Order cancellation / Scope reduction">Order cancellation / Scope reduction</option>
+                            <option value="Correction in invoice">Correction in invoice</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="g3" style={{marginBottom:14}}>
                       <div>
-                        <div className="lb">Invoice no.</div>
+                        <div className="lb">Document no.</div>
                         <input className="in" value={invNum} readOnly/>
                       </div>
                       <div>
@@ -771,7 +924,7 @@ export default function CreateInvoicePage({
 
               <div className="rp-tip">
                 <div className="rp-tip-t">What happens next</div>
-                <div className="rp-tip-s">After sending, Vasool schedules WhatsApp reminders at Day 7, 14, and 30 if unpaid. All reminders stop the moment payment is received.</div>
+                <div className="rp-tip-s">After sending, Settlr schedules WhatsApp reminders at Day 7, 14, and 30 if unpaid. All reminders stop the moment payment is received.</div>
               </div>
             </div>
           </div>

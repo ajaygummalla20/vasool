@@ -12,18 +12,23 @@ function getSupabase() {
 }
 
 interface Profile {
-  full_name:       string
-  business_name:   string
-  phone:           string
-  whatsapp:        string
-  gst_number:      string
-  pan_number:      string
-  address:         string
-  city:            string
-  state:           string
-  pincode:         string
-  invoice_prefix:  string
-  invoice_counter: number
+  full_name:         string
+  business_name:     string
+  phone:             string
+  whatsapp:          string
+  gst_number:        string
+  pan_number:        string
+  address:           string
+  city:              string
+  state:             string
+  pincode:           string
+  invoice_prefix:    string
+  invoice_counter:   number
+  upi_id:            string
+  bank_name:         string
+  bank_account:      string
+  bank_ifsc:         string
+  msme_udyam_number: string
 }
 
 const STATES = [
@@ -36,48 +41,58 @@ const EMPTY: Profile = {
   full_name:'', business_name:'', phone:'', whatsapp:'',
   gst_number:'', pan_number:'', address:'', city:'',
   state:'Andhra Pradesh', pincode:'', invoice_prefix:'INV', invoice_counter:1,
+  upi_id:'', bank_name:'', bank_account:'', bank_ifsc:'', msme_udyam_number:'',
 }
 
-export default function SettingsPage() {
+interface Props {
+  initialTab?: 'profile' | 'business' | 'payments' | 'invoice'
+}
+
+export default function SettingsPage({ initialTab = 'profile' }: Props) {
   const [profile,    setProfile]    = useState<Profile>(EMPTY)
   const [email,      setEmail]      = useState('')
   const [userName,   setUserName]   = useState('')
   const [loading,    setLoading]    = useState(true)
   const [saving,     setSaving]     = useState(false)
   const [saved,      setSaved]      = useState(false)
-  const [activeTab,  setActiveTab]  = useState<'profile'|'business'|'invoice'>('profile')
+  const [activeTab,  setActiveTab]  = useState<'profile'|'business'|'payments'|'invoice'>(initialTab)
 
   useEffect(() => {
     const load = async () => {
       const sb = getSupabase()
-      const { data } = await sb.auth.getUser()
-      const user = data?.user
+      const { data: authData } = await sb.auth.getUser()
+      const user = authData?.user
       if (!user) { window.location.href = '/login'; return }
 
       setEmail(user.email || '')
 
-      const { data } = await sb
+      const { data: profileData } = await sb
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single()
 
-      if (data) {
+      if (profileData) {
         setProfile({
-          full_name:       data.full_name       || '',
-          business_name:   data.business_name   || '',
-          phone:           data.phone           || '',
-          whatsapp:        data.whatsapp        || '',
-          gst_number:      data.gst_number      || '',
-          pan_number:      data.pan_number      || '',
-          address:         data.address         || '',
-          city:            data.city            || '',
-          state:           data.state           || 'Andhra Pradesh',
-          pincode:         data.pincode         || '',
-          invoice_prefix:  data.invoice_prefix  || 'INV',
-          invoice_counter: data.invoice_counter || 1,
+          full_name:         profileData.full_name         || '',
+          business_name:     profileData.business_name     || '',
+          phone:             profileData.phone             || '',
+          whatsapp:          profileData.whatsapp          || '',
+          gst_number:        profileData.gst_number        || '',
+          pan_number:        profileData.pan_number        || '',
+          address:           profileData.address           || '',
+          city:              profileData.city              || '',
+          state:             profileData.state             || 'Andhra Pradesh',
+          pincode:           profileData.pincode           || '',
+          invoice_prefix:    profileData.invoice_prefix    || 'INV',
+          invoice_counter:   profileData.invoice_counter   || 1,
+          upi_id:            profileData.upi_id            || '',
+          bank_name:         profileData.bank_name         || '',
+          bank_account:      profileData.bank_account      || '',
+          bank_ifsc:         profileData.bank_ifsc         || '',
+          msme_udyam_number: profileData.msme_udyam_number || '',
         })
-        setUserName(data.full_name || user.email?.split('@')[0] || '')
+        setUserName(profileData.full_name || user.email?.split('@')[0] || '')
       }
       setLoading(false)
     }
@@ -117,9 +132,10 @@ export default function SettingsPage() {
     .split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() || '?'
 
   const tabs = [
-    { id: 'profile'  as const, label: 'Personal',  icon: '👤' },
-    { id: 'business' as const, label: 'Business',   icon: '🏢' },
-    { id: 'invoice'  as const, label: 'Invoicing',  icon: '🧾' },
+    { id: 'profile'  as const, label: 'Personal',       icon: '👤' },
+    { id: 'business' as const, label: 'Business & GST',  icon: '🏢' },
+    { id: 'payments' as const, label: 'UPI & Bank Wire', icon: '💳' },
+    { id: 'invoice'  as const, label: 'Invoicing',       icon: '🧾' },
   ]
 
   if (loading) {
@@ -227,7 +243,20 @@ export default function SettingsPage() {
         @keyframes su{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
         @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-        @media(max-width:900px){.s-main{margin-left:0}.s-body{grid-template-columns:1fr}.s-nav{display:none}}
+        @media(max-width:900px){
+          .s-main{margin-left:0; padding-top:56px; padding-bottom:80px}
+          .s-top{padding:12px 16px; flex-wrap:wrap; height:auto; gap:10px}
+          .s-body{grid-template-columns:1fr; padding:16px; gap:16px}
+          .s-nav{
+            display:flex; flex-direction:row; overflow-x:auto; padding:4px;
+            background:white; border-radius:12px; border:1px solid rgba(26,20,13,.08);
+            gap:4px; width:100%; -webkit-overflow-scrolling:touch;
+          }
+          .s-av-wrap{display:none}
+          .s-nav-item{flex:1; min-width:100px; padding:8px 10px; justify-content:center; white-space:nowrap}
+          .s-card-body{padding:16px}
+          .g2{grid-template-columns:1fr}
+        }
       `}</style>
 
       <div className="s-root">
@@ -269,6 +298,7 @@ export default function SettingsPage() {
                 const filled =
                   tab.id === 'profile'  ? !!(profile.full_name && profile.phone) :
                   tab.id === 'business' ? !!(profile.business_name && profile.gst_number) :
+                  tab.id === 'payments' ? !!(profile.upi_id || profile.bank_account) :
                   !!(profile.invoice_prefix)
                 return (
                   <button
@@ -289,7 +319,7 @@ export default function SettingsPage() {
 
               {/* Profile completion */}
               {(() => {
-                const fields = [profile.full_name, profile.business_name, profile.phone, profile.gst_number, profile.address, profile.city]
+                const fields = [profile.full_name, profile.business_name, profile.phone, profile.gst_number, profile.upi_id || profile.bank_account, profile.address]
                 const filled = fields.filter(Boolean).length
                 const pct = Math.round((filled / fields.length) * 100)
                 return (
@@ -408,7 +438,7 @@ export default function SettingsPage() {
                       <div className="g2">
                         <div>
                           <div className="lb">Business / company name</div>
-                          <input className="in" value={profile.business_name} onChange={e => set('business_name', e.target.value)} placeholder="Vasool Technologies LLP"/>
+                          <input className="in" value={profile.business_name} onChange={e => set('business_name', e.target.value)} placeholder="Settlr Technologies LLP"/>
                         </div>
                         <div>
                           <div className="lb">PAN number <span className="opt">optional</span></div>
@@ -445,6 +475,106 @@ export default function SettingsPage() {
                           ) : (
                             <div style={{fontSize:11,color:'rgba(26,20,13,.38)',padding:'4px 0',lineHeight:1.5}}>Format: 2 digits + 5 letters + 4 digits + 1 letter + 1 digit + Z + 1 digit/letter</div>
                           )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* MSME Udyam Registration (MSMED Act 2006) */}
+                  <div className="s-card">
+                    <div className="s-card-hdr">
+                      <div className="s-card-icon" style={{background:'rgba(59,130,246,.12)'}}>🛡️</div>
+                      <div>
+                        <div className="s-card-title">MSME / Udyam Registration (MSMED Act 2006)</div>
+                        <div className="s-card-sub">Enables 45-day statutory payment enforcement & 3x RBI bank rate interest claims</div>
+                      </div>
+                    </div>
+                    <div className="s-card-body">
+                      <div className="g2">
+                        <div className="s2">
+                          <div className="lb">Udyam Registration Number (URN) <span className="opt">Optional but recommended</span></div>
+                          <input className="in" value={profile.msme_udyam_number || ''} onChange={e => set('msme_udyam_number', e.target.value.toUpperCase())} placeholder="UDYAM-TS-01-0012345"/>
+                          <div style={{fontSize:10,color:'rgba(26,20,13,.4)',marginTop:4}}>Printed on invoice footers to legally invoke Section 15 of MSMED Act 2006 for 45-day payment caps</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* ── PAYMENTS & BANK TAB ── */}
+              {activeTab === 'payments' && (
+                <>
+                  <div className="s-sec-title">UPI & Bank Account Details</div>
+                  <div className="s-sec-sub">Configure your remittance accounts — printed on invoice PDFs and used to generate dynamic NPCI scan-to-pay QR codes</div>
+
+                  <div className="s-card">
+                    <div className="s-card-hdr">
+                      <div className="s-card-icon" style={{background:'rgba(16,185,129,.12)'}}>📱</div>
+                      <div>
+                        <div className="s-card-title">Dynamic UPI ID (Google Pay / PhonePe / Paytm)</div>
+                        <div className="s-card-sub">Generates dynamic scan-to-pay QR codes with invoice amount and notes auto-filled</div>
+                      </div>
+                    </div>
+                    <div className="s-card-body">
+                      <div className="g2">
+                        <div className="s2">
+                          <div className="lb">Primary UPI VPA ID <span className="opt">e.g. yourname@okaxis, 9876543210@paytm</span></div>
+                          <input
+                            className="in"
+                            value={profile.upi_id || ''}
+                            onChange={e => set('upi_id', e.target.value.trim())}
+                            placeholder="username@okhdfcbank"
+                          />
+                          <div style={{fontSize:10,color:'rgba(26,20,13,.4)',marginTop:4}}>
+                            Clients can scan your invoice QR code directly via GPay, PhonePe, Paytm, or BHIM.
+                          </div>
+                        </div>
+                      </div>
+
+                      {profile.upi_id && (
+                        <div style={{ marginTop: 14, padding: 12, borderRadius: 10, background: 'rgba(27,94,59,.06)', border: '1px solid rgba(27,94,59,.15)', display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <img
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=70x70&margin=4&data=${encodeURIComponent(`upi://pay?pa=${profile.upi_id}&pn=${encodeURIComponent(profile.business_name || profile.full_name || 'Business')}&cu=INR`)}`}
+                            alt="Sample QR"
+                            style={{ width: 60, height: 60, borderRadius: 6, background: 'white', border: '1px solid rgba(0,0,0,.1)' }}
+                          />
+                          <div>
+                            <div style={{ fontSize: 12, fontWeight: 700, color: '#1B5E3B' }}>✓ Dynamic QR Code Enabled</div>
+                            <div style={{ fontSize: 10, color: 'rgba(26,20,13,.6)', marginTop: 2 }}>
+                              Every new invoice will automatically display a customized scan-to-pay QR code linked to <strong>{profile.upi_id}</strong>.
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="s-card">
+                    <div className="s-card-hdr">
+                      <div className="s-card-icon" style={{background:'rgba(24,95,165,.10)'}}>🏦</div>
+                      <div>
+                        <div className="s-card-title">Bank Wire Details (NEFT / RTGS / IMPS)</div>
+                        <div className="s-card-sub">Printed on invoice PDFs for client direct bank transfers</div>
+                      </div>
+                    </div>
+                    <div className="s-card-body">
+                      <div className="g2">
+                        <div>
+                          <div className="lb">Bank Name</div>
+                          <input className="in" value={profile.bank_name || ''} onChange={e => set('bank_name', e.target.value)} placeholder="HDFC Bank / ICICI Bank / SBI"/>
+                        </div>
+                        <div>
+                          <div className="lb">Account Number</div>
+                          <input className="in" value={profile.bank_account || ''} onChange={e => set('bank_account', e.target.value)} placeholder="50100234567890"/>
+                        </div>
+                        <div>
+                          <div className="lb">IFSC Code</div>
+                          <input className="in" value={profile.bank_ifsc || ''} onChange={e => set('bank_ifsc', e.target.value.toUpperCase())} placeholder="HDFC0001234"/>
+                        </div>
+                        <div>
+                          <div className="lb">Beneficiary / Account Holder Name</div>
+                          <input className="in" value={profile.business_name || profile.full_name || ''} readOnly placeholder="Same as business name"/>
                         </div>
                       </div>
                     </div>

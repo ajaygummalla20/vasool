@@ -216,8 +216,22 @@ export default function AddClientPage({ userName = '', userEmail = '' }: { userN
         @keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
         @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-        @media(max-width:1024px){.body{grid-template-columns:1fr}.right{display:none}}
-        @media(max-width:820px){.main{margin-left:0}}
+        @media(max-width:1024px){
+          .body{grid-template-columns:1fr; overflow:visible}
+          .right{display:none}
+        }
+        @media(max-width:900px){
+          .main{margin-left:0; padding-top:56px; padding-bottom:80px; height:auto; min-height:100vh; overflow:visible}
+          .top{padding:14px 16px; height:auto; flex-wrap:wrap; gap:12px}
+          .top-btns{width:100%; justify-content:flex-end}
+          .form-col{padding:16px; overflow:visible}
+          .grid2{grid-template-columns:1fr}
+          .span2{grid-column:auto}
+        }
+        @media(max-width:600px){
+          .top-btns{display:grid; grid-template-columns:1fr 1fr; width:100%}
+          .btn-cancel, .btn-save{width:100%; justify-content:center; text-align:center}
+        }
       `}</style>
 
       <div className="root">
@@ -364,7 +378,7 @@ export default function AddClientPage({ userName = '', userEmail = '' }: { userN
               <div className="rp-top">
                 <div className="rp-badge"><span className="rp-dot"/>Fully automated</div>
                 <div className="rp-title">What happens<br/>after you save</div>
-                <div className="rp-sub">Vasool automates the entire payment collection journey for every invoice you send to this client. Zero manual follow-up.</div>
+                <div className="rp-sub">Settlr automates the entire payment collection journey for every invoice you send to this client. Zero manual follow-up.</div>
               </div>
 
               <div className="flow-wrap">
@@ -394,7 +408,7 @@ export default function AddClientPage({ userName = '', userEmail = '' }: { userN
                   </div>
                   <span className="tip-t">Pro tip</span>
                 </div>
-                <div className="tip-s">Upload this client&apos;s contract first — Vasool will auto-fill the invoice amount, due date, and late fee terms so you never type them manually.</div>
+                <div className="tip-s">Upload this client&apos;s contract first — Settlr will auto-fill the invoice amount, due date, and late fee terms so you never type them manually.</div>
               </div>
 
             </div>

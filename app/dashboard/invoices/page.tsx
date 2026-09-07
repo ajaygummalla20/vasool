@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '../settings/supabase-server'
+import { createClient } from '@/app/lib/supabase-server'
 import InvoicesListPage from './InvoicesListPage'
 
 export default async function InvoicesPage() {
@@ -30,7 +30,7 @@ export default async function InvoicesPage() {
       userName={profile?.full_name || user.email?.split('@')[0] || ''}
       userEmail={user.email || ''}
       userId={user.id}
-      initialInvoices={invoices || []}
+      initialInvoices={(invoices as any) || []}
     />
   )
 }

@@ -1,0 +1,10 @@
+# Settlr MSME Financial OS Robots Configuration
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /invoice/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /auth/
+
+Sitemap: https://settlr.in/sitemap.xml
