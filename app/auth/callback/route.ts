@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '../../lib/supabase-server'
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-
 export async function GET(request: NextRequest) {
   const url    = new URL(request.url)
   const code   = url.searchParams.get('code')
