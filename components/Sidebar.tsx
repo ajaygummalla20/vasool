@@ -60,12 +60,16 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
     .toUpperCase()
 
   const handleSignOut = async () => {
-    const supabase = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-    await supabase.auth.signOut()
-    router.push('/login')
+    try {
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://xkeyonsreywpzigqmnuk.supabase.co'
+      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrZXlvbnNyZXl3cHppZ3FtbnVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNjE4MjIsImV4cCI6MjA5MjYzNzgyMn0.OL1BzqSkq23ErNwAG1s4DNJFDOVUSfrEarYBfJlsUDM'
+      const supabase = createBrowserClient(url, key)
+      await supabase.auth.signOut()
+    } catch (err) {
+      console.error('Error during sign out:', err)
+    } finally {
+      window.location.href = '/login'
+    }
   }
 
   const handleNavigate = (path: string) => {

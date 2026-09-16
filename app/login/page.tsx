@@ -29,17 +29,19 @@ export default function LoginPage() {
 
   // counter ₹0 → ₹2.4L
   useEffect(() => {
-    const target = 240000, dur = 1800
-    let s: number | null = null
+    const target = 240000
+    const duration = 1800
+    const stepTime = 30
+    const totalSteps = duration / stepTime
+    let step = 0
     const ease = (t: number) => 1 - Math.pow(1 - t, 3)
-    const raf = (ts: number) => {
-      if (!s) s = ts
-      const p = Math.min((ts - s) / dur, 1)
+    const timer = setInterval(() => {
+      step++
+      const p = Math.min(step / totalSteps, 1)
       setCount(Math.floor(ease(p) * target))
-      if (p < 1) requestAnimationFrame(raf)
-    }
-    const id = setTimeout(() => requestAnimationFrame(raf), 500)
-    return () => clearTimeout(id)
+      if (p >= 1) clearInterval(timer)
+    }, stepTime)
+    return () => clearInterval(timer)
   }, [])
 
   const fmt = (n: number) =>
@@ -81,8 +83,6 @@ export default function LoginPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap');
-
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { height: 100%; overflow: hidden; background-color: #080E0A; }
 
