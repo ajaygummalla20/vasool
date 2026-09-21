@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/app/lib/supabase-server'
+import { checkRateLimit } from '@/app/lib/rate-limit'
+import { logSecurityEvent } from '@/app/lib/security-logger'
 
 const GEMINI_PROMPT = `You are an expert legal advisor specializing in protecting Indian MSMEs, freelancers, contractors, and agencies against one-sided corporate contracts.
 
@@ -59,8 +62,38 @@ const MODELS_TO_TRY = [
   'gemini-2.0-flash',
 ]
 
+const ALLOWED_MIME_TYPES = [
+  'application/pdf',
+  'text/plain',
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+]
+
 export async function POST(request: NextRequest) {
   try {
+    // 1. Enforce Authentication
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      logSecurityEvent({ type: 'AUTH_UNAUTHORIZED', details: { path: '/api/contracts/analyze' } })
+      return NextResponse.json({ error: 'Unauthorized. Please sign in to analyze contracts.' }, { status: 401 })
+    }
+
+    // 2. Enforce Rate Limiting (max 10 analysis requests per minute per user)
+    const rateLimit = checkRateLimit(`contract_analyze_${user.id}`, { windowMs: 60_000, max: 10 })
+    if (!rateLimit.allowed) {
+      logSecurityEvent({
+        type: 'RATE_LIMIT_EXCEEDED',
+        userId: user.id,
+        details: { path: '/api/contracts/analyze' }
+      })
+      return NextResponse.json(
+        { error: 'Too many analysis requests. Please wait a minute before analyzing another contract.' },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
     const { fileData, mimeType, text } = body
 
@@ -71,13 +104,33 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // 3. Payload size caps and MIME validation
+    if (fileData) {
+      if (typeof fileData !== 'string' || fileData.length > 14_000_000) { // ~10MB base64 cap
+        return NextResponse.json({ error: 'Contract file is too large. Maximum size is 10MB.' }, { status: 400 })
+      }
+      if (mimeType && !ALLOWED_MIME_TYPES.includes(mimeType)) {
+        return NextResponse.json({ error: 'Unsupported file type. Please upload a PDF, image, or text file.' }, { status: 400 })
+      }
+    }
+
+    if (text && typeof text === 'string' && text.length > 50_000) {
+      return NextResponse.json({ error: 'Contract text exceeds the maximum limit of 50,000 characters.' }, { status: 400 })
+    }
+
     const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey) {
       return NextResponse.json(
         { error: 'AI analysis service is not configured. Please contact support.' },
-        { status: 400 }
+        { status: 500 }
       )
     }
+
+    logSecurityEvent({
+      type: 'AI_CONTRACT_ANALYZE',
+      userId: user.id,
+      details: { hasFile: Boolean(fileData), mimeType, textLength: text ? text.length : 0 }
+    })
 
     // Build multimodal parts array for AI
     const parts: unknown[] = [{ text: GEMINI_PROMPT }]

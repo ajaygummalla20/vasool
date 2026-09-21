@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/app/lib/supabase-server'
+import { checkRateLimit } from '@/app/lib/rate-limit'
+import { logSecurityEvent } from '@/app/lib/security-logger'
 
 const RECEIPT_PROMPT = `You are an expert AI expense and invoice OCR auditor.
 Analyze the attached receipt, bill, or invoice image/document. Extract all expense details accurately.
@@ -37,8 +40,37 @@ const MODELS_TO_TRY = [
   'gemini-2.0-flash',
 ]
 
+const ALLOWED_MIME_TYPES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'application/pdf',
+]
+
 export async function POST(request: NextRequest) {
   try {
+    // 1. Enforce Authentication
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    if (authError || !user) {
+      logSecurityEvent({ type: 'AUTH_UNAUTHORIZED', details: { path: '/api/expenses/scan' } })
+      return NextResponse.json({ error: 'Unauthorized. Please sign in to scan receipts.' }, { status: 401 })
+    }
+
+    // 2. Enforce Rate Limiting (max 15 OCR scans per minute per user)
+    const rateLimit = checkRateLimit(`expense_scan_${user.id}`, { windowMs: 60_000, max: 15 })
+    if (!rateLimit.allowed) {
+      logSecurityEvent({
+        type: 'RATE_LIMIT_EXCEEDED',
+        userId: user.id,
+        details: { path: '/api/expenses/scan' }
+      })
+      return NextResponse.json(
+        { error: 'Too many receipt scans. Please wait a minute before scanning another document.' },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
     const { fileData, mimeType } = body
 
@@ -49,13 +81,28 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // 3. Payload size caps and MIME validation
+    if (typeof fileData !== 'string' || fileData.length > 14_000_000) { // ~10MB base64 cap
+      return NextResponse.json({ error: 'Receipt file is too large. Maximum size is 10MB.' }, { status: 400 })
+    }
+
+    if (mimeType && !ALLOWED_MIME_TYPES.includes(mimeType)) {
+      return NextResponse.json({ error: 'Unsupported file format. Please upload a JPG, PNG, WebP, or PDF.' }, { status: 400 })
+    }
+
     const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey) {
       return NextResponse.json(
         { error: 'AI OCR scanning service is not configured. Please contact support.' },
-        { status: 400 }
+        { status: 500 }
       )
     }
+
+    logSecurityEvent({
+      type: 'AI_EXPENSE_SCAN',
+      userId: user.id,
+      details: { mimeType, fileSize: fileData.length }
+    })
 
     const parts: unknown[] = [
       { text: RECEIPT_PROMPT },

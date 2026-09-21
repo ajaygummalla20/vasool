@@ -1,10 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { checkRateLimit } from '@/app/lib/rate-limit'
+import { logSecurityEvent } from '@/app/lib/security-logger'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || 'unknown'
+  const rateLimit = checkRateLimit(`public_inv_${ip}`, { windowMs: 60_000, max: 60 })
+
+  if (!rateLimit.allowed) {
+    logSecurityEvent({
+      type: 'RATE_LIMIT_EXCEEDED',
+      ip,
+      details: { path: '/api/invoices/[id]/public' }
+    })
+    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+  }
+
   const { id } = await params
 
   const supabase = createClient(
