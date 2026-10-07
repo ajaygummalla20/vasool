@@ -36,6 +36,7 @@ export default function PublicInvoicePage({ invoiceId }: { invoiceId: string }) 
   const [data, setData] = useState<InvoiceData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     fetch(`/api/invoices/${invoiceId}/public`)
@@ -272,13 +273,16 @@ export default function PublicInvoicePage({ invoiceId }: { invoiceId: string }) 
                   {sender.upiId && (
                     <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
                       <button
-                        style={{ padding: '6px 12px', fontSize: 11, fontWeight: 600, borderRadius: 6, border: '1px solid rgba(27,94,59,.3)', background: 'white', color: '#1B5E3B', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}
+                        style={{ padding: '6px 12px', fontSize: 11, fontWeight: 600, borderRadius: 6, border: '1px solid rgba(27,94,59,.3)', background: copied ? 'rgba(27,94,59,.1)' : 'white', color: '#1B5E3B', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", transition: 'all .2s' }}
                         onClick={() => {
-                          navigator.clipboard.writeText(sender.upiId!)
-                          alert('UPI ID copied!')
+                          if (sender.upiId) {
+                            navigator.clipboard.writeText(sender.upiId)
+                            setCopied(true)
+                            setTimeout(() => setCopied(false), 2000)
+                          }
                         }}
                       >
-                        Copy UPI ID
+                        {copied ? '✓ Copied!' : 'Copy UPI ID'}
                       </button>
                       <a
                         href={`upi://pay?pa=${sender.upiId}&pn=${encodeURIComponent(sender.name)}&am=${invoice.amount_due || invoice.total_amount}&cu=INR&tn=Inv-${invoice.invoice_number}`}

@@ -1,11 +1,11 @@
 {
-  "name": "Settlr - MSME Financial OS",
+  "name": "Settlr — MSME Invoicing & Payment OS",
   "short_name": "Settlr",
-  "description": "The Financial Operating System for Indian MSMEs, Freelancers & Agencies. GST Invoicing, MSMED Act Late Fee Protection, and AI Cashflow.",
-  "start_url": "/dashboard",
+  "description": "Automated GST invoicing, 45-day MSMED Act statutory late fee protection, and dynamic UPI QR billing for Indian businesses.",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#0F1117",
-  "theme_color": "#185FA5",
+  "background_color": "#060A08",
+  "theme_color": "#10B981",
   "icons": [
     {
       "src": "/settlr-logo.png",

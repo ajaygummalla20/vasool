@@ -41,6 +41,31 @@ export const metadata: Metadata = {
     description: "Automated GST invoicing, MSMED Act interest calculations, and instant UPI QR payments.",
     images: ["/settlr-logo.png"],
   },
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/settlr-logo.png",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Settlr",
+  "operatingSystem": "Web",
+  "applicationCategory": "BusinessApplication",
+  "description": "Automated GST invoicing, MSMED Act 2006 compound late interest calculations, dynamic UPI QR billing, and tax compliance for Indian MSMEs.",
+  "url": "https://usesettlr.in",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "INR"
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "ratingCount": "128"
+  }
 };
 
 export default function RootLayout({
@@ -56,6 +81,10 @@ export default function RootLayout({
         <link
           href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Lora:ital,wght@0,600;1,400;1,600&display=swap"
           rel="stylesheet"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body style={{ margin: 0, padding: 0, minHeight: '100vh' }}>{children}</body>

@@ -93,6 +93,8 @@ export default function LandingPage() {
   const statsSection = useInView(0.15)
   const featuresSection = useInView(0.1)
   const compSection = useInView(0.1)
+  const pricingSection = useInView(0.1)
+  const [pricingCycle, setPricingCycle] = useState<'monthly' | 'yearly'>('monthly')
   const testimonialsSection = useInView(0.1)
   const faqSection = useInView(0.1)
   const ctaSection = useInView(0.1)
@@ -691,6 +693,67 @@ export default function LandingPage() {
           border-right: 1px solid rgba(16, 185, 129, 0.2); font-weight: 600; color: #34D399;
         }
 
+        /* ── PRICING SECTION ── */
+        .pricing-section {
+          position: relative; z-index: 1; max-width: 1240px; margin: 0 auto 120px;
+          padding: 0 24px;
+        }
+        .pricing-toggle {
+          display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 48px;
+        }
+        .pricing-toggle-pill {
+          background: rgba(14, 24, 18, 0.9); border: 1px solid rgba(255, 255, 255, 0.12);
+          padding: 4px; border-radius: 100px; display: inline-flex; gap: 4px;
+        }
+        .pricing-toggle-btn {
+          padding: 8px 18px; border-radius: 100px; font-size: 13px; font-weight: 700;
+          border: none; cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+          color: rgba(255, 255, 255, 0.6); background: transparent;
+        }
+        .pricing-toggle-btn.active {
+          background: #10B981; color: #FFFFFF; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+        }
+        .save-badge {
+          background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3);
+          color: #F59E0B; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px;
+        }
+        .pricing-grid {
+          display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: stretch;
+        }
+        .pricing-card {
+          background: rgba(14, 24, 18, 0.65); border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 20px; padding: 36px 28px; display: flex; flex-direction: column;
+          justify-content: space-between; transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          position: relative; overflow: hidden;
+        }
+        .pricing-card.featured {
+          background: linear-gradient(145deg, rgba(16, 32, 22, 0.85), rgba(8, 16, 12, 0.95));
+          border: 1.5px solid #10B981;
+          box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.15);
+          transform: scale(1.02);
+        }
+        .pricing-card:hover {
+          transform: translateY(-6px); border-color: rgba(16, 185, 129, 0.4);
+          box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 0 25px rgba(16, 185, 129, 0.1);
+        }
+        .pricing-card.featured:hover {
+          transform: scale(1.02) translateY(-6px);
+        }
+        .pricing-tag {
+          font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
+          padding: 4px 10px; border-radius: 100px; display: inline-block; margin-bottom: 16px; width: fit-content;
+        }
+        .pricing-tag-free { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.7); }
+        .pricing-tag-pro { background: rgba(16, 185, 129, 0.2); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .pricing-tag-agency { background: rgba(245, 158, 11, 0.15); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .pricing-title { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #FFFFFF; margin-bottom: 8px; }
+        .pricing-desc { font-size: 13px; color: rgba(255, 255, 255, 0.6); margin-bottom: 24px; min-height: 40px; line-height: 1.5; }
+        .pricing-price { font-family: 'Outfit', sans-serif; font-size: 40px; font-weight: 900; color: #FFFFFF; line-height: 1; margin-bottom: 4px; }
+        .pricing-period { font-size: 12px; color: rgba(255, 255, 255, 0.5); font-weight: 500; margin-bottom: 24px; }
+        .pricing-features { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+        .pricing-feat-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: rgba(255, 255, 255, 0.75); line-height: 1.4; }
+        .pricing-check { color: #10B981; font-weight: 800; font-size: 14px; flex-shrink: 0; }
+
         /* ── TESTIMONIALS ── */
         .testi-section {
           position: relative; z-index: 1; max-width: 1240px; margin: 0 auto 120px;
@@ -793,6 +856,7 @@ export default function LandingPage() {
         @media (max-width: 900px) {
           .nav-links { display: none; }
           .features-grid { grid-template-columns: 1fr; }
+          .pricing-grid { grid-template-columns: 1fr; }
           .calc-grid { grid-template-columns: 1fr; gap: 32px; }
           .preview-grid { grid-template-columns: 1fr; }
           .calc-box { padding: 28px; }
@@ -842,6 +906,7 @@ export default function LandingPage() {
             <a href="#how-it-works" className="nav-link">How It Works</a>
             <a href="#features" className="nav-link">Features</a>
             <a href="#calculator" className="nav-link">MSME Calculator</a>
+            <a href="#pricing" className="nav-link">Pricing</a>
             <a href="#testimonials" className="nav-link">Testimonials</a>
             <a href="#faq" className="nav-link">FAQ</a>
           </div>
@@ -1295,6 +1360,187 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── PRICING SECTION ── */}
+      <section className="pricing-section" id="pricing" ref={pricingSection.ref}>
+        <div className={`reveal ${pricingSection.visible ? 'visible' : ''}`}>
+          <div className="section-header">
+            <span className="section-tag">Simple, Transparent Pricing</span>
+            <h2 className="section-title">Built for Indian Freelancers & MSMEs</h2>
+            <p className="section-subtitle">
+              Start 100% free with core statutory rights enforcement. Upgrade anytime as your billing scales.
+            </p>
+          </div>
+
+          <div className="pricing-toggle">
+            <div className="pricing-toggle-pill">
+              <button
+                type="button"
+                className={`pricing-toggle-btn ${pricingCycle === 'monthly' ? 'active' : ''}`}
+                onClick={() => setPricingCycle('monthly')}
+              >
+                Monthly Billing
+              </button>
+              <button
+                type="button"
+                className={`pricing-toggle-btn ${pricingCycle === 'yearly' ? 'active' : ''}`}
+                onClick={() => setPricingCycle('yearly')}
+              >
+                Annual Billing
+              </button>
+            </div>
+            {pricingCycle === 'yearly' && (
+              <span className="save-badge">Save ~33% with Annual</span>
+            )}
+          </div>
+
+          <div className="pricing-grid">
+            {/* Starter Plan */}
+            <div className="pricing-card">
+              <div>
+                <span className="pricing-tag pricing-tag-free">Free Forever</span>
+                <h3 className="pricing-title">Starter</h3>
+                <p className="pricing-desc">
+                  Essential statutory protection for individual freelancers and sole proprietors.
+                </p>
+                <div className="pricing-price">₹0</div>
+                <div className="pricing-period">No credit card required</div>
+
+                <ul className="pricing-features">
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>Up to 5 GST invoices per month</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>Zero-MDR Direct NPCI Dynamic UPI QR billing</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>MSMED Act 45-day statutory deadline tracking</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>Automatic Section 16 compound interest calculator (20.25% p.a.)</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>Direct WhatsApp & PDF invoice sharing</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Link href="/login" className="btn-secondary" style={{ textAlign: 'center', width: '100%', marginTop: 24 }}>
+                Get Started Free
+              </Link>
+            </div>
+
+            {/* Pro Plan */}
+            <div className="pricing-card featured">
+              <div style={{ position: 'absolute', top: 14, right: 20 }}>
+                <span style={{
+                  background: '#10B981', color: '#FFF', fontSize: 10, fontWeight: 800,
+                  textTransform: 'uppercase', padding: '3px 10px', borderRadius: 100, letterSpacing: '0.08em'
+                }}>
+                  Most Popular
+                </span>
+              </div>
+              <div>
+                <span className="pricing-tag pricing-tag-pro">For Growing Businesses</span>
+                <h3 className="pricing-title">Pro</h3>
+                <p className="pricing-desc">
+                  Complete cashflow enforcement, automated reminders, and tax compliance.
+                </p>
+                <div className="pricing-price">
+                  {pricingCycle === 'monthly' ? '₹499' : '₹3,999'}
+                </div>
+                <div className="pricing-period">
+                  {pricingCycle === 'monthly' ? 'per month + GST' : 'per year (equivalent to ₹333/mo)'}
+                </div>
+
+                <ul className="pricing-features">
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span><strong>Everything in Starter</strong></span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>Unlimited GST Tax Invoices & Credit Notes</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>Automated Email & WhatsApp payment escalation reminders</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>One-Click GSTR-1 JSON export for official GST Portal</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>TDS Ledger & Form 26AS Section 194J/194C reconciliation</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>Razorpay Live Payment Gateway integration</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>Pre-formatted MSME Samadhaan legal demand notice PDFs</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Link href="/login" className="btn-glow" style={{ textAlign: 'center', width: '100%', marginTop: 24 }}>
+                Start Pro Experience →
+              </Link>
+            </div>
+
+            {/* Agency Plan */}
+            <div className="pricing-card">
+              <div>
+                <span className="pricing-tag pricing-tag-agency">For Agencies & Firms</span>
+                <h3 className="pricing-title">Agency & Growth</h3>
+                <p className="pricing-desc">
+                  AI legal intelligence, multi-client management, and quarterly advance tax forecasting.
+                </p>
+                <div className="pricing-price">
+                  {pricingCycle === 'monthly' ? '₹1,499' : '₹11,999'}
+                </div>
+                <div className="pricing-period">
+                  {pricingCycle === 'monthly' ? 'per month + GST' : 'per year (equivalent to ₹999/mo)'}
+                </div>
+
+                <ul className="pricing-features">
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span><strong>Everything in Pro</strong></span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>Gemini 2.5 Flash AI contract risk scoring & redline clause generator</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>Section 44ADA Presumptive Taxation quarterly planner & alerts</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>90-Day predictive cashflow forecasting & DSO risk radar</span>
+                  </li>
+                  <li className="pricing-feat-item">
+                    <span className="pricing-check">✓</span>
+                    <span>Dedicated Data Protection & Grievance SLA</span>
+                  </li>
+                </ul>
+              </div>
+
+              <Link href="/login" className="btn-secondary" style={{ textAlign: 'center', width: '100%', marginTop: 24 }}>
+                Get Agency Access
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── TESTIMONIALS ── */}
       <section className="testi-section" id="testimonials" ref={testimonialsSection.ref}>
         <div className={`reveal ${testimonialsSection.visible ? 'visible' : ''}`}>
@@ -1393,6 +1639,7 @@ export default function LandingPage() {
             <a href="#how-it-works" style={{ color: 'inherit', textDecoration: 'none' }}>How It Works</a>
             <a href="#features" style={{ color: 'inherit', textDecoration: 'none' }}>Features</a>
             <a href="#calculator" style={{ color: 'inherit', textDecoration: 'none' }}>Calculator</a>
+            <a href="#pricing" style={{ color: 'inherit', textDecoration: 'none' }}>Pricing</a>
             <a href="#faq" style={{ color: 'inherit', textDecoration: 'none' }}>FAQ</a>
             <Link href="/privacy" style={{ color: 'inherit', textDecoration: 'none' }}>Privacy (DPDP)</Link>
             <Link href="/terms" style={{ color: 'inherit', textDecoration: 'none' }}>Terms</Link>
