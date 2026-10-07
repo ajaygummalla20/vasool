@@ -13,6 +13,9 @@ export type SecurityEventType =
   | 'AI_EXPENSE_SCAN'
   | 'RATE_LIMIT_EXCEEDED'
   | 'INVOICE_PUBLIC_ACCESS'
+  | 'DPDP_DATA_EXPORT'
+  | 'DPDP_DATA_ERASURE_REQUEST'
+  | 'DPDP_CONSENT_WITHDRAWAL'
 
 export interface SecurityEventPayload {
   type: SecurityEventType

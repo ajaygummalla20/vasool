@@ -27,6 +27,7 @@ export default function OnboardingPage({ initialProfile, userId, userEmail }: Pr
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [saving, setSaving] = useState(false)
+  const [dpdpConsent, setDpdpConsent] = useState(true)
 
   const [form, setForm] = useState({
     business_name: initialProfile?.business_name || '',
@@ -321,6 +322,39 @@ export default function OnboardingPage({ initialProfile, userId, userEmail }: Pr
                   {form.invoice_prefix}-{String(form.invoice_counter).padStart(4, '0')}
                 </div>
               </div>
+
+              {/* DPDP Statutory Consent Box */}
+              <label style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 10,
+                marginTop: 18,
+                padding: '12px 14px',
+                background: 'rgba(16, 185, 129, 0.06)',
+                border: '1px solid rgba(16, 185, 129, 0.2)',
+                borderRadius: 10,
+                cursor: 'pointer',
+                fontSize: 12,
+                color: 'rgba(255, 255, 255, 0.85)',
+                lineHeight: 1.5,
+              }}>
+                <input
+                  type="checkbox"
+                  checked={dpdpConsent}
+                  onChange={e => setDpdpConsent(e.target.checked)}
+                  style={{ accentColor: '#10B981', marginTop: 3, cursor: 'pointer' }}
+                />
+                <span>
+                  I consent to the processing of my business and financial records for automated GST invoicing, MSMED late fee calculations, and UPI settlement under the{' '}
+                  <a href="/privacy" target="_blank" style={{ color: '#34D399', textDecoration: 'underline' }}>
+                    DPDP Privacy Notice
+                  </a>{' '}
+                  and{' '}
+                  <a href="/terms" target="_blank" style={{ color: '#34D399', textDecoration: 'underline' }}>
+                    Terms
+                  </a>.
+                </span>
+              </label>
             </div>
           )}
 
@@ -339,7 +373,7 @@ export default function OnboardingPage({ initialProfile, userId, userEmail }: Pr
                 Continue →
               </button>
             ) : (
-              <button className="ob-btn-pri" onClick={handleFinish} disabled={saving}>
+              <button className="ob-btn-pri" onClick={handleFinish} disabled={saving || !dpdpConsent} style={{ opacity: (!dpdpConsent || saving) ? 0.6 : 1, cursor: (!dpdpConsent || saving) ? 'not-allowed' : 'pointer' }}>
                 {saving ? 'Setting up...' : '🚀 Launch Settlr OS'}
               </button>
             )}

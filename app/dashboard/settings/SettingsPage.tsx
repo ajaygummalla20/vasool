@@ -1,6 +1,7 @@
- 'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { createBrowserClient } from '@supabase/ssr'
 import Sidebar from '@/components/Sidebar'
 
@@ -45,7 +46,7 @@ const EMPTY: Profile = {
 }
 
 interface Props {
-  initialTab?: 'profile' | 'business' | 'payments' | 'invoice'
+  initialTab?: 'profile' | 'business' | 'payments' | 'invoice' | 'privacy'
 }
 
 export default function SettingsPage({ initialTab = 'profile' }: Props) {
@@ -55,7 +56,58 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
   const [loading,    setLoading]    = useState(true)
   const [saving,     setSaving]     = useState(false)
   const [saved,      setSaved]      = useState(false)
-  const [activeTab,  setActiveTab]  = useState<'profile'|'business'|'payments'|'invoice'>(initialTab)
+  const [activeTab,  setActiveTab]  = useState<'profile'|'business'|'payments'|'invoice'|'privacy'>(initialTab)
+
+  // DPDP Act 2023 Data Rights States
+  const [exporting, setExporting] = useState(false)
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deleteConfirmText, setDeleteConfirmText] = useState('')
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
+
+  const handleExportData = async () => {
+    setExporting(true)
+    try {
+      const res = await fetch('/api/user/export-data')
+      if (!res.ok) throw new Error('Export request failed')
+      const blob = await res.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `settlr-personal-data-${new Date().toISOString().split('T')[0]}.json`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+    } catch (err: any) {
+      alert(err.message || 'Failed to export data')
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== 'DELETE') {
+      setDeleteError('Please type DELETE exactly to confirm.')
+      return
+    }
+    setDeleting(true)
+    setDeleteError('')
+    try {
+      const res = await fetch('/api/user/delete-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ confirmation: 'DELETE' }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Deletion failed')
+      alert('Your account and personal data have been erased.')
+      window.location.href = '/login'
+    } catch (err: any) {
+      setDeleteError(err.message || 'Failed to delete account')
+      setDeleting(false)
+    }
+  }
 
   useEffect(() => {
     const load = async () => {
@@ -132,10 +184,11 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
     .split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() || '?'
 
   const tabs = [
-    { id: 'profile'  as const, label: 'Personal',       icon: '👤' },
-    { id: 'business' as const, label: 'Business & GST',  icon: '🏢' },
-    { id: 'payments' as const, label: 'UPI & Bank Wire', icon: '💳' },
-    { id: 'invoice'  as const, label: 'Invoicing',       icon: '🧾' },
+    { id: 'profile'  as const, label: 'Personal',          icon: '👤' },
+    { id: 'business' as const, label: 'Business & GST',     icon: '🏢' },
+    { id: 'payments' as const, label: 'UPI & Bank Wire',    icon: '💳' },
+    { id: 'invoice'  as const, label: 'Invoicing',          icon: '🧾' },
+    { id: 'privacy'  as const, label: 'DPDP & Data Rights', icon: '🛡️' },
   ]
 
   if (loading) {
@@ -299,7 +352,8 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
                   tab.id === 'profile'  ? !!(profile.full_name && profile.phone) :
                   tab.id === 'business' ? !!(profile.business_name && profile.gst_number) :
                   tab.id === 'payments' ? !!(profile.upi_id || profile.bank_account) :
-                  !!(profile.invoice_prefix)
+                  tab.id === 'invoice'  ? !!(profile.invoice_prefix) :
+                  true
                 return (
                   <button
                     key={tab.id}
@@ -679,10 +733,181 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
                 </>
               )}
 
+              {/* ── PRIVACY & DPDP DATA RIGHTS TAB ── */}
+              {activeTab === 'privacy' && (
+                <>
+                  <div className="s-card">
+                    <div className="s-card-hdr">
+                      <div className="s-card-icon" style={{background:'rgba(16,185,129,.12)'}}>🛡️</div>
+                      <div>
+                        <div className="s-card-title">Digital Personal Data Protection (DPDP Act, 2023)</div>
+                        <div className="s-card-sub">Statutory transparency, data portability, and Data Principal rights</div>
+                      </div>
+                    </div>
+                    <div className="s-card-body">
+                      <p style={{fontSize:13, color:'rgba(26,20,13,.7)', lineHeight:1.6, marginBottom:16}}>
+                        Settlr complies with the <strong>Digital Personal Data Protection Act, 2023</strong> of India. As a Data Principal, you possess statutory rights to access, export, correct, and erase your personal data.
+                      </p>
+                      <div style={{display:'flex', gap:10, flexWrap:'wrap'}}>
+                        <Link href="/privacy" target="_blank" style={{fontSize:12, color:'#1B5E3B', fontWeight:600, textDecoration:'none', padding:'6px 12px', background:'rgba(27,94,59,.08)', borderRadius:6, border:'1px solid rgba(27,94,59,.2)'}}>
+                          Read Statutory Privacy Notice ↗
+                        </Link>
+                        <Link href="/terms" target="_blank" style={{fontSize:12, color:'rgba(26,20,13,.7)', textDecoration:'none', padding:'6px 12px', background:'#F7F5F0', borderRadius:6, border:'1px solid rgba(26,20,13,.1)'}}>
+                          Terms of Service ↗
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 11: Right to Access & Portability */}
+                  <div className="s-card">
+                    <div className="s-card-hdr">
+                      <div className="s-card-icon" style={{background:'rgba(59,130,246,.10)'}}>📥</div>
+                      <div>
+                        <div className="s-card-title">Right to Access Information & Data Portability (Section 11)</div>
+                        <div className="s-card-sub">Download an encrypted, machine-readable JSON archive of your personal records</div>
+                      </div>
+                    </div>
+                    <div className="s-card-body">
+                      <p style={{fontSize:12, color:'rgba(26,20,13,.6)', lineHeight:1.5, marginBottom:14}}>
+                        Your data archive includes your business profile, client directory, invoices, itemized line items, and expense records in structured JSON format.
+                      </p>
+                      <button
+                        onClick={handleExportData}
+                        disabled={exporting}
+                        style={{
+                          background: '#1B5E3B', color: 'white', border: 'none', borderRadius: 8,
+                          padding: '10px 18px', fontSize: 13, fontWeight: 600, cursor: exporting ? 'not-allowed' : 'pointer',
+                          display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'DM Sans,sans-serif',
+                          boxShadow: '0 2px 6px rgba(27,94,59,.2)'
+                        }}
+                      >
+                        {exporting ? 'Generating JSON Archive…' : '📥 Download Personal Data Archive (.json)'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Grievance Redressal Officer */}
+                  <div className="s-card">
+                    <div className="s-card-hdr">
+                      <div className="s-card-icon" style={{background:'rgba(245,158,11,.12)'}}>⚖️</div>
+                      <div>
+                        <div className="s-card-title">Grievance Redressal Officer (Section 8(10) & 13)</div>
+                        <div className="s-card-sub">Designated Data Protection & Grievance Officer details</div>
+                      </div>
+                    </div>
+                    <div className="s-card-body">
+                      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(220px, 1fr))', gap:12, fontSize:12}}>
+                        <div>
+                          <div className="lb">Designation</div>
+                          <div style={{fontWeight:600, color:'#1A140D'}}>Grievance Officer, Settlr Compliance</div>
+                        </div>
+                        <div>
+                          <div className="lb">Official Email</div>
+                          <a href="mailto:grievance@usesettlr.in" style={{fontWeight:600, color:'#1B5E3B', textDecoration:'none'}}>grievance@usesettlr.in</a>
+                        </div>
+                        <div>
+                          <div className="lb">Turnaround SLA</div>
+                          <div style={{fontWeight:600, color:'#1A140D'}}>7 Business Days</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 12: Danger Zone - Erasure */}
+                  <div className="s-card" style={{borderColor:'rgba(239,68,68,.3)'}}>
+                    <div className="s-card-hdr" style={{background:'rgba(239,68,68,.04)', borderBottom:'1px solid rgba(239,68,68,.12)'}}>
+                      <div className="s-card-icon" style={{background:'rgba(239,68,68,.12)'}}>🗑️</div>
+                      <div>
+                        <div className="s-card-title" style={{color:'#DC2626'}}>Right to Erasure & Account Deletion (Section 12)</div>
+                        <div className="s-card-sub">Permanently delete your account and erase all associated personal data</div>
+                      </div>
+                    </div>
+                    <div className="s-card-body">
+                      <p style={{fontSize:12, color:'rgba(26,20,13,.65)', lineHeight:1.5, marginBottom:14}}>
+                        Executing erasure permanently purges your profile, client contacts, invoices, line items, and expense records.
+                        <strong style={{display:'block', color:'#B91C1C', marginTop:4}}>
+                          Statutory Tax Note: Invoices generated under the CGST Act 2017 must be retained for 72 months for tax audits.
+                        </strong>
+                      </p>
+                      <button
+                        onClick={() => { setDeleteModalOpen(true); setDeleteError(''); setDeleteConfirmText('') }}
+                        style={{
+                          background: '#DC2626', color: 'white', border: 'none', borderRadius: 8,
+                          padding: '10px 18px', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                          display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'DM Sans,sans-serif'
+                        }}
+                      >
+                        Request Account & Data Erasure
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+
             </div>
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteModalOpen && (
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 999, padding: 16
+        }}>
+          <div style={{
+            background: 'white', borderRadius: 16, padding: 24, maxWidth: 440, width: '100%',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.3)', border: '1px solid rgba(239,68,68,0.2)'
+          }}>
+            <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:12}}>
+              <span style={{fontSize:24}}>⚠️</span>
+              <h3 style={{fontSize:18, fontWeight:700, color:'#DC2626', margin:0}}>Confirm Account & Data Erasure</h3>
+            </div>
+            <p style={{fontSize:13, color:'rgba(26,20,13,0.7)', lineHeight:1.5, marginBottom:16}}>
+              This action is <strong>irreversible</strong> under Section 12 of the DPDP Act 2023. All your invoices, client information, and profile records will be permanently erased.
+            </p>
+            <p style={{fontSize:12, fontWeight:600, color:'#1A140D', marginBottom:8}}>
+              Type <span style={{color:'#DC2626', background:'#FEE2E2', padding:'2px 6px', borderRadius:4}}>DELETE</span> below to confirm:
+            </p>
+            <input
+              type="text"
+              className="in"
+              placeholder="Type DELETE"
+              value={deleteConfirmText}
+              onChange={e => setDeleteConfirmText(e.target.value)}
+              style={{marginBottom:12}}
+            />
+            {deleteError && (
+              <div style={{fontSize:12, color:'#DC2626', marginBottom:12}}>⚠️ {deleteError}</div>
+            )}
+            <div style={{display:'flex', gap:10, justifyContent:'flex-end'}}>
+              <button
+                onClick={() => setDeleteModalOpen(false)}
+                disabled={deleting}
+                style={{
+                  background: '#F7F5F0', border: '1px solid rgba(26,20,13,0.1)', borderRadius: 8,
+                  padding: '8px 16px', fontSize: 13, cursor: 'pointer', fontFamily: 'DM Sans,sans-serif'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deleting || deleteConfirmText !== 'DELETE'}
+                style={{
+                  background: deleteConfirmText === 'DELETE' ? '#DC2626' : '#FCA5A5', color: 'white',
+                  border: 'none', borderRadius: 8, padding: '8px 16px', fontSize: 13, fontWeight: 600,
+                  cursor: deleteConfirmText === 'DELETE' && !deleting ? 'pointer' : 'not-allowed',
+                  fontFamily: 'DM Sans,sans-serif'
+                }}
+              >
+                {deleting ? 'Erasing Data…' : 'Confirm Erasure'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {saved && (
         <div className="s-toast">

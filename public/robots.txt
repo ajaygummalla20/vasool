@@ -2,6 +2,11 @@
 User-agent: *
 Allow: /
 Allow: /login
+Allow: /privacy
+Allow: /terms
+Allow: /contact
+Allow: /refund-policy
+Allow: /shipping-policy
 Allow: /invoice/
 Disallow: /dashboard/
 Disallow: /api/

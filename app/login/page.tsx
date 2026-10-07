@@ -507,6 +507,25 @@ export default function LoginPage() {
                 </button>
               </>
             )}
+
+            {/* DPDP Act Affirmative Consent Notice */}
+            <p style={{
+              fontSize: '11px',
+              color: 'rgba(255,255,255,0.45)',
+              textAlign: 'center',
+              marginTop: '16px',
+              lineHeight: '1.5',
+            }}>
+              By continuing, you agree to our{' '}
+              <a href="/terms" target="_blank" style={{ color: 'rgba(255,255,255,0.7)', textDecoration: 'underline' }}>
+                Terms
+              </a>{' '}
+              and acknowledge our{' '}
+              <a href="/privacy" target="_blank" style={{ color: '#34D399', textDecoration: 'underline' }}>
+                DPDP Privacy Notice
+              </a>{' '}
+              under Indian law.
+            </p>
           </div>
         </div>
       </div>

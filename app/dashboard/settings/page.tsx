@@ -14,8 +14,8 @@ export default async function Page({
 
   const params = searchParams ? await searchParams : {}
   const tabParam = typeof params.tab === 'string' ? params.tab : undefined
-  const initialTab = (tabParam && ['profile', 'business', 'payments', 'invoice'].includes(tabParam))
-    ? (tabParam as 'profile' | 'business' | 'payments' | 'invoice')
+  const initialTab = (tabParam && ['profile', 'business', 'payments', 'invoice', 'privacy'].includes(tabParam))
+    ? (tabParam as 'profile' | 'business' | 'payments' | 'invoice' | 'privacy')
     : undefined
 
   return <SettingsPage initialTab={initialTab} />

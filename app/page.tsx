@@ -1389,11 +1389,16 @@ export default function LandingPage() {
             </span>
           </div>
 
-          <div style={{ display: 'flex', gap: 20, fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>
+          <div style={{ display: 'flex', gap: 16, fontSize: 12, color: 'rgba(255,255,255,0.5)', flexWrap: 'wrap', alignItems: 'center' }}>
             <a href="#how-it-works" style={{ color: 'inherit', textDecoration: 'none' }}>How It Works</a>
             <a href="#features" style={{ color: 'inherit', textDecoration: 'none' }}>Features</a>
             <a href="#calculator" style={{ color: 'inherit', textDecoration: 'none' }}>Calculator</a>
             <a href="#faq" style={{ color: 'inherit', textDecoration: 'none' }}>FAQ</a>
+            <Link href="/privacy" style={{ color: 'inherit', textDecoration: 'none' }}>Privacy (DPDP)</Link>
+            <Link href="/terms" style={{ color: 'inherit', textDecoration: 'none' }}>Terms</Link>
+            <Link href="/refund-policy" style={{ color: 'inherit', textDecoration: 'none' }}>Refund Policy</Link>
+            <Link href="/shipping-policy" style={{ color: 'inherit', textDecoration: 'none' }}>Delivery Policy</Link>
+            <Link href="/contact" style={{ color: 'inherit', textDecoration: 'none' }}>Contact Us</Link>
             <Link href="/login" style={{ color: '#34D399', textDecoration: 'none', fontWeight: 600 }}>Sign In →</Link>
           </div>
         </div>

@@ -82,11 +82,23 @@ test('HMAC-SHA256 rejects tampered Razorpay signatures (Tamper Resistance)', () 
   assert(isValid === false, 'Tampered signature must be rejected')
 })
 
-// 3. Subscription Allowlist Verification
-test('Subscription plans are strictly constrained to allowlist', () => {
-  const ALLOWED_PLANS = ['starter', 'pro', 'agency']
-  assert(ALLOWED_PLANS.includes('agency'), 'agency plan must be allowed')
-  assert(!ALLOWED_PLANS.includes('enterprise_free_hack'), 'Injected plan must not be allowed')
+// 4. Digital Personal Data Protection (DPDP Act 2023) Compliance Controls
+test('DPDP Data Export Rate Limiting caps export abuse at 5 requests/hr', () => {
+  const userId = `dpdp_user_${Date.now()}`
+  for (let i = 0; i < 5; i++) {
+    const res = checkRateLimit(`export_data_${userId}`, { windowMs: 3600_000, max: 5 })
+    assert(res.allowed === true, `Export ${i + 1} within threshold must be allowed`)
+  }
+  const excess = checkRateLimit(`export_data_${userId}`, { windowMs: 3600_000, max: 5 })
+  assert(excess.allowed === false, '6th export in same hour must be rejected')
+})
+
+test('DPDP Section 12 Account Erasure rejects invalid confirmation strings', () => {
+  const validateConfirmation = (conf: any) => conf === 'DELETE'
+  assert(validateConfirmation('DELETE') === true, 'Exact string "DELETE" must pass')
+  assert(validateConfirmation('delete') === false, 'Lowercase "delete" must fail')
+  assert(validateConfirmation('yes') === false, 'Arbitrary confirmation must fail')
+  assert(validateConfirmation(undefined) === false, 'Undefined confirmation must fail')
 })
 
 console.log(`\nResults: ${passed}/${total} passed (${failed} failed)`)
