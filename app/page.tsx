@@ -174,7 +174,7 @@ export default function LandingPage() {
     },
     {
       q: 'How does the AI contract redlining feature work?',
-      a: 'Powered by Google Gemini 2.5 Flash, Settlr scans uploaded contracts for unfair indemnity clauses, missing MSMED Act late fee terms, uncapped liability risks, and non-compete overreach. It generates a contract risk score (0-100) and provides redline suggestions with specific clause rewrites.'
+      a: 'Powered by advanced AI capabilities, Settlr scans uploaded contracts for unfair indemnity clauses, missing MSMED Act late fee terms, uncapped liability risks, and non-compete overreach. It generates a contract risk score (0-100) and provides redline suggestions with specific clause rewrites.'
     },
   ]
 
@@ -1089,7 +1089,7 @@ export default function LandingPage() {
                 <div className="preview-grid">
                   <div className="preview-left">
                     <div style={{ fontSize: 11, fontWeight: 700, color: '#34D399', textTransform: 'uppercase', letterSpacing: '0.1em' }}>AI Legal Intelligence</div>
-                    <h3 style={{ fontFamily: 'Outfit', fontSize: 26, fontWeight: 800, color: '#FFF' }}>Gemini 2.5 Flash Contract Risk Redlining</h3>
+                    <h3 style={{ fontFamily: 'Outfit', fontSize: 26, fontWeight: 800, color: '#FFF' }}>Autonomous AI Contract Risk Redlining</h3>
                     <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>
                       Upload vendor agreements or client NDAs. Settlr instantly highlights unfair indemnity clauses, missing MSMED late fee terms, and unconstrained liability risks.
                     </p>
@@ -1289,7 +1289,7 @@ export default function LandingPage() {
             { icon: '💳', title: 'Zero-MDR Direct UPI Payments', desc: 'Embedded dynamic NPCI UPI QR codes directly on invoices. Instant bank settlements via GPay/PhonePe with 0% payment gateway processing fees.' },
             { icon: '🧾', title: 'GST & Proforma Invoicing', desc: 'Full support for Intra-State CGST/SGST, Inter-State IGST, and GST Credit Notes. Instant GSTR-1 JSON export for hassle-free tax filing.' },
             { icon: '📊', title: 'TDS Ledger & Form 26AS Matcher', desc: 'Track 10%/2% Section 194J and 1% Section 194C tax withholdings. Auto-generate WhatsApp reminders for Form 16A certificates.' },
-            { icon: '🤖', title: 'AI Contract Legal Redlining', desc: 'Powered by Google Gemini 2.5 Flash. Upload client contracts to instantly detect missing MSME clauses, payment risks, and uncapped liabilities.' },
+            { icon: '🤖', title: 'AI Contract Legal Redlining', desc: 'Powered by advanced AI capabilities. Upload client contracts to instantly detect missing MSME clauses, payment risks, and uncapped liabilities.' },
             { icon: '📈', title: '90-Day Cashflow & DSO Runway', desc: 'Forecast cashflow runway across 30, 60, and 90-day buckets. Track Days Sales Outstanding (DSO) and optimize your working capital liquidity.' },
           ].map((feat, idx) => (
             <div
@@ -1351,7 +1351,7 @@ export default function LandingPage() {
               </tr>
               <tr>
                 <td>AI Contract Legal Redlining & Risk Scoring</td>
-                <td className="col-settlr">✅ Gemini 2.5 Flash Included</td>
+                <td className="col-settlr">✅ Advanced AI Capabilities Included</td>
                 <td>❌ No AI legal analysis</td>
                 <td>❌ No AI capabilities</td>
               </tr>
@@ -1516,7 +1516,7 @@ export default function LandingPage() {
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
-                    <span>Gemini 2.5 Flash AI contract risk scoring & redline clause generator</span>
+                    <span>Autonomous AI contract risk scoring & redline clause generator</span>
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>

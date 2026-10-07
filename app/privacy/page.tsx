@@ -152,7 +152,7 @@ export default function PrivacyPage() {
             <tr>
               <td><strong>Documents & OCR Data</strong></td>
               <td>Uploaded contract documents, physical receipt photos, invoice line items.</td>
-              <td>Performing automated AI OCR expense categorization and contractual risk assessment via Google Gemini.</td>
+              <td>Performing automated AI OCR expense categorization and contractual risk assessment via secure cloud AI capabilities.</td>
             </tr>
           </tbody>
         </table>
@@ -176,7 +176,7 @@ export default function PrivacyPage() {
         <ul style={{ paddingLeft: 20, margin: '10px 0' }}>
           <li><strong>Supabase (PostgreSQL):</strong> Encrypted database storage, user authentication, and multi-tenant Row-Level Security (RLS) isolation.</li>
           <li><strong>Razorpay:</strong> Cryptographic payment gateway processing for Settlr platform subscription upgrades (we never store card numbers or banking passwords).</li>
-          <li><strong>Google Gemini API:</strong> Multimodal AI processing for OCR extraction of expense receipts and legal contract risk analysis. Documents sent to the API are processed ephemerally and not used to train public foundation models.</li>
+          <li><strong>Secure AI Capabilities & Cloud Inference:</strong> Multimodal AI processing for OCR extraction of expense receipts and legal contract risk analysis. Documents sent to the processor are processed ephemerally with zero data retention and not used to train public foundation models.</li>
           <li><strong>Vercel:</strong> Edge network hosting and serverless infrastructure with strict TLS 1.3 encryption in transit.</li>
         </ul>
 

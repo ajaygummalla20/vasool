@@ -13,7 +13,7 @@
 - **TDS Asset Ledger (Sections 194J & 194C)**: Form 26AS tax withholding tracking, Form 16A reconciliation, and automated WhatsApp reminder templates.
 - **Advance Tax & Section 44ADA Presumptive Planner**: Automatic 50% presumptive profit margin computation with statutory quarterly schedule tracking (June 15, Sept 15, Dec 15, March 15).
 - **Working Capital & 90-Day Cashflow Deck**: Cash runway forecasting, monthly burn rates, and Days Sales Outstanding (DSO) health indicators.
-- **AI Contract Analyzer & Risk Redlining**: Google Gemini 2.5 Flash integration for automated contract clause risk detection and MSME protection scores.
+- **AI Contract Analyzer & Risk Redlining**: Autonomous multimodal AI capabilities for automated contract clause risk detection and MSME protection scores.
 - **Strix Security Suite**: Cryptographic payment verification (HMAC SHA256), multi-tenant IDOR protection, XSS sanitization, and AI prompt injection defenses.
 
 ---
@@ -25,7 +25,7 @@
 | **Frontend & Backend** | Next.js 16 (App Router + Turbopack), React 19, TypeScript 5 | Vercel (Hobby Tier) | **$0 / mo** |
 | **Database & Auth** | PostgreSQL, Row Level Security (RLS), Supabase Auth | Supabase Cloud | **$0 / mo** |
 | **Styling** | Modern Vanilla CSS & TailwindCSS v4 | — | **$0 / mo** |
-| **AI Analysis** | Google Gemini 2.5 Flash API | Google AI Studio | **$0 / mo** |
+| **AI Capabilities** | Autonomous Multimodal AI API | Cloud AI Studio | **$0 / mo** |
 | **Payments** | Dynamic NPCI UPI QR + Razorpay Gateway | Razorpay Standard | **$0 / mo** |
 
 ---
