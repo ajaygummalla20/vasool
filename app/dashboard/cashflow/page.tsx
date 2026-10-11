@@ -30,7 +30,7 @@ export default async function CashflowRoute() {
       .from('recurring_templates')
       .select('*')
       .eq('user_id', user.id)
-      .eq('status', 'active')
+      .eq('is_active', true)
     recurring = data || []
   } catch {
     recurring = []

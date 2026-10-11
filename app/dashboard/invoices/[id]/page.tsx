@@ -29,7 +29,7 @@ export default async function InvoiceDetailRoute({ params }: PageProps) {
       total_amount, amount_due, discount_amount,
       cgst_pct, sgst_pct, igst_pct,
       issue_date, due_date, sent_at, paid_at,
-      payment_terms, late_fee_terms, notes,
+      payment_terms, late_fee_terms, notes, payment_token,
       created_at,
       clients (
         id, name, company_name, email, phone, whatsapp,

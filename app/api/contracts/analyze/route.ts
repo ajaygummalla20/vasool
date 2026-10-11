@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/app/lib/supabase-server'
 import { checkRateLimit } from '@/app/lib/rate-limit'
 import { logSecurityEvent } from '@/app/lib/security-logger'
+import { validateBase64FileSignature } from '@/app/lib/file-validator'
+import { validateContractAnalysis } from '@/app/lib/ai-schema-validator'
 
 const GEMINI_PROMPT = `You are an expert legal advisor specializing in protecting Indian MSMEs, freelancers, contractors, and agencies against one-sided corporate contracts.
 
@@ -104,14 +106,23 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 3. Payload size caps and MIME validation
+    // 3. Payload size caps and Binary Magic Byte Signature Validation
+    let effectiveMime = mimeType || 'text/plain'
     if (fileData) {
       if (typeof fileData !== 'string' || fileData.length > 14_000_000) { // ~10MB base64 cap
         return NextResponse.json({ error: 'Contract file is too large. Maximum size is 10MB.' }, { status: 400 })
       }
-      if (mimeType && !ALLOWED_MIME_TYPES.includes(mimeType)) {
-        return NextResponse.json({ error: 'Unsupported file type. Please upload a PDF, image, or text file.' }, { status: 400 })
+
+      const sigCheck = validateBase64FileSignature(fileData, mimeType, ALLOWED_MIME_TYPES)
+      if (!sigCheck.valid) {
+        logSecurityEvent({
+          type: 'INVALID_FILE_SIGNATURE',
+          userId: user.id,
+          details: { error: sigCheck.error, declaredMime: mimeType }
+        })
+        return NextResponse.json({ error: sigCheck.error || 'Invalid file format.' }, { status: 400 })
       }
+      effectiveMime = sigCheck.detectedMime || effectiveMime
     }
 
     if (text && typeof text === 'string' && text.length > 50_000) {
@@ -129,7 +140,7 @@ export async function POST(request: NextRequest) {
     logSecurityEvent({
       type: 'AI_CONTRACT_ANALYZE',
       userId: user.id,
-      details: { hasFile: Boolean(fileData), mimeType, textLength: text ? text.length : 0 }
+      details: { hasFile: Boolean(fileData), mimeType: effectiveMime, textLength: text ? text.length : 0 }
     })
 
     // Build multimodal parts array for AI
@@ -138,7 +149,7 @@ export async function POST(request: NextRequest) {
     if (fileData) {
       parts.push({
         inlineData: {
-          mimeType: mimeType || 'text/plain',
+          mimeType: effectiveMime,
           data: fileData,
         }
       })
@@ -149,7 +160,7 @@ export async function POST(request: NextRequest) {
     let lastError: string | null = null
     let responseData: any = null
 
-    // Try available models sequentially to bypass model-specific rate limits
+    // Try available models sequentially with bounded timeout
     for (const modelName of MODELS_TO_TRY) {
       const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`
 
@@ -167,6 +178,7 @@ export async function POST(request: NextRequest) {
               maxOutputTokens: 4096,
             }
           }),
+          signal: AbortSignal.timeout(30000), // 30s bounded request timeout
         })
 
         if (response.ok) {
@@ -191,16 +203,20 @@ export async function POST(request: NextRequest) {
         }
 
         lastError = `AI service response error (${response.status})`
-      } catch (err) {
+      } catch (err: any) {
         console.error(`[AI Analysis ${modelName} Exception]`, err)
-        lastError = 'Network error connecting to AI analysis service.'
+        if (err.name === 'TimeoutError') {
+          lastError = 'AI service request timed out. Please try again.'
+        } else {
+          lastError = 'Network error connecting to AI analysis service.'
+        }
       }
     }
 
     if (!responseData) {
       return NextResponse.json(
         { error: lastError || 'AI service is temporarily busy. Please wait a few seconds and try again.' },
-        { status: 429 }
+        { status: 503 }
       )
     }
 
@@ -216,9 +232,9 @@ export async function POST(request: NextRequest) {
     let rawText = candidates[0]?.content?.parts?.[0]?.text || ''
     rawText = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim()
 
-    let analysis
+    let rawJson: any
     try {
-      analysis = JSON.parse(rawText)
+      rawJson = JSON.parse(rawText)
     } catch {
       console.error('[Gemini Parse Error] Raw text:', rawText.slice(0, 500))
       return NextResponse.json(
@@ -227,7 +243,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    return NextResponse.json({ analysis })
+    // Runtime Schema Validation & Sanitization
+    try {
+      const validatedAnalysis = validateContractAnalysis(rawJson)
+      return NextResponse.json({ analysis: validatedAnalysis })
+    } catch (schemaErr: any) {
+      console.error('[Contract Analysis Schema Error]:', schemaErr)
+      return NextResponse.json(
+        { error: 'AI output did not match expected structure. Please try again.' },
+        { status: 500 }
+      )
+    }
 
   } catch (e) {
     console.error('[Contract Analysis Error]', e)

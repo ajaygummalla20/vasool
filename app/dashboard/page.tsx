@@ -18,16 +18,25 @@ export default async function DashboardPage() {
 
   // ── Metrics ──
   const now = new Date()
+  const todayStr = now.toISOString().split('T')[0]
   const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
 
   const [
-    { data: invoices },
+    { data: allInvoices },
+    { data: recentInvoices },
     { data: paidThisMonth },
     { data: reminderCount },
     { data: recentActivity },
   ] = await Promise.all([
 
-    // All active invoices with client name
+    // 1. All active invoices for accurate total receivables & overdue calculation (unlimited)
+    supabase
+      .from('invoices')
+      .select('amount_due, status, due_date')
+      .eq('user_id', user.id)
+      .not('status', 'in', '("cancelled")'),
+
+    // 2. Recent 8 invoices for display in dashboard list
     supabase
       .from('invoices')
       .select(`
@@ -40,14 +49,14 @@ export default async function DashboardPage() {
       .order('created_at', { ascending: false })
       .limit(8),
 
-    // Paid this month
+    // 3. Paid this month
     supabase
       .from('payments')
       .select('amount')
       .eq('user_id', user.id)
       .gte('paid_at', firstOfMonth),
 
-    // Reminders sent this month
+    // 4. Reminders sent this month
     supabase
       .from('reminders')
       .select('id', { count: 'exact' })
@@ -55,7 +64,7 @@ export default async function DashboardPage() {
       .eq('status', 'sent')
       .gte('sent_at', firstOfMonth),
 
-    // Recent activity (last 8 reminders)
+    // 5. Recent activity (last 6 reminders)
     supabase
       .from('reminders')
       .select(`
@@ -68,19 +77,32 @@ export default async function DashboardPage() {
       .limit(6),
   ])
 
-  // ── Compute metrics ──
-  const totalReceivable = (invoices || [])
-    .filter(i => !['paid', 'cancelled'].includes(i.status))
+  // ── Accurate System-Wide Financial Metrics ──
+  const totalReceivable = (allInvoices || [])
+    .filter(i => !['paid', 'cancelled'].includes(i.status) && Number(i.amount_due || 0) > 0)
     .reduce((sum, i) => sum + Number(i.amount_due || 0), 0)
 
-  const overdueAmount = (invoices || [])
-    .filter(i => i.status === 'overdue')
+  // Derive overdue both from explicit status AND past due_date with unpaid balance
+  const overdueAmount = (allInvoices || [])
+    .filter(i => {
+      const isPastDue = i.due_date && i.due_date < todayStr && !['paid', 'cancelled'].includes(i.status)
+      return (i.status === 'overdue' || isPastDue) && Number(i.amount_due || 0) > 0
+    })
     .reduce((sum, i) => sum + Number(i.amount_due || 0), 0)
 
   const collectedThisMonth = (paidThisMonth || [])
     .reduce((sum, p) => sum + Number(p.amount || 0), 0)
 
   const remindersSent = reminderCount?.length ?? 0
+
+  // Enrich recent invoices with dynamic overdue state
+  const enrichedRecentInvoices = (recentInvoices || []).map((inv: any) => {
+    const isPastDue = inv.due_date && inv.due_date < todayStr && !['paid', 'cancelled'].includes(inv.status) && Number(inv.amount_due || 0) > 0
+    return {
+      ...inv,
+      status: isPastDue ? 'overdue' : inv.status,
+    }
+  })
 
   const userName  = profile?.full_name || user.email?.split('@')[0] || 'there'
   const userEmail = user.email || ''
@@ -107,7 +129,7 @@ export default async function DashboardPage() {
         collectedThisMonth,
         remindersSent,
       }}
-      invoices={invoices || []}
+      invoices={enrichedRecentInvoices}
       recentActivity={recentActivity || []}
     />
   )

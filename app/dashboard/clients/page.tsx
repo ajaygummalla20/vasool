@@ -39,6 +39,7 @@ export default function ClientsPage() {
   const router = useRouter()
   const [clients, setClients]   = useState<Client[]>([])
   const [loading, setLoading]   = useState(true)
+  const [errorMsg, setErrorMsg] = useState('')
   const [search,  setSearch]    = useState('')
   const [userName,  setUserName]  = useState('')
   const [userEmail, setUserEmail] = useState('')
@@ -58,14 +59,67 @@ export default function ClientsPage() {
         .from('profiles').select('full_name').eq('id', user.id).single()
       setUserName(profile?.full_name || user.email?.split('@')[0] || '')
 
-      const { data } = await supabase
-        .from('clients')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('is_archived', false)
-        .order('created_at', { ascending: false })
+      // 1. Fetch clients and user invoices in parallel
+      const [clientRes, invRes] = await Promise.all([
+        supabase
+          .from('clients')
+          .select('*')
+          .eq('user_id', user.id)
+          .or('is_archived.is.null,is_archived.eq.false')
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('invoices')
+          .select('client_id, total_amount, amount_due, status')
+          .eq('user_id', user.id)
+      ])
 
-      setClients(data || [])
+      let rawClients = clientRes.data
+
+      // Fallback query if is_archived is not yet populated
+      if (clientRes.error) {
+        console.warn('[Clients query fallback]:', clientRes.error.message)
+        const fallback = await supabase
+          .from('clients')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+
+        if (fallback.error) {
+          setErrorMsg('Failed to load client directory: ' + fallback.error.message)
+          setLoading(false)
+          return
+        }
+        rawClients = fallback.data
+      }
+
+      // Compute aggregate invoice totals per client
+      const invByClient = new Map<string, { total: number; paid: number }>()
+      for (const inv of (invRes.data || [])) {
+        if (!inv.client_id) continue
+        const curr = invByClient.get(inv.client_id) || { total: 0, paid: 0 }
+        curr.total += Number(inv.total_amount || 0)
+        curr.paid += (Number(inv.total_amount || 0) - Number(inv.amount_due || 0))
+        invByClient.set(inv.client_id, curr)
+      }
+
+      const enriched: Client[] = (rawClients || []).map((c: any) => {
+        const stats = invByClient.get(c.id) || { total: 0, paid: 0 }
+        return {
+          id: c.id,
+          name: c.name,
+          company_name: c.company_name || null,
+          email: c.email || null,
+          phone: c.phone || null,
+          whatsapp: c.whatsapp || null,
+          city: c.city || null,
+          total_invoiced: stats.total,
+          total_paid: stats.paid,
+          avg_payment_days: c.avg_payment_days || null,
+          created_at: c.created_at,
+        }
+      })
+
+      setClients(enriched)
       setLoading(false)
     }
     load()
@@ -249,6 +303,11 @@ export default function ClientsPage() {
           </div>
 
           <div className="cl-content">
+            {errorMsg && (
+              <div style={{ background: '#FEE2E2', border: '1px solid #F87171', borderRadius: 8, padding: '12px 16px', color: '#991B1B', marginBottom: 16, fontSize: 13 }}>
+                ⚠️ {errorMsg}
+              </div>
+            )}
             <div className="cl-grid">
               {loading ? (
                 Array(6).fill(0).map((_, i) => <div key={i} className="cl-skeleton" />)

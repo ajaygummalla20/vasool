@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/app/lib/supabase-server'
 import { checkRateLimit } from '@/app/lib/rate-limit'
 import { logSecurityEvent } from '@/app/lib/security-logger'
+import { validateBase64FileSignature } from '@/app/lib/file-validator'
+import { validateReceiptScan } from '@/app/lib/ai-schema-validator'
 
 const RECEIPT_PROMPT = `You are an expert AI expense and invoice OCR auditor.
 Analyze the attached receipt, bill, or invoice image/document. Extract all expense details accurately.
@@ -81,14 +83,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 3. Payload size caps and MIME validation
+    // 3. Payload size caps and Binary Magic Byte Validation
     if (typeof fileData !== 'string' || fileData.length > 14_000_000) { // ~10MB base64 cap
       return NextResponse.json({ error: 'Receipt file is too large. Maximum size is 10MB.' }, { status: 400 })
     }
 
-    if (mimeType && !ALLOWED_MIME_TYPES.includes(mimeType)) {
-      return NextResponse.json({ error: 'Unsupported file format. Please upload a JPG, PNG, WebP, or PDF.' }, { status: 400 })
+    const sigCheck = validateBase64FileSignature(fileData, mimeType, ALLOWED_MIME_TYPES)
+    if (!sigCheck.valid) {
+      logSecurityEvent({
+        type: 'INVALID_FILE_SIGNATURE',
+        userId: user.id,
+        details: { error: sigCheck.error, declaredMime: mimeType }
+      })
+      return NextResponse.json({ error: sigCheck.error || 'Invalid file format.' }, { status: 400 })
     }
+
+    const effectiveMime = sigCheck.detectedMime || mimeType || 'image/jpeg'
 
     const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey) {
@@ -101,14 +111,14 @@ export async function POST(request: NextRequest) {
     logSecurityEvent({
       type: 'AI_EXPENSE_SCAN',
       userId: user.id,
-      details: { mimeType, fileSize: fileData.length }
+      details: { mimeType: effectiveMime, fileSize: fileData.length }
     })
 
     const parts: unknown[] = [
       { text: RECEIPT_PROMPT },
       {
         inlineData: {
-          mimeType: mimeType || 'image/jpeg',
+          mimeType: effectiveMime,
           data: fileData,
         }
       }
@@ -134,6 +144,7 @@ export async function POST(request: NextRequest) {
               maxOutputTokens: 2048,
             }
           }),
+          signal: AbortSignal.timeout(30000), // 30s bounded request timeout
         })
 
         if (response.ok) {
@@ -145,22 +156,33 @@ export async function POST(request: NextRequest) {
         console.warn(`[AI OCR ${modelName} ${response.status}]`, errBody.slice(0, 300))
 
         if (response.status === 429) {
-          lastError = 'Rate limit reached. Retrying...'
+          lastError = 'Rate limit reached. Please wait a few seconds and try again.'
           await new Promise(r => setTimeout(r, 500))
           continue
         }
 
+        if (response.status === 403 || response.status === 401) {
+          return NextResponse.json(
+            { error: 'Invalid AI service credentials.' },
+            { status: 401 }
+          )
+        }
+
         lastError = `AI OCR service error (${response.status})`
-      } catch (err) {
+      } catch (err: any) {
         console.error(`[AI OCR Exception]`, err)
-        lastError = 'Network error connecting to AI OCR service.'
+        if (err.name === 'TimeoutError') {
+          lastError = 'AI OCR request timed out. Please try again.'
+        } else {
+          lastError = 'Network error connecting to AI OCR service.'
+        }
       }
     }
 
     if (!responseData) {
       return NextResponse.json(
         { error: lastError || 'AI OCR service busy. Please try again.' },
-        { status: 429 }
+        { status: 503 }
       )
     }
 
@@ -175,9 +197,9 @@ export async function POST(request: NextRequest) {
     let rawText = candidates[0]?.content?.parts?.[0]?.text || ''
     rawText = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/i, '').trim()
 
-    let extracted
+    let rawJson: any
     try {
-      extracted = JSON.parse(rawText)
+      rawJson = JSON.parse(rawText)
     } catch {
       console.error('[Gemini OCR Parse Error]:', rawText)
       return NextResponse.json(
@@ -186,7 +208,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    return NextResponse.json({ extracted })
+    // Runtime Schema Validation
+    try {
+      const extracted = validateReceiptScan(rawJson)
+      return NextResponse.json({ extracted })
+    } catch (schemaErr: any) {
+      console.error('[Receipt OCR Schema Error]:', schemaErr)
+      return NextResponse.json(
+        { error: 'AI output did not match expected structure. Please enter details manually.' },
+        { status: 500 }
+      )
+    }
 
   } catch (e) {
     console.error('[Receipt OCR Error]', e)

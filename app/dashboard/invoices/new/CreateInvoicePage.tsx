@@ -237,23 +237,38 @@ export default function CreateInvoicePage({
       const { data: inv, error: invErr } = await sb.from('invoices').insert(buildPayload(invoiceNumber, status)).select('id').single()
       if (invErr) throw invErr
 
-      await sb.from('invoice_items').insert(
-        items.map((it, idx) => ({ invoice_id: inv.id, description: it.description, quantity: it.qty, unit: it.unit, unit_price: it.rate, sort_order: idx }))
-      )
+      const createdInvoiceId = inv.id
 
-      if (status === 'sent') {
-        const dueTs = new Date(dueDate)
-        await sb.from('reminders').insert(
-          [7, 14, 30].map(d => {
-            const t = new Date(dueTs); t.setDate(t.getDate() + d)
-            return { invoice_id: inv.id, user_id: userId, channel: 'whatsapp', status: 'scheduled', scheduled_at: t.toISOString(), days_overdue: d, used_contract_context: !!contractId }
-          })
+      try {
+        const { error: itemsErr } = await sb.from('invoice_items').insert(
+          items.map((it, idx) => ({ invoice_id: inv.id, description: it.description, quantity: it.qty, unit: it.unit, unit_price: it.rate, sort_order: idx }))
         )
+        if (itemsErr) throw itemsErr
+
+        if (status === 'sent') {
+          const dueTs = new Date(dueDate)
+          const { error: remErr } = await sb.from('reminders').insert(
+            [7, 14, 30].map(d => {
+              const t = new Date(dueTs); t.setDate(t.getDate() + d)
+              return { invoice_id: inv.id, user_id: userId, channel: 'whatsapp', status: 'scheduled', scheduled_at: t.toISOString(), days_overdue: d, used_contract_context: !!contractId }
+            })
+          )
+          if (remErr) {
+            console.warn('[Reminders schedule warning]:', remErr.message)
+          }
+        }
+      } catch (childErr: any) {
+        // Rollback orphaned invoice header to preserve data integrity
+        console.error('[Rolling back incomplete invoice header]:', createdInvoiceId, childErr)
+        await sb.from('invoices').delete().eq('id', createdInvoiceId)
+        throw new Error(childErr?.message || 'Failed to save line items')
       }
+
       setSaved(true)
       setTimeout(() => router.push('/dashboard/invoices'), 1400)
-    } catch (e: unknown) {
-      console.error(e); alert('Error saving invoice. Try again.')
+    } catch (e: any) {
+      console.error('[Invoice save error]:', e)
+      alert(`Error saving invoice: ${e?.message || 'Please check your inputs and connection.'}`)
     } finally { setSaving(false); setSending(false) }
   }
 

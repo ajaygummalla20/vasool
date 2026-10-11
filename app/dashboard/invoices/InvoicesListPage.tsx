@@ -124,9 +124,10 @@ export default function InvoicesListPage({
     setMenuOpen(null)
     try {
       const sb = getSupabase()
+      const nowIso = new Date().toISOString()
       await sb.from('invoices').update({
         status: 'paid',
-        paid_at: new Date().toISOString(),
+        paid_at: nowIso,
         amount_due: 0,
       }).eq('id', inv.id)
 
@@ -135,7 +136,9 @@ export default function InvoicesListPage({
         user_id: userId,
         amount: inv.amount_due,
         method: 'other',
-        paid_at: new Date().toISOString(),
+        payment_method: 'other',
+        paid_at: nowIso,
+        payment_date: nowIso.split('T')[0],
       })
 
       await sb.from('reminders')

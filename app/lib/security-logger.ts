@@ -15,7 +15,10 @@ export type SecurityEventType =
   | 'INVOICE_PUBLIC_ACCESS'
   | 'DPDP_DATA_EXPORT'
   | 'DPDP_DATA_ERASURE_REQUEST'
+  | 'DPDP_DATA_ERASURE_PARTIAL'
+  | 'DPDP_DATA_ERASURE_COMPLETE'
   | 'DPDP_CONSENT_WITHDRAWAL'
+  | 'INVALID_FILE_SIGNATURE'
 
 export interface SecurityEventPayload {
   type: SecurityEventType

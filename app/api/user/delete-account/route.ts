@@ -33,6 +33,8 @@ export async function POST(request: NextRequest) {
       details: { email: user.email }
     })
 
+    const failedTables: string[] = []
+
     // 1. Delete invoice items first (FK dependency)
     const { data: userInvoices } = await supabase
       .from('invoices')
@@ -41,35 +43,91 @@ export async function POST(request: NextRequest) {
 
     if (userInvoices && userInvoices.length > 0) {
       const invIds = userInvoices.map(i => i.id)
-      await supabase.from('invoice_items').delete().in('invoice_id', invIds)
+      const { error: itemsErr } = await supabase.from('invoice_items').delete().in('invoice_id', invIds)
+      if (itemsErr) failedTables.push('invoice_items')
     }
 
-    // 2. Delete user records across tables
-    await supabase.from('invoices').delete().eq('user_id', user.id)
-    await supabase.from('clients').delete().eq('user_id', user.id)
-    await supabase.from('expenses').delete().eq('user_id', user.id)
-    await supabase.from('subscriptions').delete().eq('user_id', user.id)
-    await supabase.from('profiles').delete().eq('id', user.id)
+    // 2. Delete child tables and related entities with error checking
+    const tablesToDelete = [
+      'payments',
+      'reminders',
+      'invoices',
+      'clients',
+      'expenses',
+      'contracts',
+      'proposals',
+      'recurring_templates',
+      'billing_orders',
+      'subscriptions',
+    ]
 
-    // 3. Purge Auth record if service role key is present
+    for (const table of tablesToDelete) {
+      const { error } = await supabase.from(table).delete().eq('user_id', user.id)
+      if (error) {
+        console.warn(`[Delete Account Error] Table ${table}:`, error.message)
+        failedTables.push(table)
+      }
+    }
+
+    // 3. Delete Profile
+    const { error: profErr } = await supabase.from('profiles').delete().eq('id', user.id)
+    if (profErr) {
+      console.warn('[Delete Account Error] Profile:', profErr.message)
+      failedTables.push('profiles')
+    }
+
+    // 4. Purge Auth record via Admin Client
+    let authUserDeleted = false
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 
     if (serviceRoleKey && supabaseUrl) {
       try {
         const adminSupabase = createAdminClient(supabaseUrl, serviceRoleKey)
-        await adminSupabase.auth.admin.deleteUser(user.id)
-      } catch (adminErr) {
-        console.warn('[Admin user delete fallback warning]:', adminErr)
+        const { error: adminErr } = await adminSupabase.auth.admin.deleteUser(user.id)
+        if (adminErr) {
+          console.error('[Admin Auth Delete Error]:', adminErr.message)
+        } else {
+          authUserDeleted = true
+        }
+      } catch (adminErr: any) {
+        console.error('[Admin Auth Delete Exception]:', adminErr)
       }
+    } else {
+      console.warn('[Delete Account Warning]: SUPABASE_SERVICE_ROLE_KEY absent. Auth user record cannot be purged.')
     }
 
-    // 4. Sign out
+    // 5. Sign out current session
     await supabase.auth.signOut()
+
+    // 6. Report accurate result to user
+    if (failedTables.length > 0 || !authUserDeleted) {
+      logSecurityEvent({
+        type: 'DPDP_DATA_ERASURE_PARTIAL',
+        userId: user.id,
+        details: { failedTables, authUserDeleted }
+      })
+
+      return NextResponse.json(
+        {
+          success: false,
+          partial: true,
+          message: 'Account erasure completed partially. Some records or the authentication record could not be fully deleted. Our Data Protection Officer has been notified.',
+          details: { failedTables, authUserDeleted }
+        },
+        { status: 207 }
+      )
+    }
+
+    logSecurityEvent({
+      type: 'DPDP_DATA_ERASURE_COMPLETE',
+      userId: user.id,
+      details: { email: user.email }
+    })
 
     return NextResponse.json({
       success: true,
-      message: 'Account and associated personal data successfully erased in accordance with Section 12 of the DPDP Act, 2023.',
+      message: 'Account and all associated personal data successfully erased in accordance with Section 12 of the DPDP Act, 2023.',
     })
   } catch (err: any) {
     console.error('[DPDP Delete Account Error]', err)

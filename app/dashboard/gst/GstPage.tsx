@@ -31,6 +31,9 @@ interface Invoice {
   subtotal: number
   tax_rate: number
   tax_amount: number
+  cgst_amount?: number
+  sgst_amount?: number
+  igst_amount?: number
   discount_amount: number
   issue_date: string
   due_date: string
@@ -177,60 +180,104 @@ export default function GstPageClient({
     return Object.values(map)
   }, [filteredInvoices])
 
+  // Helper to derive 2-digit Place of Supply (POS) from GSTIN or state
+  const getPosCode = (clientGstin: string | null | undefined, clientState: string | null | undefined): string => {
+    if (clientGstin && clientGstin.trim().length >= 2) {
+      const prefix = clientGstin.trim().slice(0, 2)
+      if (/^\d{2}$/.test(prefix)) return prefix
+    }
+    if (profile.gstin && profile.gstin.trim().length >= 2) {
+      const prefix = profile.gstin.trim().slice(0, 2)
+      if (/^\d{2}$/.test(prefix)) return prefix
+    }
+    return '36' // Default Telangana
+  }
+
+  // Neutralize CSV spreadsheet formula injection and quote properly
+  const sanitizeCsvCell = (val: any): string => {
+    if (val === null || val === undefined) return '""'
+    let str = String(val)
+    // Neutralize formula trigger characters (=, +, -, @, \t, \r)
+    if (/^[=+\-@\t\r]/.test(str)) {
+      str = `'${str}`
+    }
+    // Escape internal quotes
+    return `"${str.replace(/"/g, '""')}"`
+  }
+
   // Export GSTR-1 JSON (GST Portal format)
   const handleExportGstr1Json = () => {
+    if (!profile.gstin) {
+      alert('Your Business GSTIN is required to generate a valid GSTR-1 filing export. Please configure your GSTIN in Settings.')
+      return
+    }
+
     const fpMonth = String(new Date().getMonth() + 1).padStart(2, '0')
     const fpYear = new Date().getFullYear()
 
     const gstr1Payload = {
-      gstin: profile.gstin || '36ABCDE1234F1Z5',
+      gstin: profile.gstin,
       fp: `${fpMonth}${fpYear}`,
       gt: taxMetrics.totalTurnover,
       cur_gt: taxMetrics.totalTurnover,
       b2b: filteredInvoices
         .filter(inv => inv.clients?.gstin)
-        .map(inv => ({
-          ctin: inv.clients?.gstin,
-          inv: [
-            {
-              inum: inv.invoice_number,
-              idt: inv.issue_date,
-              val: inv.total_amount,
-              pos: '36',
-              rchrg: 'N',
-              inv_typ: 'R',
-              itms: [
-                {
-                  num: 1,
-                  itm_det: {
-                    txval: inv.subtotal || inv.total_amount,
-                    rt: inv.tax_rate || 18,
-                    camt: taxMetrics.totalCgst,
-                    samt: taxMetrics.totalSgst,
-                    iamt: taxMetrics.totalIgst,
+        .map(inv => {
+          const invTax = Number(inv.tax_amount || 0)
+          const isInterstate = inv.clients?.state && !inv.clients.state.toLowerCase().includes('telangana') && !inv.clients.state.toLowerCase().includes('ap')
+          const camt = Number(inv.cgst_amount ?? (isInterstate ? 0 : invTax / 2))
+          const samt = Number(inv.sgst_amount ?? (isInterstate ? 0 : invTax / 2))
+          const iamt = Number(inv.igst_amount ?? (isInterstate ? invTax : 0))
+          const pos = getPosCode(inv.clients?.gstin, inv.clients?.state)
+
+          return {
+            ctin: inv.clients?.gstin,
+            inv: [
+              {
+                inum: inv.invoice_number,
+                idt: inv.issue_date,
+                val: inv.total_amount,
+                pos,
+                rchrg: 'N',
+                inv_typ: 'R',
+                itms: [
+                  {
+                    num: 1,
+                    itm_det: {
+                      txval: inv.subtotal || (inv.total_amount - invTax),
+                      rt: inv.tax_rate || 18,
+                      camt,
+                      samt,
+                      iamt,
+                    }
                   }
-                }
-              ]
-            }
-          ]
-        })),
+                ]
+              }
+            ]
+          }
+        }),
       b2cs: filteredInvoices
         .filter(inv => !inv.clients?.gstin)
-        .map(inv => ({
-          sply_ty: 'INTRA',
-          pos: '36',
-          typ: 'OE',
-          rt: inv.tax_rate || 18,
-          txval: inv.subtotal || inv.total_amount,
-          iamt: 0,
-          csamt: 0
-        }))
+        .map(inv => {
+          const invTax = Number(inv.tax_amount || 0)
+          const isInterstate = inv.clients?.state && !inv.clients.state.toLowerCase().includes('telangana') && !inv.clients.state.toLowerCase().includes('ap')
+          const pos = getPosCode(null, inv.clients?.state)
+          return {
+            sply_ty: isInterstate ? 'INTER' : 'INTRA',
+            pos,
+            typ: 'OE',
+            rt: inv.tax_rate || 18,
+            txval: inv.subtotal || (inv.total_amount - invTax),
+            iamt: isInterstate ? invTax : 0,
+            csamt: 0
+          }
+        })
     }
 
     const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(gstr1Payload, null, 2))}`
     const downloadAnchor = document.createElement('a')
     downloadAnchor.setAttribute('href', jsonString)
-    downloadAnchor.setAttribute('download', `GSTR1_${profile.gstin || 'Settlr'}_${fpMonth}${fpYear}.json`)
+    downloadAnchor.setAttribute('download', `GSTR1_${profile.gstin}_${fpMonth}${fpYear}.json`)
     document.body.appendChild(downloadAnchor)
     downloadAnchor.click()
     downloadAnchor.remove()
@@ -243,11 +290,25 @@ export default function GstPageClient({
     filteredInvoices.forEach(inv => {
       const isInterstate = inv.clients?.state && !inv.clients.state.toLowerCase().includes('telangana') && !inv.clients.state.toLowerCase().includes('ap')
       const tax = Number(inv.tax_amount || 0)
-      const cgst = isInterstate ? 0 : tax / 2
-      const sgst = isInterstate ? 0 : tax / 2
-      const igst = isInterstate ? tax : 0
+      const cgst = Number(inv.cgst_amount ?? (isInterstate ? 0 : tax / 2))
+      const sgst = Number(inv.sgst_amount ?? (isInterstate ? 0 : tax / 2))
+      const igst = Number(inv.igst_amount ?? (isInterstate ? tax : 0))
 
-      csv += `"${inv.invoice_number}","${inv.issue_date}","${inv.clients?.name || 'Client'}","${inv.clients?.gstin || 'B2C (Unregistered)'}","${inv.clients?.state || 'Telangana'}",${inv.subtotal || 0},${cgst},${sgst},${igst},${inv.total_amount || 0},"${inv.status.toUpperCase()}"\n`
+      const cells = [
+        sanitizeCsvCell(inv.invoice_number),
+        sanitizeCsvCell(inv.issue_date),
+        sanitizeCsvCell(inv.clients?.name || 'Client'),
+        sanitizeCsvCell(inv.clients?.gstin || 'B2C (Unregistered)'),
+        sanitizeCsvCell(inv.clients?.state || 'Telangana'),
+        Number(inv.subtotal || 0).toFixed(2),
+        cgst.toFixed(2),
+        sgst.toFixed(2),
+        igst.toFixed(2),
+        Number(inv.total_amount || 0).toFixed(2),
+        sanitizeCsvCell(inv.status.toUpperCase()),
+      ]
+
+      csv += cells.join(',') + '\n'
     })
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })

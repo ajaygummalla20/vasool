@@ -61,6 +61,7 @@ interface Invoice {
   payment_terms: string | null
   late_fee_terms: string | null
   notes: string | null
+  payment_token?: string | null
 }
 
 interface Props {
@@ -321,7 +322,9 @@ Authorized Signatory`
         user_id: userId,
         amount: amountDue,
         method: paidMethod,
+        payment_method: paidMethod,
         paid_at: paidAtISO,
+        payment_date: paidAtISO.split('T')[0],
       }).select().single()
 
       await sb.from('reminders')
@@ -362,7 +365,12 @@ Authorized Signatory`
   // ── Shareable link ──
   const [linkCopied, setLinkCopied] = useState(false)
   const handleCopyLink = () => {
-    const url = `${window.location.origin}/invoice/${invoice.id}`
+    const token = invoice.payment_token
+    if (!token) {
+      alert('This invoice does not have a secure public token yet. Please refresh or update the invoice.')
+      return
+    }
+    const url = `${window.location.origin}/invoice/${token}`
     navigator.clipboard.writeText(url)
     setLinkCopied(true)
     setTimeout(() => setLinkCopied(false), 2000)

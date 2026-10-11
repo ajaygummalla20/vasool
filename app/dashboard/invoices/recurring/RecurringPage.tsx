@@ -144,8 +144,10 @@ export default function RecurringPage({
       const payload = {
         user_id: userId,
         client_id: form.client_id,
+        template_name: form.title,
         title: form.title,
         frequency: form.frequency,
+        next_run_date: form.next_due,
         next_due: form.next_due,
         amount: computedSubtotal,
         tax_rate: 18,
@@ -174,9 +176,9 @@ export default function RecurringPage({
         notes: 'Recurring retainer services invoice.',
       })
       setItems([{ id: uid(), description: 'Monthly Retainer', qty: 1, unit: 'mo', rate: 25000 }])
-    } catch (e) {
+    } catch (e: any) {
       console.error(e)
-      alert('Failed to save recurring template. Check Supabase connection.')
+      alert(`Failed to save recurring template: ${e?.message || 'Check database connection'}`)
     } finally {
       setSaving(false)
     }
@@ -185,7 +187,12 @@ export default function RecurringPage({
   const handleToggleActive = async (tpl: RecurringTemplate) => {
     const sb = getSupabase()
     const updatedStatus = !tpl.is_active
-    await sb.from('recurring_templates').update({ is_active: updatedStatus }).eq('id', tpl.id)
+    const { error } = await sb.from('recurring_templates').update({ is_active: updatedStatus }).eq('id', tpl.id)
+    if (error) {
+      console.error('[Recurring toggle error]:', error)
+      alert(`Could not update recurring schedule: ${error.message}`)
+      return
+    }
     setTemplates((prev) =>
       prev.map((t) => (t.id === tpl.id ? { ...t, is_active: updatedStatus } : t))
     )
@@ -194,11 +201,7 @@ export default function RecurringPage({
   const handleGenerateInvoice = async (tpl: RecurringTemplate) => {
     setGeneratingId(tpl.id)
     try {
-      const query = new URLSearchParams()
-      if (tpl.client_id) query.set('client_id', tpl.client_id)
-      if (tpl.payment_terms) query.set('terms', tpl.payment_terms)
-      if (tpl.notes) query.set('notes', tpl.notes)
-      router.push(`/dashboard/invoices/new?${query.toString()}`)
+      router.push(`/dashboard/invoices/new?template=${tpl.id}`)
     } finally {
       setGeneratingId(null)
     }
@@ -207,7 +210,12 @@ export default function RecurringPage({
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this recurring schedule?')) return
     const sb = getSupabase()
-    await sb.from('recurring_templates').delete().eq('id', id)
+    const { error } = await sb.from('recurring_templates').delete().eq('id', id)
+    if (error) {
+      console.error('[Recurring delete error]:', error)
+      alert(`Could not delete recurring schedule: ${error.message}`)
+      return
+    }
     setTemplates((prev) => prev.filter((t) => t.id !== id))
   }
 

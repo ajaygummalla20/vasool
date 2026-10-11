@@ -48,9 +48,11 @@ export default async function NewInvoicePage({
     : 'tax_invoice'
   const initialOriginalInvRef = typeof params.ref === 'string' ? params.ref : ''
 
-  // ── Duplicate invoice support ──
+  // ── Duplicate invoice or Recurring Template support ──
   const duplicateId = typeof params.duplicate === 'string' ? params.duplicate : ''
+  const templateId = typeof params.template === 'string' ? params.template : ''
   let duplicateData = null
+
   if (duplicateId) {
     const { data: srcInvoice } = await supabase
       .from('invoices')
@@ -78,6 +80,35 @@ export default async function NewInvoicePage({
             unit: it.unit,
             rate: it.unit_price,
           })),
+      }
+    }
+  } else if (templateId) {
+    const { data: tpl } = await supabase
+      .from('recurring_templates')
+      .select('*')
+      .eq('id', templateId)
+      .eq('user_id', user.id)
+      .single()
+    if (tpl) {
+      duplicateData = {
+        client_id: tpl.client_id,
+        contract_id: null,
+        payment_terms: tpl.payment_terms || 'Net 15',
+        late_fee_terms: null,
+        notes: tpl.notes || '',
+        cgst_pct: 9,
+        sgst_pct: 9,
+        igst_pct: 0,
+        discount_pct: 0,
+        discount_amount: 0,
+        items: Array.isArray(tpl.items)
+          ? tpl.items.map((it: any) => ({
+              description: it.description || 'Retainer Services',
+              qty: Number(it.qty || it.quantity || 1),
+              unit: it.unit || 'mo',
+              rate: Number(it.rate || it.unit_price || 0),
+            }))
+          : [{ description: tpl.title || tpl.template_name || 'Retainer', qty: 1, unit: 'mo', rate: Number(tpl.amount || 0) }],
       }
     }
   }

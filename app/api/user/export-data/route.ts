@@ -31,39 +31,39 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // 1. Fetch Profile
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single()
+    // Parallel fetch of all user data entities with error safety
+    const [
+      { data: profile, error: profErr },
+      { data: clients, error: clientErr },
+      { data: invoices, error: invErr },
+      { data: expenses, error: expErr },
+      { data: payments, error: payErr },
+      { data: reminders, error: remErr },
+      { data: proposals, error: propErr },
+      { data: contracts, error: conErr },
+      { data: recurringTemplates, error: recErr },
+      { data: subscriptions, error: subErr },
+    ] = await Promise.all([
+      supabase.from('profiles').select('*').eq('id', user.id).single(),
+      supabase.from('clients').select('*').eq('user_id', user.id),
+      supabase.from('invoices').select('*, invoice_items (*)').eq('user_id', user.id),
+      supabase.from('expenses').select('*').eq('user_id', user.id),
+      supabase.from('payments').select('*').eq('user_id', user.id),
+      supabase.from('reminders').select('*').eq('user_id', user.id),
+      supabase.from('proposals').select('*').eq('user_id', user.id),
+      supabase.from('contracts').select('*').eq('user_id', user.id),
+      supabase.from('recurring_templates').select('*').eq('user_id', user.id),
+      supabase.from('subscriptions').select('*').eq('user_id', user.id),
+    ])
 
-    // 2. Fetch Clients
-    const { data: clients } = await supabase
-      .from('clients')
-      .select('*')
-      .eq('user_id', user.id)
+    const fetchErrors = [
+      profErr, clientErr, invErr, expErr, payErr,
+      remErr, propErr, conErr, recErr, subErr
+    ].filter(Boolean)
 
-    // 3. Fetch Invoices & Items
-    const { data: invoices } = await supabase
-      .from('invoices')
-      .select(`
-        *,
-        invoice_items (*)
-      `)
-      .eq('user_id', user.id)
-
-    // 4. Fetch Expenses
-    const { data: expenses } = await supabase
-      .from('expenses')
-      .select('*')
-      .eq('user_id', user.id)
-
-    // 5. Fetch Subscriptions
-    const { data: subscriptions } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', user.id)
+    if (fetchErrors.length > 0) {
+      console.warn('[DPDP Export Queries Warning]:', fetchErrors.map(e => e?.message))
+    }
 
     const exportPayload = {
       export_metadata: {
@@ -76,12 +76,23 @@ export async function GET(request: NextRequest) {
           clients: clients?.length || 0,
           invoices: invoices?.length || 0,
           expenses: expenses?.length || 0,
+          payments: payments?.length || 0,
+          reminders: reminders?.length || 0,
+          proposals: proposals?.length || 0,
+          contracts: contracts?.length || 0,
+          recurring_templates: recurringTemplates?.length || 0,
+          subscriptions: subscriptions?.length || 0,
         },
       },
       profile: profile || {},
       clients: clients || [],
       invoices: invoices || [],
       expenses: expenses || [],
+      payments: payments || [],
+      reminders: reminders || [],
+      proposals: proposals || [],
+      contracts: contracts || [],
+      recurring_templates: recurringTemplates || [],
       subscriptions: subscriptions || [],
     }
 

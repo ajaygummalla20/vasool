@@ -67,11 +67,15 @@ export default function ProposalsPage({ proposals: initialProposals, clients, us
     setSaving(true)
     try {
       const sb = getSupabase()
+      const filteredItems = items.filter(i => i.description)
       const { data, error } = await sb.from('proposals').insert({
         user_id: userId, proposal_number: previewNumber, title: form.title,
         client_id: form.client_id || null, total_amount: totalAmount,
-        valid_until: form.valid_until || null, items: items.filter(i => i.description),
-        scope_of_work: form.scope_of_work || null, terms: form.terms || null,
+        valid_until: form.valid_until || null, items: filteredItems,
+        deliverables: filteredItems,
+        scope_of_work: form.scope_of_work || null,
+        scope_summary: form.scope_of_work || null,
+        terms: form.terms || null,
         notes: form.notes || null, status: 'draft',
       }).select('*, clients ( name )').single()
 

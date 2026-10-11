@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 
@@ -91,6 +91,16 @@ export default function TDSPage({
   const [selectedTdsRates, setSelectedTdsRates] = useState<Record<string, number>>({})
   const [form16Status, setForm16Status] = useState<Record<string, 'pending' | 'received' | 'verified'>>({})
 
+  // Hydrate persistent Form 16A certificate status from client localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(`settlr_form16_${userId}`)
+      if (saved) {
+        setForm16Status(JSON.parse(saved))
+      }
+    } catch {}
+  }, [userId])
+
   // Compute TDS records per invoice
   const tdsRecords = useMemo(() => {
     return invoices.map(inv => {
@@ -102,7 +112,7 @@ export default function TDSPage({
       const netCash = grossAmount - tdsAmount
       const fy = getFY(inv.issue_date)
       const section = rate === 1 ? '194C' : '194J'
-      const status = form16Status[inv.id] || (inv.status === 'paid' ? 'pending' : 'pending')
+      const status = form16Status[inv.id] || 'pending'
 
       return {
         ...inv,
@@ -130,8 +140,10 @@ export default function TDSPage({
     })
   }, [tdsRecords, selectedFY, sectionFilter, searchQuery])
 
-  // Aggregate Metrics
+  // Aggregate Metrics & Audit Reconciliation Split
   const totalTdsAsset = filteredRecords.reduce((acc, r) => acc + r.tdsAmount, 0)
+  const verifiedTds = filteredRecords.filter(r => r.form16Status === 'verified').reduce((acc, r) => acc + r.tdsAmount, 0)
+  const pendingTds = totalTdsAsset - verifiedTds
   const total194J = filteredRecords.filter(r => r.section === '194J').reduce((acc, r) => acc + r.tdsAmount, 0)
   const total194C = filteredRecords.filter(r => r.section === '194C').reduce((acc, r) => acc + r.tdsAmount, 0)
   const pendingCertificates = filteredRecords.filter(r => r.form16Status === 'pending').length
@@ -141,7 +153,13 @@ export default function TDSPage({
   }
 
   const handleStatusChange = (invId: string, status: 'pending' | 'received' | 'verified') => {
-    setForm16Status(prev => ({ ...prev, [invId]: status }))
+    setForm16Status(prev => {
+      const updated = { ...prev, [invId]: status }
+      try {
+        localStorage.setItem(`settlr_form16_${userId}`, JSON.stringify(updated))
+      } catch {}
+      return updated
+    })
   }
 
   // 1-Click WhatsApp reminder for Form 16A
@@ -158,21 +176,31 @@ export default function TDSPage({
     window.open(`https://wa.me/91${phone}?text=${msg}`, '_blank')
   }
 
+  // Sanitize cell values for CSV injection safety
+  const sanitizeCsv = (val: any): string => {
+    if (val === null || val === undefined) return '""'
+    let str = String(val)
+    if (/^[=+\-@\t\r]/.test(str)) {
+      str = `'${str}`
+    }
+    return `"${str.replace(/"/g, '""')}"`
+  }
+
   // CSV Export for CA
   const handleExportCSV = () => {
-    const headers = ['Financial Year,Invoice No,Date,Client Name,PAN,Gross Amount (₹),TDS Section,TDS Rate (%),TDS Deducted (₹),Net Cash Received (₹),Form 16A Status']
+    const headers = 'Financial Year,Invoice No,Date,Client Name,PAN,Gross Amount (INR),TDS Section,TDS Rate (%),TDS Deducted (INR),Net Cash Received (INR),Form 16A Status'
     const rows = filteredRecords.map(r => [
-      `"${r.fy}"`,
-      `"${r.invoice_number}"`,
-      `"${r.issue_date}"`,
-      `"${r.clients?.company_name || r.clients?.name || 'Client'}"`,
-      `"${r.clients?.pan_number || '—'}"`,
+      sanitizeCsv(r.fy),
+      sanitizeCsv(r.invoice_number),
+      sanitizeCsv(r.issue_date),
+      sanitizeCsv(r.clients?.company_name || r.clients?.name || 'Client'),
+      sanitizeCsv(r.clients?.pan_number || '—'),
       r.grossAmount,
-      `"Section ${r.section}"`,
+      sanitizeCsv(`Section ${r.section}`),
       `${r.rate}%`,
       r.tdsAmount,
       r.netCash,
-      `"${r.form16Status.toUpperCase()}"`,
+      sanitizeCsv(r.form16Status.toUpperCase()),
     ].join(','))
 
     const csvContent = [headers, ...rows].join('\n')
@@ -255,30 +283,34 @@ export default function TDSPage({
             {/* Metric Overview Cards */}
             <div className="tds-grid">
               <div className="tds-card" style={{ border: '1px solid rgba(16,185,129,.3)', background: 'linear-gradient(135deg,rgba(16,185,129,.08),rgba(18,30,22,.8))' }}>
-                <div className="tds-card-lbl" style={{ color: '#34D399' }}>Total TDS Tax Asset</div>
+                <div className="tds-card-lbl" style={{ color: '#34D399' }}>Estimated TDS Withheld</div>
                 <div className="tds-card-val" style={{ color: '#34D399' }}>{fmtINR(totalTdsAsset)}</div>
-                <div className="tds-card-sub">Available to offset Income Tax in ITR</div>
+                <div className="tds-card-sub">{fmtINR(verifiedTds)} verified via Form 16A / 26AS</div>
+              </div>
+
+              <div className="tds-card" style={{ border: '1px solid rgba(59,130,246,.3)' }}>
+                <div className="tds-card-lbl" style={{ color: '#60A5FA' }}>Verified Tax Credit</div>
+                <div className="tds-card-val" style={{ color: '#60A5FA' }}>{fmtINR(verifiedTds)}</div>
+                <div className="tds-card-sub">Reconciled with Form 16A certificates</div>
+              </div>
+
+              <div className="tds-card" style={{ border: '1px solid rgba(245,158,11,.3)' }}>
+                <div className="tds-card-lbl" style={{ color: '#FBBF24' }}>Unreconciled Withholding</div>
+                <div className="tds-card-val" style={{ color: '#FBBF24' }}>{fmtINR(pendingTds)}</div>
+                <div className="tds-card-sub">{pendingCertificates} Form 16A certificates pending</div>
               </div>
 
               <div className="tds-card">
-                <div className="tds-card-lbl">Section 194J (Tech & Prof.)</div>
-                <div className="tds-card-val">{fmtINR(total194J)}</div>
-                <div className="tds-card-sub">10% / 2% Professional TDS</div>
+                <div className="tds-card-lbl">194J / 194C Splits</div>
+                <div className="tds-card-val" style={{ fontSize: 20 }}>{fmtINR(total194J)} / {fmtINR(total194C)}</div>
+                <div className="tds-card-sub">Prof (10%/2%) & Contractor (1%)</div>
               </div>
+            </div>
 
-              <div className="tds-card">
-                <div className="tds-card-lbl">Section 194C (Contractors)</div>
-                <div className="tds-card-val">{fmtINR(total194C)}</div>
-                <div className="tds-card-sub">1% Works & Labor contracts</div>
-              </div>
-
-              <div className="tds-card">
-                <div className="tds-card-lbl">Pending Form 16A</div>
-                <div className="tds-card-val" style={{ color: pendingCertificates > 0 ? '#FBBF24' : '#FFF' }}>
-                  {pendingCertificates}
-                </div>
-                <div className="tds-card-sub">Certificates awaiting client release</div>
-              </div>
+            {/* Statutory Reconciliation Banner */}
+            <div style={{ background: 'rgba(245,158,11,.08)', border: '1px solid rgba(245,158,11,.25)', borderRadius: 12, padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: '#FCD34D' }}>
+              <span>ℹ️</span>
+              <span><strong>Statutory Reconciliation Note:</strong> TDS amounts shown here are estimated deductions based on statutory slabs (Sec 194J/194C). To claim tax credits in your ITR, ensure client certificates match your official Form 26AS / AIS records on TRACES.</span>
             </div>
 
             {/* Filter and FY Bar */}
