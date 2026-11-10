@@ -36,7 +36,7 @@ interface Props {
 // ── Helpers ────────────────────────────────────────────────────
 function fmtINR(n: number) {
   if (n >= 100000) return `₹${(n / 100000).toFixed(2).replace(/\.?0+$/, '')}L`
-  if (n >= 1000)   return `₹${(n / 1000).toFixed(1).replace(/\.?0+$/, '')}K`
+  if (n >= 1000) return `₹${(n / 1000).toFixed(1).replace(/\.?0+$/, '')}K`
   return `₹${Math.round(n)}`
 }
 
@@ -56,14 +56,14 @@ function daysOverdue(dueDate: string) {
 }
 
 const STATUS_CFG: Record<string, { label: string; bg: string; color: string; dot: string }> = {
-  draft:          { label: 'Draft',     bg: '#F1EFE8', color: '#444441', dot: '#888780' },
-  sent:           { label: 'Sent',      bg: '#E6F1FB', color: '#0C447C', dot: '#185FA5' },
-  overdue:        { label: 'Overdue',   bg: '#FCEBEB', color: '#791F1F', dot: '#C0392B' },
+  draft: { label: 'Draft', bg: '#F1EFE8', color: '#444441', dot: '#888780' },
+  sent: { label: 'Sent', bg: '#E6F1FB', color: '#0C447C', dot: '#185FA5' },
+  overdue: { label: 'Overdue', bg: '#FCEBEB', color: '#791F1F', dot: '#C0392B' },
   partially_paid: { label: 'Part paid', bg: '#FAEEDA', color: '#633806', dot: '#BA7517' },
-  paid:           { label: 'Paid',      bg: '#E1F5EE', color: '#085041', dot: '#1B5E3B' },
+  paid: { label: 'Paid', bg: '#E1F5EE', color: '#085041', dot: '#1B5E3B' },
 }
 
-const COLORS = ['#1B5E3B','#185FA5','#854F0B','#7C3AED','#C85A1A','#0F766E']
+const COLORS = ['#1B5E3B', '#185FA5', '#854F0B', '#7C3AED', '#C85A1A', '#0F766E']
 function clientColor(name: string) {
   let h = 0
   for (const c of name) h = c.charCodeAt(0) + ((h << 5) - h)
@@ -71,9 +71,9 @@ function clientColor(name: string) {
 }
 
 const STATES = [
-  'Andhra Pradesh','Telangana','Karnataka','Tamil Nadu','Maharashtra',
-  'Delhi','Uttar Pradesh','Gujarat','Rajasthan','West Bengal',
-  'Madhya Pradesh','Kerala','Punjab','Haryana','Bihar','Other',
+  'Andhra Pradesh', 'Telangana', 'Karnataka', 'Tamil Nadu', 'Maharashtra',
+  'Delhi', 'Uttar Pradesh', 'Gujarat', 'Rajasthan', 'West Bengal',
+  'Madhya Pradesh', 'Kerala', 'Punjab', 'Haryana', 'Bihar', 'Other',
 ]
 
 function getSupabase() {
@@ -93,7 +93,7 @@ export default function ClientDetailPage({
 
   // ── Edit mode ──
   const [editing, setEditing] = useState(false)
-  const [form, setForm]       = useState({
+  const [form, setForm] = useState({
     name: client.name || '',
     company_name: client.company_name || '',
     email: client.email || '',
@@ -107,7 +107,7 @@ export default function ClientDetailPage({
     notes: client.notes || '',
   })
   const [saving, setSaving] = useState(false)
-  const [saved,  setSaved]  = useState(false)
+  const [saved, setSaved] = useState(false)
 
   const set = (f: string, v: string) => setForm(p => ({ ...p, [f]: v }))
 
@@ -177,9 +177,9 @@ export default function ClientDetailPage({
   // ── Metrics ──
   const metrics = useMemo(() => {
     const totalInvoiced = invoices.reduce((s, i) => s + Number(i.total_amount), 0)
-    const totalPaid     = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + Number(i.total_amount), 0)
-    const outstanding   = invoices.filter(i => !['paid','cancelled','draft'].includes(i.status)).reduce((s, i) => s + Number(i.amount_due), 0)
-    const overdueCount  = invoices.filter(i => i.status === 'overdue').length
+    const totalPaid = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + Number(i.total_amount), 0)
+    const outstanding = invoices.filter(i => !['paid', 'cancelled', 'draft'].includes(i.status)).reduce((s, i) => s + Number(i.amount_due), 0)
+    const overdueCount = invoices.filter(i => i.status === 'overdue').length
     return { totalInvoiced, totalPaid, outstanding, overdueCount, total: invoices.length }
   }, [invoices])
 
@@ -311,7 +311,7 @@ export default function ClientDetailPage({
             <div className="cd-top-left">
               <button className="cd-back" onClick={() => router.push('/dashboard/clients')}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(26,20,13,.65)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M19 12H5M12 5l-7 7 7 7"/>
+                  <path d="M19 12H5M12 5l-7 7 7 7" />
                 </svg>
               </button>
               <div className="cd-top-av" style={{ background: clientColor(client.name) }}>{initials}</div>
@@ -325,12 +325,12 @@ export default function ClientDetailPage({
                 <>
                   <button className="cd-btn-sec" onClick={startEdit}>
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                     </svg>
                     Edit
                   </button>
                   <button className="cd-btn-primary" onClick={() => router.push(`/dashboard/invoices/new?client=${client.id}`)}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
                     New Invoice
                   </button>
                 </>
@@ -440,12 +440,12 @@ export default function ClientDetailPage({
                     {!editing ? (
                       <>
                         {[
-                          { icon: '📧', label: 'Email',    val: client.email },
-                          { icon: '📱', label: 'Phone',    val: client.phone },
+                          { icon: '📧', label: 'Email', val: client.email },
+                          { icon: '📱', label: 'Phone', val: client.phone },
                           { icon: '💬', label: 'WhatsApp', val: client.whatsapp },
-                          { icon: '🏢', label: 'GST',      val: client.gst_number },
+                          { icon: '🏢', label: 'GST', val: client.gst_number },
                           { icon: '📍', label: 'Location', val: [client.city, client.state].filter(Boolean).join(', ') || null },
-                          { icon: '🏠', label: 'Address',  val: client.address },
+                          { icon: '🏠', label: 'Address', val: client.address },
                         ].map(info => (
                           <div key={info.label} className="cd-info-row">
                             <span className="cd-info-icon">{info.icon}</span>

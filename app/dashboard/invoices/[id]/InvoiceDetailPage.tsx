@@ -111,8 +111,8 @@ function daysOverdue(dueDate: string) {
 // ── Amount In Words (INR) ──────────────────────────────────────
 function amountInWords(num: number): string {
   if (num === 0) return 'Zero Rupees Only'
-  const ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen']
-  const tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety']
+  const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen']
+  const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']
 
   function convertBelow1000(n: number): string {
     if (n === 0) return ''
@@ -141,11 +141,11 @@ function amountInWords(num: number): string {
 }
 
 const STATUS_CFG: Record<string, { label: string; bg: string; color: string; dot: string }> = {
-  draft:          { label: 'Draft',    bg: '#F1EFE8', color: '#444441', dot: '#888780' },
-  sent:           { label: 'Sent',     bg: '#E6F1FB', color: '#0C447C', dot: '#185FA5' },
-  overdue:        { label: 'Overdue',  bg: '#FCEBEB', color: '#791F1F', dot: '#C0392B' },
-  partially_paid: { label: 'Part paid',bg: '#FAEEDA', color: '#633806', dot: '#BA7517' },
-  paid:           { label: 'Paid',     bg: '#E1F5EE', color: '#085041', dot: '#1B5E3B' },
+  draft: { label: 'Draft', bg: '#F1EFE8', color: '#444441', dot: '#888780' },
+  sent: { label: 'Sent', bg: '#E6F1FB', color: '#0C447C', dot: '#185FA5' },
+  overdue: { label: 'Overdue', bg: '#FCEBEB', color: '#791F1F', dot: '#C0392B' },
+  partially_paid: { label: 'Part paid', bg: '#FAEEDA', color: '#633806', dot: '#BA7517' },
+  paid: { label: 'Paid', bg: '#E1F5EE', color: '#085041', dot: '#1B5E3B' },
 }
 
 const METHOD_LABELS: Record<string, string> = {
@@ -168,38 +168,38 @@ export default function InvoiceDetailPage({
 }: Props) {
   const router = useRouter()
 
-  const [invStatus,    setInvStatus]    = useState(invoice.status)
-  const [amountDue,    setAmountDue]    = useState(invoice.amount_due)
-  const [paidAt,       setPaidAt]       = useState(invoice.paid_at)
+  const [invStatus, setInvStatus] = useState(invoice.status)
+  const [amountDue, setAmountDue] = useState(invoice.amount_due)
+  const [paidAt, setPaidAt] = useState(invoice.paid_at)
   const [paymentsList, setPaymentsList] = useState<Payment[]>(payments)
   const [reminderList] = useState<Reminder[]>(reminders)
 
   // Mark as paid modal
-  const [showPaidModal,   setShowPaidModal]   = useState(false)
-  const [paidMethod,      setPaidMethod]      = useState<'upi'|'bank_transfer'|'cash'|'cheque'|'other'>('upi')
-  const [paidDateInput,   setPaidDateInput]   = useState(new Date().toISOString().split('T')[0])
+  const [showPaidModal, setShowPaidModal] = useState(false)
+  const [paidMethod, setPaidMethod] = useState<'upi' | 'bank_transfer' | 'cash' | 'cheque' | 'other'>('upi')
+  const [paidDateInput, setPaidDateInput] = useState(new Date().toISOString().split('T')[0])
   const [hasTdsDeduction, setHasTdsDeduction] = useState(false)
-  const [tdsSection,      setTdsSection]      = useState<'194J_10'|'194J_2'|'194C_1'>('194J_10')
-  const [marking,         setMarking]         = useState(false)
-  const [markError,       setMarkError]       = useState('')
+  const [tdsSection, setTdsSection] = useState<'194J_10' | '194J_2' | '194C_1'>('194J_10')
+  const [marking, setMarking] = useState(false)
+  const [markError, setMarkError] = useState('')
 
   // Proforma conversion
-  const [convertingPi,    setConvertingPi]    = useState(false)
+  const [convertingPi, setConvertingPi] = useState(false)
 
   // Account details modal
-  const [currentUpi,         setCurrentUpi]         = useState(upiId || '')
-  const [currentBankName,    setCurrentBankName]    = useState(bankName || '')
+  const [currentUpi, setCurrentUpi] = useState(upiId || '')
+  const [currentBankName, setCurrentBankName] = useState(bankName || '')
   const [currentBankAccount, setCurrentBankAccount] = useState(bankAccount || '')
-  const [currentBankIfsc,    setCurrentBankIfsc]    = useState(bankIfsc || '')
-  const [currentUdyam,       setCurrentUdyam]       = useState(msmeUdyamNumber || '')
-  const [showAccountModal,   setShowAccountModal]   = useState(false)
-  const [savingAccount,      setSavingAccount]      = useState(false)
+  const [currentBankIfsc, setCurrentBankIfsc] = useState(bankIfsc || '')
+  const [currentUdyam, setCurrentUdyam] = useState(msmeUdyamNumber || '')
+  const [showAccountModal, setShowAccountModal] = useState(false)
+  const [savingAccount, setSavingAccount] = useState(false)
 
   // MSMED Legal Notice Modal
   const [showMsmeModal, setShowMsmeModal] = useState(false)
-  const [copiedNotice,  setCopiedNotice]  = useState(false)
+  const [copiedNotice, setCopiedNotice] = useState(false)
 
-  const isPaid   = invStatus === 'paid'
+  const isPaid = invStatus === 'paid'
   const isOverdue = invStatus === 'overdue'
   const overdueDays = daysOverdue(invoice.due_date)
   const cfg = STATUS_CFG[invStatus] || STATUS_CFG.draft
@@ -293,14 +293,14 @@ For ${senderName || userName}
 Authorized Signatory`
 
   // ── Compute totals ──
-  const subtotal   = invoiceItems.reduce((s, i) => s + i.quantity * i.unit_price, 0)
-  const discount   = Number(invoice.discount_amount || 0)
-  const afterDisc  = subtotal - discount
+  const subtotal = invoiceItems.reduce((s, i) => s + i.quantity * i.unit_price, 0)
+  const discount = Number(invoice.discount_amount || 0)
+  const afterDisc = subtotal - discount
   const hasCgstSgst = (invoice.cgst_pct || 0) > 0 || (invoice.sgst_pct || 0) > 0
-  const hasIgst    = (invoice.igst_pct || 0) > 0
-  const cgstAmt    = hasCgstSgst ? afterDisc * (invoice.cgst_pct || 0) / 100 : 0
-  const sgstAmt    = hasCgstSgst ? afterDisc * (invoice.sgst_pct || 0) / 100 : 0
-  const igstAmt    = hasIgst     ? afterDisc * (invoice.igst_pct || 0) / 100 : 0
+  const hasIgst = (invoice.igst_pct || 0) > 0
+  const cgstAmt = hasCgstSgst ? afterDisc * (invoice.cgst_pct || 0) / 100 : 0
+  const sgstAmt = hasCgstSgst ? afterDisc * (invoice.sgst_pct || 0) / 100 : 0
+  const igstAmt = hasIgst ? afterDisc * (invoice.igst_pct || 0) / 100 : 0
   const grandTotal = Number(invoice.total_amount)
 
   // ── Mark as paid ──
@@ -352,8 +352,8 @@ Authorized Signatory`
       return
     }
     const phone = (client.whatsapp || client.phone || '').replace(/\D/g, '')
-    const days  = daysOverdue(invoice.due_date)
-    const msg   = encodeURIComponent(
+    const days = daysOverdue(invoice.due_date)
+    const msg = encodeURIComponent(
       `Hi ${client.name},\n\nThis is a gentle reminder that Invoice ${invoice.invoice_number} for ${fmtINR(Number(amountDue))} is ${days > 0 ? `${days} days overdue` : 'due soon'}.\n\nKindly process the payment at your earliest convenience.\n\nThank you.`
     )
     window.open(`https://wa.me/91${phone}?text=${msg}`, '_blank')
@@ -704,7 +704,7 @@ Authorized Signatory`
             <div className="id-top-left">
               <button className="id-back" onClick={() => router.push('/dashboard/invoices')} title="Back to invoices">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(26,20,13,.65)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M19 12H5M12 5l-7 7 7 7"/>
+                  <path d="M19 12H5M12 5l-7 7 7 7" />
                 </svg>
               </button>
               <div className="id-top-inv">{invoice.invoice_number}</div>
@@ -717,13 +717,13 @@ Authorized Signatory`
             <div className="id-top-right">
               <button className="id-btn-sec" onClick={handlePrint}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/>
+                  <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z" />
                 </svg>
                 Download PDF
               </button>
               <button className="id-btn-sec" onClick={handleCopyLink} title="Copy client-facing invoice link">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+                  <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
                 </svg>
                 {linkCopied ? '✓ Copied!' : 'Share Link'}
               </button>
@@ -765,7 +765,7 @@ Authorized Signatory`
               {!isPaid && (
                 <button className="id-btn-wa" onClick={sendReminder}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+                    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
                   </svg>
                   Send Reminder
                 </button>
@@ -773,7 +773,7 @@ Authorized Signatory`
               {!isPaid && (
                 <button className="id-btn-primary" onClick={() => setShowPaidModal(true)}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 6L9 17l-5-5"/>
+                    <path d="M20 6L9 17l-5-5" />
                   </svg>
                   Mark as Paid
                 </button>
@@ -795,7 +795,7 @@ Authorized Signatory`
           {isOverdue && overdueDays > 0 && (
             <div className="id-banner">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C0392B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+                <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
               </svg>
               <span className="id-banner-text">
                 This invoice is <strong>{overdueDays} days overdue</strong>. Due date was {fmtDate(invoice.due_date)}.
@@ -1081,7 +1081,7 @@ Authorized Signatory`
                         label: 'Invoice Sent',
                         sub: 'Sent to client',
                         date: invoice.sent_at ? fmtDateTime(invoice.sent_at) : undefined,
-                        done: !!invoice.sent_at || ['sent','overdue','partially_paid','paid'].includes(invStatus),
+                        done: !!invoice.sent_at || ['sent', 'overdue', 'partially_paid', 'paid'].includes(invStatus),
                         current: invStatus === 'sent',
                       },
                       {
@@ -1107,7 +1107,7 @@ Authorized Signatory`
                         <div className={`id-tl-dot ${step.done ? 'done' : step.current ? 'current' : 'pending'}`}>
                           {step.done ? (
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M20 6L9 17l-5-5"/>
+                              <path d="M20 6L9 17l-5-5" />
                             </svg>
                           ) : step.current ? (
                             <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'white' }} />
@@ -1167,8 +1167,8 @@ Authorized Signatory`
                     </div>
                   ) : (
                     reminderList.map(r => {
-                      const isSent   = r.status === 'sent'
-                      const isSched  = r.status === 'scheduled'
+                      const isSent = r.status === 'sent'
+                      const isSched = r.status === 'scheduled'
                       return (
                         <div key={r.id} className="id-rem-row">
                           <div className={`id-rem-icon ${isSent ? 'id-rem-sent' : isSched ? 'id-rem-sched' : 'id-rem-skip'}`}>
@@ -1436,10 +1436,10 @@ Authorized Signatory`
             <div className="id-modal-label">Payment Method</div>
             <div className="id-method-grid">
               {([
-                { v: 'upi',           label: 'UPI',           icon: '📱' },
-                { v: 'bank_transfer', label: 'Bank Transfer',  icon: '🏦' },
-                { v: 'cash',          label: 'Cash',           icon: '💵' },
-                { v: 'cheque',        label: 'Cheque',         icon: '📄' },
+                { v: 'upi', label: 'UPI', icon: '📱' },
+                { v: 'bank_transfer', label: 'Bank Transfer', icon: '🏦' },
+                { v: 'cash', label: 'Cash', icon: '💵' },
+                { v: 'cheque', label: 'Cheque', icon: '📄' },
               ] as const).map(m => (
                 <button
                   key={m.v}

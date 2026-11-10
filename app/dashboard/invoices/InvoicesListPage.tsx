@@ -28,7 +28,7 @@ interface Props {
 // ── Helpers ────────────────────────────────────────────────────
 function fmtINR(n: number) {
   if (n >= 100000) return `₹${(n / 100000).toFixed(2).replace(/\.?0+$/, '')}L`
-  if (n >= 1000)   return `₹${(n / 1000).toFixed(1).replace(/\.?0+$/, '')}K`
+  if (n >= 1000) return `₹${(n / 1000).toFixed(1).replace(/\.?0+$/, '')}K`
   return `₹${Math.round(n)}`
 }
 
@@ -42,17 +42,17 @@ function daysOverdue(dueDate: string) {
 }
 
 const STATUS_CFG: Record<string, { label: string; bg: string; color: string; dot: string }> = {
-  draft:          { label: 'Draft',      bg: '#F1EFE8', color: '#444441', dot: '#888780' },
-  sent:           { label: 'Sent',       bg: '#E6F1FB', color: '#0C447C', dot: '#185FA5' },
-  overdue:        { label: 'Overdue',    bg: '#FCEBEB', color: '#791F1F', dot: '#C0392B' },
-  partially_paid: { label: 'Part paid',  bg: '#FAEEDA', color: '#633806', dot: '#BA7517' },
-  paid:           { label: 'Paid',       bg: '#E1F5EE', color: '#085041', dot: '#1B5E3B' },
+  draft: { label: 'Draft', bg: '#F1EFE8', color: '#444441', dot: '#888780' },
+  sent: { label: 'Sent', bg: '#E6F1FB', color: '#0C447C', dot: '#185FA5' },
+  overdue: { label: 'Overdue', bg: '#FCEBEB', color: '#791F1F', dot: '#C0392B' },
+  partially_paid: { label: 'Part paid', bg: '#FAEEDA', color: '#633806', dot: '#BA7517' },
+  paid: { label: 'Paid', bg: '#E1F5EE', color: '#085041', dot: '#1B5E3B' },
 }
 
 const FILTERS = ['All', 'Sent', 'Overdue', 'Paid', 'Draft'] as const
 type Filter = typeof FILTERS[number]
 
-const COLORS = ['#1B5E3B','#185FA5','#854F0B','#7C3AED','#C85A1A','#0F766E']
+const COLORS = ['#1B5E3B', '#185FA5', '#854F0B', '#7C3AED', '#C85A1A', '#0F766E']
 function clientColor(name: string) {
   let h = 0
   for (const c of name) h = c.charCodeAt(0) + ((h << 5) - h)
@@ -72,9 +72,9 @@ export default function InvoicesListPage({
 }: Props) {
   const router = useRouter()
   const [invoices, setInvoices] = useState<Invoice[]>(initialInvoices)
-  const [search,   setSearch]   = useState('')
-  const [filter,   setFilter]   = useState<Filter>('All')
-  const [marking,  setMarking]  = useState<string | null>(null)
+  const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState<Filter>('All')
+  const [marking, setMarking] = useState<string | null>(null)
   const [menuOpen, setMenuOpen] = useState<string | null>(null)
 
   // ── Metrics ──────────────────────────────────────────────────
@@ -83,7 +83,7 @@ export default function InvoicesListPage({
     const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
     const outstanding = invoices
-      .filter(i => !['paid','cancelled','draft'].includes(i.status))
+      .filter(i => !['paid', 'cancelled', 'draft'].includes(i.status))
       .reduce((s, i) => s + Number(i.amount_due), 0)
 
     const overdue = invoices.filter(i => i.status === 'overdue')
@@ -108,11 +108,11 @@ export default function InvoicesListPage({
         (inv.clients?.company_name || '').toLowerCase().includes(search.toLowerCase())
 
       const matchFilter =
-        filter === 'All'    ? true :
-        filter === 'Sent'   ? inv.status === 'sent' :
-        filter === 'Overdue'? inv.status === 'overdue' :
-        filter === 'Paid'   ? inv.status === 'paid' :
-        filter === 'Draft'  ? inv.status === 'draft' : true
+        filter === 'All' ? true :
+          filter === 'Sent' ? inv.status === 'sent' :
+            filter === 'Overdue' ? inv.status === 'overdue' :
+              filter === 'Paid' ? inv.status === 'paid' :
+                filter === 'Draft' ? inv.status === 'draft' : true
 
       return matchSearch && matchFilter
     })
@@ -308,7 +308,7 @@ export default function InvoicesListPage({
             <div className="il-top-r">
               <div className="il-search-wrap">
                 <svg className="il-search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(26,20,13,.35)" strokeWidth="2" strokeLinecap="round">
-                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                  <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
                 </svg>
                 <input
                   className="il-search"
@@ -318,7 +318,7 @@ export default function InvoicesListPage({
                 />
               </div>
               <button className="il-new-btn" onClick={() => router.push('/dashboard/invoices/new')}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg>
                 New invoice
               </button>
             </div>
@@ -328,10 +328,10 @@ export default function InvoicesListPage({
             {/* Metrics */}
             <div className="il-metrics">
               {[
-                { label: 'Total outstanding',    val: fmtINR(metrics.outstanding), sub: `${invoices.filter(i => !['paid','draft','cancelled'].includes(i.status)).length} invoices`, subColor: '#BA7517' },
-                { label: 'Overdue',              val: fmtINR(metrics.overdueAmt),  sub: metrics.overdueCount > 0 ? `${metrics.overdueCount} invoice${metrics.overdueCount>1?'s':''} overdue` : 'None overdue', subColor: metrics.overdueCount > 0 ? '#C0392B' : '#1B5E3B' },
+                { label: 'Total outstanding', val: fmtINR(metrics.outstanding), sub: `${invoices.filter(i => !['paid', 'draft', 'cancelled'].includes(i.status)).length} invoices`, subColor: '#BA7517' },
+                { label: 'Overdue', val: fmtINR(metrics.overdueAmt), sub: metrics.overdueCount > 0 ? `${metrics.overdueCount} invoice${metrics.overdueCount > 1 ? 's' : ''} overdue` : 'None overdue', subColor: metrics.overdueCount > 0 ? '#C0392B' : '#1B5E3B' },
                 { label: 'Collected this month', val: fmtINR(metrics.paidThisMonth), sub: 'Via all payment methods', subColor: '#1B5E3B' },
-                { label: 'Total invoices',       val: String(metrics.total),        sub: `${invoices.filter(i=>i.status==='paid').length} paid · ${invoices.filter(i=>i.status==='draft').length} draft`, subColor: 'rgba(26,20,13,.40)' },
+                { label: 'Total invoices', val: String(metrics.total), sub: `${invoices.filter(i => i.status === 'paid').length} paid · ${invoices.filter(i => i.status === 'draft').length} draft`, subColor: 'rgba(26,20,13,.40)' },
               ].map(m => (
                 <div className="il-met" key={m.label}>
                   <div className="il-met-l">{m.label}</div>
@@ -345,11 +345,11 @@ export default function InvoicesListPage({
             <div className="il-filters">
               {FILTERS.map(f => {
                 const count =
-                  f === 'All'     ? invoices.length :
-                  f === 'Sent'    ? invoices.filter(i => i.status === 'sent').length :
-                  f === 'Overdue' ? invoices.filter(i => i.status === 'overdue').length :
-                  f === 'Paid'    ? invoices.filter(i => i.status === 'paid').length :
-                  invoices.filter(i => i.status === 'draft').length
+                  f === 'All' ? invoices.length :
+                    f === 'Sent' ? invoices.filter(i => i.status === 'sent').length :
+                      f === 'Overdue' ? invoices.filter(i => i.status === 'overdue').length :
+                        f === 'Paid' ? invoices.filter(i => i.status === 'paid').length :
+                          invoices.filter(i => i.status === 'draft').length
 
                 return (
                   <button
@@ -384,8 +384,8 @@ export default function InvoicesListPage({
                   </div>
                   <div className="il-empty-title">
                     {search ? `No results for "${search}"` :
-                     filter !== 'All' ? `No ${filter.toLowerCase()} invoices` :
-                     'No invoices yet'}
+                      filter !== 'All' ? `No ${filter.toLowerCase()} invoices` :
+                        'No invoices yet'}
                   </div>
                   <div className="il-empty-sub">
                     {search || filter !== 'All'
@@ -400,12 +400,12 @@ export default function InvoicesListPage({
                 </div>
               ) : (
                 filtered.map(inv => {
-                  const cfg     = STATUS_CFG[inv.status] || STATUS_CFG.draft
-                  const client  = inv.clients
-                  const name    = client?.name || 'Unknown client'
+                  const cfg = STATUS_CFG[inv.status] || STATUS_CFG.draft
+                  const client = inv.clients
+                  const name = client?.name || 'Unknown client'
                   const overdue = daysOverdue(inv.due_date)
-                  const isOver  = inv.status === 'overdue'
-                  const isPaid  = inv.status === 'paid'
+                  const isOver = inv.status === 'overdue'
+                  const isPaid = inv.status === 'paid'
 
                   return (
                     <div
@@ -416,7 +416,7 @@ export default function InvoicesListPage({
                       {/* Client */}
                       <div className="il-client" onClick={e => e.stopPropagation()}>
                         <div className="il-av" style={{ background: clientColor(name) }}>
-                          {name.slice(0,2).toUpperCase()}
+                          {name.slice(0, 2).toUpperCase()}
                         </div>
                         <div style={{ minWidth: 0 }}>
                           <div className="il-client-name">{name}</div>
@@ -427,7 +427,7 @@ export default function InvoicesListPage({
                       {/* Status */}
                       <div>
                         <div className="il-badge" style={{ background: cfg.bg, color: cfg.color }}>
-                          <div className="il-badge-dot" style={{ background: cfg.dot }}/>
+                          <div className="il-badge-dot" style={{ background: cfg.dot }} />
                           {cfg.label}
                         </div>
                       </div>
@@ -467,8 +467,8 @@ export default function InvoicesListPage({
                             onClick={() => markPaid(inv)}
                           >
                             {marking === inv.id
-                              ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1B5E3B" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'spin 1s linear infinite' }}><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-                              : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1B5E3B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                              ? <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1B5E3B" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'spin 1s linear infinite' }}><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /></svg>
+                              : <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1B5E3B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
                             }
                           </button>
                         )}
@@ -481,7 +481,7 @@ export default function InvoicesListPage({
                             onClick={() => sendReminder(inv)}
                           >
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(26,20,13,.55)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                              <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
+                              <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
                             </svg>
                           </button>
                         )}
@@ -493,7 +493,7 @@ export default function InvoicesListPage({
                           onClick={() => setMenuOpen(p => p === inv.id ? null : inv.id)}
                         >
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(26,20,13,.55)" strokeWidth="2.5" strokeLinecap="round">
-                            <circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>
+                            <circle cx="12" cy="5" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="12" cy="19" r="1" />
                           </svg>
                         </button>
 
@@ -501,24 +501,24 @@ export default function InvoicesListPage({
                         {menuOpen === inv.id && (
                           <div className="il-menu">
                             <button className="il-menu-item" onClick={() => { setMenuOpen(null); router.push(`/dashboard/invoices/${inv.id}`) }}>
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                               View invoice
                             </button>
                             {!isPaid && (
                               <>
                                 <button className="il-menu-item" onClick={() => sendReminder(inv)}>
-                                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+                                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" /></svg>
                                   Send WhatsApp reminder
                                 </button>
                                 <button className="il-menu-item" onClick={() => { setMenuOpen(null); markPaid(inv) }}>
-                                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
                                   Mark as paid
                                 </button>
                               </>
                             )}
-                            <div className="il-menu-divider"/>
+                            <div className="il-menu-divider" />
                             <button className="il-menu-item" onClick={() => router.push(`/dashboard/invoices/new?duplicate=${inv.id}`)}>
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" /></svg>
                               Duplicate invoice
                             </button>
                           </div>

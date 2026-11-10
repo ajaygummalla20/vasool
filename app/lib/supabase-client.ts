@@ -12,3 +12,4 @@ export function createClient() {
 }
 
 export const getSupabase = createClient
+

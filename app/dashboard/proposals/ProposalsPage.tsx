@@ -23,11 +23,11 @@ interface Props {
 }
 
 const STATUS_CFG: Record<string, { label: string; bg: string; color: string }> = {
-  draft:    { label: 'Draft',    bg: 'rgba(255,255,255,.08)', color: 'rgba(255,255,255,.5)' },
-  sent:     { label: 'Sent',     bg: 'rgba(59,130,246,.15)', color: '#60A5FA' },
+  draft: { label: 'Draft', bg: 'rgba(255,255,255,.08)', color: 'rgba(255,255,255,.5)' },
+  sent: { label: 'Sent', bg: 'rgba(59,130,246,.15)', color: '#60A5FA' },
   accepted: { label: 'Accepted', bg: 'rgba(16,185,129,.15)', color: '#34D399' },
   rejected: { label: 'Rejected', bg: 'rgba(248,113,113,.15)', color: '#F87171' },
-  expired:  { label: 'Expired',  bg: 'rgba(251,191,36,.12)', color: '#FBBF24' },
+  expired: { label: 'Expired', bg: 'rgba(251,191,36,.12)', color: '#FBBF24' },
 }
 
 function fmtINR(n: number) { return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n) }
