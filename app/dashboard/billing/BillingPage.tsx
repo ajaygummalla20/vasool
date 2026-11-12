@@ -6,7 +6,8 @@ import Sidebar from '@/components/Sidebar'
 
 declare global {
   interface Window {
-    Razorpay: any
+    Razorpay?: any
+    Youpi?: any
   }
 }
 
@@ -32,7 +33,9 @@ interface Props {
   userEmail: string
   userPhone: string
   userId: string
-  razorpayKeyId: string
+  youpiCheckoutUrl?: string
+  youpiMerchantId?: string
+  razorpayKeyId?: string
 }
 
 function fmtINR(n: number) {
@@ -59,6 +62,8 @@ export default function BillingPage({
   userEmail,
   userPhone,
   userId,
+  youpiCheckoutUrl = 'http://localhost:7000',
+  youpiMerchantId = 'settlr_merchant_dev',
   razorpayKeyId,
 }: Props) {
   const router = useRouter()
@@ -76,21 +81,32 @@ export default function BillingPage({
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [activeTab, setActiveTab] = useState<'plans' | 'faq' | 'invoices'>('plans')
 
-  // Load Razorpay Checkout Script dynamically
+  // Load YouPI Checkout Script dynamically (with Razorpay fallback)
   useEffect(() => {
-    const script = document.createElement('script')
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js'
-    script.async = true
-    document.body.appendChild(script)
+    // 1. Try loading YouPI checkout.js
+    const youpiScript = document.createElement('script')
+    youpiScript.src = `${youpiCheckoutUrl}/checkout.js`
+    youpiScript.async = true
+    youpiScript.setAttribute('data-youpi-key', youpiMerchantId)
+    youpiScript.setAttribute('data-currency', 'INR')
+    document.body.appendChild(youpiScript)
+
+    // 2. Load legacy Razorpay checkout as fallback
+    const rzpScript = document.createElement('script')
+    rzpScript.src = 'https://checkout.razorpay.com/v1/checkout.js'
+    rzpScript.async = true
+    document.body.appendChild(rzpScript)
+
     return () => {
-      document.body.removeChild(script)
+      if (document.body.contains(youpiScript)) document.body.removeChild(youpiScript)
+      if (document.body.contains(rzpScript)) document.body.removeChild(rzpScript)
     }
-  }, [])
+  }, [youpiCheckoutUrl, youpiMerchantId])
 
   const handleUpgrade = async (planId: 'pro' | 'agency') => {
     setLoadingPlan(planId)
     try {
-      // 1. Create order on backend
+      // 1. Create order on backend (YouPI-PG Gateway by default)
       const res = await fetch('/api/billing/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -100,8 +116,48 @@ export default function BillingPage({
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed to initialize order')
 
-      // 2. If Razorpay SDK is available and key is configured
-      if (typeof window.Razorpay !== 'undefined' && data.keyId && !data.isTest) {
+      // 2. If YouPI JavaScript modal is loaded on window
+      if (typeof window.Youpi !== 'undefined' && typeof window.Youpi.pay === 'function') {
+        window.Youpi.pay({
+          order_id: data.orderId,
+          amount: data.amountInRupees || (data.amount / 100),
+          currency: 'INR',
+          name: 'Settlr Technologies',
+          description: `${planId.toUpperCase()} Plan (${cycle === 'yearly' ? 'Annual' : 'Monthly'})`,
+          handler: async function (response: any) {
+            const verifyRes = await fetch('/api/billing/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                gateway: 'youpi',
+                orderId: data.orderId,
+                paymentId: response.payment_id || response.paymentId || response.utr,
+                signature: response.signature || response.x_gateway_signature,
+                utr: response.utr,
+                planId,
+                cycle,
+                isTest: false,
+              }),
+            })
+
+            const verifyData = await verifyRes.json()
+            if (verifyData.success) {
+              setSubscription({
+                plan_id: planId,
+                status: 'active',
+                billing_cycle: cycle,
+                amount: verifyData.amount,
+                current_period_end: verifyData.expiresAt,
+              })
+              setShowSuccessModal(true)
+            }
+          },
+          onClose: function () {
+            setLoadingPlan(null)
+          },
+        })
+      } else if (data.gateway === 'razorpay' && typeof window.Razorpay !== 'undefined' && data.keyId && !data.isTest) {
+        // 3. Fallback to legacy Razorpay if configured
         const options = {
           key: data.keyId,
           amount: data.amount,
@@ -114,20 +170,18 @@ export default function BillingPage({
             email: userEmail,
             contact: userPhone || '',
           },
-          theme: {
-            color: '#10B981',
-          },
+          theme: { color: '#10B981' },
           modal: {
             ondismiss: function () {
               setLoadingPlan(null)
             },
           },
           handler: async function (response: any) {
-            // Verify signature
             const verifyRes = await fetch('/api/billing/verify-payment', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
+                gateway: 'razorpay',
                 ...response,
                 planId,
                 cycle,
@@ -151,15 +205,19 @@ export default function BillingPage({
 
         const rzp = new window.Razorpay(options)
         rzp.open()
+      } else if (data.checkoutUrl && !data.isTest) {
+        // 4. Redirect to YouPI hosted checkout page
+        window.location.href = data.checkoutUrl
       } else {
-        // Test simulation mode (Instant upgrade for development / preview)
+        // 5. Test simulation mode (Instant upgrade for development / preview)
         const verifyRes = await fetch('/api/billing/verify-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            razorpay_order_id: data.orderId,
-            razorpay_payment_id: `pay_test_${Date.now()}`,
-            razorpay_signature: 'test_signature',
+            gateway: 'youpi',
+            orderId: data.orderId,
+            paymentId: `youpi_test_${Date.now()}`,
+            signature: 'test_signature',
             planId,
             cycle,
             isTest: true,
@@ -506,10 +564,10 @@ export default function BillingPage({
                       disabled={loadingPlan === 'pro'}
                     >
                       {loadingPlan === 'pro'
-                        ? 'Opening Razorpay...'
+                        ? 'Opening YouPI Gateway...'
                         : currentPlan === 'pro'
                         ? '✓ Renew / Extend Pro'
-                        : '⚡ Upgrade to Pro Now'}
+                        : '⚡ Upgrade with 0% Fee UPI'}
                     </button>
                   </div>
 
@@ -559,7 +617,7 @@ export default function BillingPage({
                       disabled={loadingPlan === 'agency'}
                     >
                       {loadingPlan === 'agency'
-                        ? 'Opening Razorpay...'
+                        ? 'Opening YouPI Gateway...'
                         : currentPlan === 'agency'
                         ? '✓ Active Agency License'
                         : '🏢 Upgrade to Agency'}
@@ -658,7 +716,7 @@ export default function BillingPage({
                       What payment methods are accepted?
                     </div>
                     <div style={{ fontSize: 13, color: 'rgba(255,255,255,.6)', marginTop: 4 }}>
-                      Through our secure Razorpay gateway, we accept all Indian UPI apps (Google Pay, PhonePe, Paytm, BHIM), RuPay/Visa/Mastercard Credit & Debit cards, and NetBanking across 50+ banks.
+                      Through our zero-fee YouPI Payment Gateway, we accept direct bank-to-bank UPI across all Indian apps (Google Pay, PhonePe, Paytm, BHIM, CRED), along with NetBanking and RuPay cards.
                     </div>
                   </div>
 

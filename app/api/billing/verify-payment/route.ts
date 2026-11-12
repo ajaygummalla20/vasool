@@ -17,6 +17,13 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json().catch(() => ({}))
     const {
+      gateway = 'youpi',
+      // YouPI / Unified parameters
+      orderId: rawOrderId,
+      paymentId: rawPaymentId,
+      signature: rawSignature,
+      utr: rawUtr,
+      // Legacy Razorpay parameters
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
@@ -24,6 +31,10 @@ export async function POST(request: NextRequest) {
       cycle = 'monthly',
       isTest = false,
     } = body
+
+    const orderId = rawOrderId || razorpay_order_id
+    const paymentId = rawPaymentId || razorpay_payment_id || rawUtr || (isTest ? `mock_pay_${Date.now()}` : null)
+    const signature = rawSignature || razorpay_signature
 
     // 1. Validate plan and billing cycle
     if (!ALLOWED_PLANS.includes(planId)) {
@@ -34,7 +45,8 @@ export async function POST(request: NextRequest) {
     }
 
     const isProduction = process.env.NODE_ENV === 'production'
-    const keySecret = process.env.RAZORPAY_KEY_SECRET
+    const youpiSecret = process.env.YOUPI_WEBHOOK_SECRET
+    const rzpSecret = process.env.RAZORPAY_KEY_SECRET
 
     // 2. Strict Production Guard: Test bypass is forbidden in production
     if (isProduction && isTest) {
@@ -48,26 +60,29 @@ export async function POST(request: NextRequest) {
 
     // 3. Cryptographic Signature Verification
     if (!isTest || isProduction) {
-      if (!keySecret) {
-        // Fail closed: Never approve payments without verified cryptographic credentials
-        console.error('[Billing Security Violation]: RAZORPAY_KEY_SECRET is missing. Cannot verify payment.')
+      const activeSecret = gateway === 'razorpay' ? rzpSecret : (youpiSecret || rzpSecret)
+
+      if (!activeSecret) {
+        console.error('[Billing Security Violation]: Gateway secret key is missing. Cannot verify payment.')
         return NextResponse.json(
           { error: 'Payment gateway configuration error. Secret key not configured.' },
           { status: 500 }
         )
       }
 
-      if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      if (!orderId || !paymentId || !signature) {
         return NextResponse.json({ error: 'Missing payment signature parameters' }, { status: 400 })
       }
 
+      // Check signature format (sha256=<hex> or raw hex)
+      const cleanIncomingSig = signature.startsWith('sha256=') ? signature.slice(7) : signature
+
       const generatedSignature = crypto
-        .createHmac('sha256', keySecret)
-        .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+        .createHmac('sha256', activeSecret)
+        .update(`${orderId}|${paymentId}`)
         .digest('hex')
 
-      // Constant-time comparison to prevent timing attacks
-      const sigBuffer = Buffer.from(razorpay_signature, 'utf8')
+      const sigBuffer = Buffer.from(cleanIncomingSig, 'utf8')
       const genBuffer = Buffer.from(generatedSignature, 'utf8')
       const isValid = sigBuffer.length === genBuffer.length && crypto.timingSafeEqual(sigBuffer, genBuffer)
 
@@ -75,16 +90,18 @@ export async function POST(request: NextRequest) {
         logSecurityEvent({
           type: 'BILLING_VERIFY_FAILED',
           userId: user.id,
-          details: { razorpay_order_id, razorpay_payment_id }
+          details: { orderId, paymentId, gateway }
         })
         return NextResponse.json({ error: 'Invalid payment signature verification' }, { status: 400 })
       }
+    }
 
-      // 4. Order Reconciliation & Ownership Validation
+    // 4. Order Reconciliation & Ownership Validation
+    if (orderId) {
       const { data: existingOrder } = await supabase
         .from('billing_orders')
         .select('*')
-        .eq('order_id', razorpay_order_id)
+        .eq('order_id', orderId)
         .single()
 
       if (existingOrder) {
@@ -93,7 +110,7 @@ export async function POST(request: NextRequest) {
           logSecurityEvent({
             type: 'BILLING_TAMPER_ATTEMPT',
             userId: user.id,
-            details: { message: 'Cross-user order fulfillment attempt', order_id: razorpay_order_id }
+            details: { message: 'Cross-user order fulfillment attempt', order_id: orderId }
           })
           return NextResponse.json({ error: 'Order does not belong to the current user' }, { status: 403 })
         }
@@ -103,8 +120,8 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({ error: 'Order plan or billing cycle mismatch' }, { status: 400 })
         }
 
-        // Idempotency: If order was already fulfilled with this exact payment ID, return success idempotently
-        if (existingOrder.status === 'paid' && existingOrder.razorpay_payment_id === razorpay_payment_id) {
+        // Idempotency: If order was already fulfilled with this exact payment ID, return success
+        if (existingOrder.status === 'paid' && existingOrder.razorpay_payment_id === paymentId) {
           return NextResponse.json({
             success: true,
             planId,
@@ -114,19 +131,21 @@ export async function POST(request: NextRequest) {
           })
         }
       }
+    }
 
-      // 5. Payment ID Replay Defense
+    // 5. Payment ID Replay Defense
+    if (paymentId && (!isTest || isProduction)) {
       const { data: duplicatePayment } = await supabase
         .from('subscriptions')
         .select('id, user_id')
-        .eq('razorpay_payment_id', razorpay_payment_id)
+        .eq('razorpay_payment_id', paymentId)
         .single()
 
       if (duplicatePayment && duplicatePayment.user_id !== user.id) {
         logSecurityEvent({
           type: 'BILLING_TAMPER_ATTEMPT',
           userId: user.id,
-          details: { message: 'Duplicate payment ID replay attack detected', razorpay_payment_id }
+          details: { message: 'Duplicate payment ID replay attack detected', paymentId }
         })
         return NextResponse.json({ error: 'Payment reference has already been used' }, { status: 400 })
       }
@@ -144,6 +163,8 @@ export async function POST(request: NextRequest) {
     // 6. Persist Subscription in Supabase with verified service-role or fallback client
     const dbClient = createAdminClient() || supabase
 
+    const finalPaymentId = paymentId || `pay_youpi_${Date.now()}`
+
     const { error: subError } = await dbClient
       .from('subscriptions')
       .upsert({
@@ -153,8 +174,8 @@ export async function POST(request: NextRequest) {
         billing_cycle: cycle,
         amount: amountPaid,
         currency: 'INR',
-        razorpay_order_id: razorpay_order_id || null,
-        razorpay_payment_id: razorpay_payment_id || `pay_mock_${Date.now()}`,
+        razorpay_order_id: orderId || null,
+        razorpay_payment_id: finalPaymentId,
         current_period_start: now.toISOString(),
         current_period_end: periodEnd.toISOString(),
         updated_at: now.toISOString(),
@@ -169,21 +190,21 @@ export async function POST(request: NextRequest) {
     }
 
     // 7. Update billing_orders status to paid
-    if (razorpay_order_id) {
+    if (orderId) {
       await dbClient
         .from('billing_orders')
         .update({
           status: 'paid',
-          razorpay_payment_id: razorpay_payment_id || null,
+          razorpay_payment_id: finalPaymentId,
           updated_at: now.toISOString(),
         })
-        .eq('order_id', razorpay_order_id)
+        .eq('order_id', orderId)
     }
 
     logSecurityEvent({
       type: 'BILLING_VERIFY_SUCCESS',
       userId: user.id,
-      details: { planId, cycle, amount: amountPaid }
+      details: { planId, cycle, amount: amountPaid, gateway }
     })
 
     return NextResponse.json({

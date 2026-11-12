@@ -1480,7 +1480,7 @@ export default function LandingPage() {
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
-                    <span>Razorpay Live Payment Gateway integration</span>
+                    <span>0% Fee Direct UPI Payment Gateway (YouPI-PG)</span>
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>

@@ -8,10 +8,10 @@ export default async function BillingRoute() {
   if (authError || !user) redirect('/login')
 
   const { data: profile } = await supabase
-    .from('profiles')
-    .select('full_name, business_name, phone, upi_id')
-    .eq('id', user.id)
-    .single()
+  .from('profiles')
+  .select('full_name, business_name, phone, upi_id')
+  .eq('id', user.id)
+  .single()
 
   // Fetch subscription status
   let subscription: any = null
@@ -48,6 +48,8 @@ export default async function BillingRoute() {
       userEmail={user.email || ''}
       userPhone={profile?.phone || ''}
       userId={user.id}
+      youpiCheckoutUrl={process.env.NEXT_PUBLIC_YOUPI_CHECKOUT_URL || 'http://localhost:7000'}
+      youpiMerchantId={process.env.YOUPI_MERCHANT_ID || 'settlr_merchant_dev'}
       razorpayKeyId={process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || ''}
     />
   )

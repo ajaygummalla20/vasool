@@ -337,6 +337,36 @@ test('17. Next.js middleware guards private dashboard routes and refreshes token
   assert(evaluateRouteAccess('/invoice/abc12345', false).action === 'next', 'Public invoice link must not be blocked')
 })
 
+// 18. YouPI-PG x-gateway-signature Webhook HMAC Verification
+test('18. YouPI-PG x-gateway-signature validates authentic raw body payloads and rejects tampered webhooks', () => {
+  const webhookSecret = 'test_youpi_secret_key_889900'
+  const rawPayload = JSON.stringify({
+    event: 'RECONCILED',
+    order_id: 'order_youpi_456',
+    payment_id: 'pay_youpi_789',
+    amount: 499,
+    utr: 'UTR998877665544',
+  })
+
+  const authenticHash = crypto
+    .createHmac('sha256', webhookSecret)
+    .update(rawPayload, 'utf8')
+    .digest('hex')
+
+  const verifySignature = (headerSig: string, secret: string, body: string) => {
+    const cleanHeader = headerSig.startsWith('sha256=') ? headerSig.slice(7) : headerSig
+    const computed = crypto.createHmac('sha256', secret).update(body, 'utf8').digest('hex')
+    const b1 = Buffer.from(cleanHeader, 'utf8')
+    const b2 = Buffer.from(computed, 'utf8')
+    return b1.length === b2.length && crypto.timingSafeEqual(b1, b2)
+  }
+
+  assert(verifySignature(`sha256=${authenticHash}`, webhookSecret, rawPayload) === true, 'sha256= prefixed authentic signature must pass')
+  assert(verifySignature(authenticHash, webhookSecret, rawPayload) === true, 'Raw hex authentic signature must pass')
+  assert(verifySignature(`sha256=${authenticHash}`, 'wrong_secret', rawPayload) === false, 'Wrong secret must fail')
+  assert(verifySignature(`sha256=${authenticHash}`, webhookSecret, rawPayload + ' ') === false, 'Body tampering must fail HMAC')
+})
+
 console.log(`\n\x1b[1m===================================================\x1b[0m`)
 console.log(`\x1b[1mAudit Test Summary: \x1b[32m${passed} passed\x1b[0m, \x1b[31m${failed} failed\x1b[0m (Total: ${total})\x1b[0m`)
 console.log(`\x1b[1m===================================================\x1b[0m\n`)

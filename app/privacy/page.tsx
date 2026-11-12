@@ -175,7 +175,7 @@ export default function PrivacyPage() {
         </p>
         <ul style={{ paddingLeft: 20, margin: '10px 0' }}>
           <li><strong>Supabase (PostgreSQL):</strong> Encrypted database storage, user authentication, and multi-tenant Row-Level Security (RLS) isolation.</li>
-          <li><strong>Razorpay:</strong> Cryptographic payment gateway processing for Settlr platform subscription upgrades (we never store card numbers or banking passwords).</li>
+          <li><strong>YouPI-PG / Payment Gateways:</strong> Cryptographic payment gateway processing for Settlr platform subscription upgrades (we never store banking passwords or UPI PINs; transactions route directly to the merchant VPA).</li>
           <li><strong>Secure AI Capabilities & Cloud Inference:</strong> Multimodal AI processing for OCR extraction of expense receipts and legal contract risk analysis. Documents sent to the processor are processed ephemerally with zero data retention and not used to train public foundation models.</li>
           <li><strong>Vercel:</strong> Edge network hosting and serverless infrastructure with strict TLS 1.3 encryption in transit.</li>
         </ul>

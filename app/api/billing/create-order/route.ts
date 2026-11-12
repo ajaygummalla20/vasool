@@ -40,17 +40,85 @@ export async function POST(request: NextRequest) {
 
     const validCycle = cycle as BillingCycle
     const amountInPaise = PLAN_AMOUNTS[planId][validCycle]
+    const amountInRupees = amountInPaise / 100
 
-    const keyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID
-    const keySecret = process.env.RAZORPAY_KEY_SECRET
     const isProduction = process.env.NODE_ENV === 'production'
+    const origin = request.nextUrl.origin
 
-    let orderId: string
+    // Check YouPI-PG Gateway configuration
+    const youpiApiUrl = process.env.YOUPI_API_URL || 'http://localhost:6100'
+    const youpiCheckoutUrl = process.env.NEXT_PUBLIC_YOUPI_CHECKOUT_URL || 'http://localhost:7000'
+    const youpiMerchantId = process.env.YOUPI_MERCHANT_ID
+    const youpiApiKey = process.env.YOUPI_MERCHANT_API_KEY
+
+    // Legacy Razorpay Gateway credentials (for fallback)
+    const razorpayKeyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID
+    const razorpayKeySecret = process.env.RAZORPAY_KEY_SECRET
+
+    let orderId = `order_${user.id.slice(0, 6)}_${Date.now()}`
+    let checkoutUrl = ''
     let isTest = false
+    let gateway: 'youpi' | 'razorpay' | 'simulator' = 'youpi'
 
-    // If Razorpay API keys are configured, create real order via Razorpay REST API
-    if (keyId && keySecret) {
-      const authHeader = 'Basic ' + Buffer.from(`${keyId}:${keySecret}`).toString('base64')
+    // 1. Try YouPI-PG Gateway (Primary)
+    if (youpiMerchantId || youpiApiKey || youpiApiUrl) {
+      gateway = 'youpi'
+      try {
+        const youpiRes = await fetch(`${youpiApiUrl}/api/v1/payments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-merchant-id': youpiMerchantId || 'default',
+            ...(youpiApiKey ? { 'x-api-key': youpiApiKey } : {}),
+            'Idempotency-Key': `idem_${user.id}_${Date.now()}`,
+          },
+          body: JSON.stringify({
+            orderId,
+            amount: amountInRupees,
+            currency: 'INR',
+            customerName: user.user_metadata?.full_name || 'Settlr Customer',
+            customerEmail: user.email,
+            returnUrl: `${origin}/dashboard/billing?status=return&orderId=${orderId}`,
+            metadata: {
+              userId: user.id,
+              planId,
+              cycle: validCycle,
+            },
+          }),
+        })
+
+        if (youpiRes.ok) {
+          const youpiData = await youpiRes.json().catch(() => ({}))
+          orderId = youpiData.orderId || youpiData.paymentId || orderId
+          checkoutUrl =
+            youpiData.checkoutUrl ||
+            `${youpiCheckoutUrl}/pay/${orderId}`
+        } else {
+          // If YouPI service returned error, check fallback
+          const errText = await youpiRes.text().catch(() => '')
+          console.warn('[YouPI-PG API Notice]:', errText || youpiRes.statusText)
+          if (isProduction && !razorpayKeyId) {
+            return NextResponse.json({ error: 'YouPI-PG gateway currently unreachable' }, { status: 502 })
+          }
+          // In development, allow graceful fallback to checkout simulator
+          isTest = true
+          checkoutUrl = `${youpiCheckoutUrl}/pay/${orderId}`
+        }
+      } catch (youpiErr) {
+        console.warn('[YouPI-PG Connection Notice]: Self-hosted instance at', youpiApiUrl, 'offline or unreachable.')
+        if (isProduction && !razorpayKeyId) {
+          return NextResponse.json(
+            { error: 'Payment gateway is temporarily unavailable. Please verify your YouPI-PG server is running.' },
+            { status: 503 }
+          )
+        }
+        isTest = true
+        checkoutUrl = `${youpiCheckoutUrl}/pay/${orderId}`
+      }
+    } else if (razorpayKeyId && razorpayKeySecret) {
+      // 2. Legacy Razorpay Fallback if explicitly configured
+      gateway = 'razorpay'
+      const authHeader = 'Basic ' + Buffer.from(`${razorpayKeyId}:${razorpayKeySecret}`).toString('base64')
       const orderRes = await fetch('https://api.razorpay.com/v1/orders', {
         method: 'POST',
         headers: {
@@ -70,29 +138,26 @@ export async function POST(request: NextRequest) {
       })
 
       if (!orderRes.ok) {
-        const errText = await orderRes.text()
-        console.error('[Razorpay Order Error]:', errText)
         return NextResponse.json({ error: 'Failed to initialize payment gateway' }, { status: 500 })
       }
 
       const orderData = await orderRes.json()
       orderId = orderData.id
     } else {
-      // In production, missing payment credentials must fail closed
+      // 3. Dev-only mock order
       if (isProduction) {
-        console.error('[Billing Configuration Error]: Razorpay keys missing in production')
+        console.error('[Billing Configuration Error]: No payment gateway configured in production')
         return NextResponse.json(
           { error: 'Payment gateway is temporarily unavailable. Please contact support.' },
           { status: 500 }
         )
       }
-
-      // Dev-only mock order
       orderId = `order_test_${Date.now()}`
       isTest = true
+      gateway = 'simulator'
     }
 
-    // Persist pending order to bind user, plan, cycle and amount for reconciliation
+    // Persist pending order in Supabase
     const { error: orderInsertError } = await supabase
       .from('billing_orders')
       .insert({
@@ -100,7 +165,7 @@ export async function POST(request: NextRequest) {
         order_id: orderId,
         plan_id: planId,
         billing_cycle: validCycle,
-        amount: amountInPaise / 100,
+        amount: amountInRupees,
         currency: 'INR',
         status: 'created',
       })
@@ -112,8 +177,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       orderId,
       amount: amountInPaise,
+      amountInRupees,
       currency: 'INR',
-      keyId: keyId || (isTest ? 'rzp_test_mock_settlr' : ''),
+      gateway,
+      checkoutUrl,
+      youpiCheckoutUrl,
+      youpiMerchantId: youpiMerchantId || 'settlr_merchant_dev',
+      keyId: razorpayKeyId || '',
       planId,
       cycle: validCycle,
       isTest,
