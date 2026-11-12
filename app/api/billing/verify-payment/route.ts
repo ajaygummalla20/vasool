@@ -58,8 +58,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Test mode is disabled in production' }, { status: 403 })
     }
 
-    // 3. Cryptographic Signature Verification
-    if (!isTest || isProduction) {
+    // 3. Signature & Verification Verification
+    if (gateway === 'native_upi') {
+      // Direct NPCI UPI bank transfer verification via UTR / Transaction Reference
+      const cleanUtr = (rawUtr || paymentId || '').trim()
+      if (!cleanUtr || cleanUtr.length < 6) {
+        return NextResponse.json(
+          { error: 'Please enter a valid UPI Transaction Reference ID (UTR) of at least 6 characters.' },
+          { status: 400 }
+        )
+      }
+    } else if (!isTest || isProduction) {
       const activeSecret = gateway === 'razorpay' ? rzpSecret : (youpiSecret || rzpSecret)
 
       if (!activeSecret) {

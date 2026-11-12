@@ -81,6 +81,21 @@ export default function BillingPage({
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [activeTab, setActiveTab] = useState<'plans' | 'faq' | 'invoices'>('plans')
 
+  // Native 0% Fee UPI QR Modal State
+  const [upiModal, setUpiModal] = useState<{
+    open: boolean
+    orderId: string
+    planId: 'pro' | 'agency'
+    cycle: 'monthly' | 'yearly'
+    amount: number
+    merchantUpi: string
+    merchantName: string
+  } | null>(null)
+  const [utrInput, setUtrInput] = useState('')
+  const [verifyingUtr, setVerifyingUtr] = useState(false)
+  const [utrError, setUtrError] = useState('')
+  const [copiedUpi, setCopiedUpi] = useState(false)
+
   // Load YouPI Checkout Script dynamically (with Razorpay fallback)
   useEffect(() => {
     // 1. Try loading YouPI checkout.js
@@ -116,7 +131,24 @@ export default function BillingPage({
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed to initialize order')
 
-      // 2. If YouPI JavaScript modal is loaded on window
+      // 2. If Native 0% Fee UPI is selected (default for zero fees on Vercel)
+      if (data.gateway === 'native_upi') {
+        setUpiModal({
+          open: true,
+          orderId: data.orderId,
+          planId,
+          cycle,
+          amount: data.amountInRupees || (data.amount / 100),
+          merchantUpi: data.merchantUpi || 'settlr@upi',
+          merchantName: data.merchantName || 'Settlr Technologies',
+        })
+        setUtrInput('')
+        setUtrError('')
+        setLoadingPlan(null)
+        return
+      }
+
+      // 3. If YouPI JavaScript modal is loaded on window
       if (typeof window.Youpi !== 'undefined' && typeof window.Youpi.pay === 'function') {
         window.Youpi.pay({
           order_id: data.orderId,
@@ -241,6 +273,53 @@ export default function BillingPage({
       alert(err.message || 'Payment initiation failed. Please try again.')
     } finally {
       setLoadingPlan(null)
+    }
+  }
+
+  const handleVerifyUtr = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!upiModal) return
+    const cleanUtr = utrInput.trim()
+    if (!cleanUtr || cleanUtr.length < 6) {
+      setUtrError('Please enter a valid 6-12 digit UPI Transaction ID (UTR)')
+      return
+    }
+
+    setVerifyingUtr(true)
+    setUtrError('')
+    try {
+      const verifyRes = await fetch('/api/billing/verify-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          gateway: 'native_upi',
+          orderId: upiModal.orderId,
+          paymentId: cleanUtr,
+          utr: cleanUtr,
+          planId: upiModal.planId,
+          cycle: upiModal.cycle,
+          isTest: false,
+        }),
+      })
+
+      const verifyData = await verifyRes.json()
+      if (!verifyRes.ok || !verifyData.success) {
+        throw new Error(verifyData.error || 'Payment verification failed. Please verify your UTR reference.')
+      }
+
+      setSubscription({
+        plan_id: upiModal.planId,
+        status: 'active',
+        billing_cycle: upiModal.cycle,
+        amount: verifyData.amount,
+        current_period_end: verifyData.expiresAt,
+      })
+      setUpiModal(null)
+      setShowSuccessModal(true)
+    } catch (err: any) {
+      setUtrError(err.message || 'Failed to verify transaction. Please check your UTR.')
+    } finally {
+      setVerifyingUtr(false)
     }
   }
 
@@ -390,19 +469,18 @@ export default function BillingPage({
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <span
-                    className={`bl-badge-curr ${
-                      currentPlan === 'agency'
+                    className={`bl-badge-curr ${currentPlan === 'agency'
                         ? 'bl-badge-agency'
                         : isPro
-                        ? 'bl-badge-pro'
-                        : 'bl-badge-free'
-                    }`}
+                          ? 'bl-badge-pro'
+                          : 'bl-badge-free'
+                      }`}
                   >
                     {currentPlan === 'agency'
                       ? '🏢 Agency Plan'
                       : isPro
-                      ? '⚡ Pro Growth Member'
-                      : '🌱 Free Starter Plan'}
+                        ? '⚡ Pro Growth Member'
+                        : '🌱 Free Starter Plan'}
                   </span>
                   {subscription.status === 'active' && isPro && (
                     <span style={{ fontSize: 11, color: '#34D399' }}>● Active</span>
@@ -566,8 +644,8 @@ export default function BillingPage({
                       {loadingPlan === 'pro'
                         ? 'Opening YouPI Gateway...'
                         : currentPlan === 'pro'
-                        ? '✓ Renew / Extend Pro'
-                        : '⚡ Upgrade with 0% Fee UPI'}
+                          ? '✓ Renew / Extend Pro'
+                          : '⚡ Upgrade with 0% Fee UPI'}
                     </button>
                   </div>
 
@@ -619,8 +697,8 @@ export default function BillingPage({
                       {loadingPlan === 'agency'
                         ? 'Opening YouPI Gateway...'
                         : currentPlan === 'agency'
-                        ? '✓ Active Agency License'
-                        : '🏢 Upgrade to Agency'}
+                          ? '✓ Active Agency License'
+                          : '🏢 Upgrade to Agency'}
                     </button>
                   </div>
                 </div>
@@ -734,6 +812,226 @@ export default function BillingPage({
           </div>
         </div>
       </div>
+
+      {/* Native Zero-Fee UPI Payment Modal */}
+      {upiModal && upiModal.open && (
+        <div className="bl-overlay" onClick={() => setUpiModal(null)}>
+          <div
+            className="bl-modal"
+            style={{ maxWidth: 440, padding: '32px 28px', textAlign: 'left' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <span
+                  style={{
+                    background: 'rgba(16,185,129,.15)',
+                    color: '#34D399',
+                    border: '1px solid rgba(16,185,129,.35)',
+                    padding: '3px 10px',
+                    borderRadius: 100,
+                    fontSize: 10,
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '.06em',
+                  }}
+                >
+                  ⚡ Direct 0% Fee UPI
+                </span>
+                <div style={{ fontSize: 20, fontWeight: 800, color: '#FFF', marginTop: 8 }}>
+                  Upgrade to {upiModal.planId === 'agency' ? 'Agency Plan' : 'Pro Growth'}
+                </div>
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', marginTop: 2 }}>
+                  {upiModal.cycle === 'yearly' ? 'Annual Subscription' : 'Monthly Subscription'}
+                </div>
+              </div>
+              <button
+                onClick={() => setUpiModal(null)}
+                style={{
+                  background: 'rgba(255,255,255,.08)',
+                  border: 'none',
+                  color: 'rgba(255,255,255,.6)',
+                  width: 28,
+                  height: 28,
+                  borderRadius: '50%',
+                  cursor: 'pointer',
+                  fontSize: 14,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Amount Banner */}
+            <div
+              style={{
+                background: 'rgba(255,255,255,.04)',
+                border: '1px solid rgba(255,255,255,.08)',
+                borderRadius: 14,
+                padding: '12px 16px',
+                margin: '16px 0',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <span style={{ fontSize: 13, color: 'rgba(255,255,255,.7)' }}>Total Payable</span>
+              <span style={{ fontSize: 24, fontWeight: 900, color: '#34D399' }}>
+                {fmtINR(upiModal.amount)}
+              </span>
+            </div>
+
+            {/* Step 1: Scan QR */}
+            <div style={{ textAlign: 'center' }}>
+              <div
+                style={{
+                  background: '#FFFFFF',
+                  borderRadius: 16,
+                  padding: 12,
+                  display: 'inline-block',
+                  boxShadow: '0 8px 30px rgba(0,0,0,.5)',
+                }}
+              >
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${encodeURIComponent(
+                    `upi://pay?pa=${upiModal.merchantUpi}&pn=${encodeURIComponent(
+                      upiModal.merchantName
+                    )}&am=${upiModal.amount}&cu=INR&tn=${encodeURIComponent(
+                      `Settlr-${upiModal.planId.toUpperCase()}-${upiModal.orderId.slice(-6)}`
+                    )}`
+                  )}`}
+                  alt="Settlr UPI QR Code"
+                  width={200}
+                  height={200}
+                  style={{ display: 'block', borderRadius: 8 }}
+                />
+              </div>
+
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,.45)', marginTop: 8 }}>
+                Scan with Google Pay, PhonePe, Paytm, BHIM, Navi, or CRED
+              </div>
+
+              {/* UPI ID Row */}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  background: 'rgba(255,255,255,.06)',
+                  border: '1px solid rgba(255,255,255,.1)',
+                  borderRadius: 100,
+                  padding: '5px 14px',
+                  marginTop: 8,
+                  fontSize: 12,
+                  color: '#F3F4F6',
+                }}
+              >
+                <span style={{ color: 'rgba(255,255,255,.5)' }}>UPI:</span>
+                <strong>{upiModal.merchantUpi}</strong>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(upiModal.merchantUpi)
+                    setCopiedUpi(true)
+                    setTimeout(() => setCopiedUpi(false), 2000)
+                  }}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: copiedUpi ? '#34D399' : 'rgba(255,255,255,.6)',
+                    cursor: 'pointer',
+                    fontSize: 11,
+                    fontWeight: 700,
+                  }}
+                >
+                  {copiedUpi ? '✓ Copied' : 'Copy'}
+                </button>
+              </div>
+
+              {/* Mobile Pay Link */}
+              <div style={{ marginTop: 10 }}>
+                <a
+                  href={`upi://pay?pa=${upiModal.merchantUpi}&pn=${encodeURIComponent(
+                    upiModal.merchantName
+                  )}&am=${upiModal.amount}&cu=INR&tn=${encodeURIComponent(
+                    `Settlr-${upiModal.planId.toUpperCase()}-${upiModal.orderId.slice(-6)}`
+                  )}`}
+                  style={{
+                    fontSize: 12,
+                    color: '#34D399',
+                    textDecoration: 'underline',
+                    fontWeight: 600,
+                  }}
+                >
+                  📱 Tap here to open directly in your UPI App
+                </a>
+              </div>
+            </div>
+
+            {/* Step 2: Verification Input */}
+            <form onSubmit={handleVerifyUtr} style={{ marginTop: 18, borderTop: '1px solid rgba(255,255,255,.08)', paddingTop: 16 }}>
+              <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,.7)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>
+                Step 2: Enter 12-Digit UPI Ref / UTR
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. 423456789012"
+                value={utrInput}
+                onChange={(e) => setUtrInput(e.target.value.replace(/[^a-zA-Z0-9]/g, ''))}
+                maxLength={20}
+                style={{
+                  width: '100%',
+                  background: 'rgba(255,255,255,.06)',
+                  border: utrError ? '1px solid #EF4444' : '1px solid rgba(255,255,255,.15)',
+                  borderRadius: 10,
+                  padding: '10px 14px',
+                  color: '#FFF',
+                  fontSize: 14,
+                  fontFamily: 'monospace',
+                  letterSpacing: '.08em',
+                  outline: 'none',
+                }}
+              />
+              {utrError && (
+                <div style={{ fontSize: 11, color: '#EF4444', marginTop: 4 }}>
+                  ⚠️ {utrError}
+                </div>
+              )}
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,.4)', marginTop: 4 }}>
+                Found in your UPI app under &quot;UPI transaction ID&quot; or &quot;Bank reference number&quot;.
+              </div>
+
+              <button
+                type="submit"
+                disabled={verifyingUtr}
+                style={{
+                  width: '100%',
+                  marginTop: 14,
+                  padding: 12,
+                  background: 'linear-gradient(135deg, #10B981, #059669)',
+                  border: 'none',
+                  borderRadius: 12,
+                  color: '#FFF',
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: verifyingUtr ? 'not-allowed' : 'pointer',
+                  opacity: verifyingUtr ? 0.7 : 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                  fontFamily: 'Outfit, sans-serif',
+                }}
+              >
+                {verifyingUtr ? 'Verifying Reference...' : '⚡ Verify & Unlock Pro License →'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Success Confetti Modal */}
       {showSuccessModal && (

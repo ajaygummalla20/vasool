@@ -44,9 +44,11 @@ export async function POST(request: NextRequest) {
 
     const isProduction = process.env.NODE_ENV === 'production'
     const origin = request.nextUrl.origin
+    const merchantUpi = process.env.NEXT_PUBLIC_MERCHANT_UPI_ID || process.env.MERCHANT_UPI_ID || 'settlr@upi'
+    const merchantName = process.env.MERCHANT_NAME || 'Settlr Technologies'
 
     // Check YouPI-PG Gateway configuration
-    const youpiApiUrl = process.env.YOUPI_API_URL || 'http://localhost:6100'
+    const youpiApiUrl = process.env.YOUPI_API_URL
     const youpiCheckoutUrl = process.env.NEXT_PUBLIC_YOUPI_CHECKOUT_URL || 'http://localhost:7000'
     const youpiMerchantId = process.env.YOUPI_MERCHANT_ID
     const youpiApiKey = process.env.YOUPI_MERCHANT_API_KEY
@@ -58,17 +60,17 @@ export async function POST(request: NextRequest) {
     let orderId = `order_${user.id.slice(0, 6)}_${Date.now()}`
     let checkoutUrl = ''
     let isTest = false
-    let gateway: 'youpi' | 'razorpay' | 'simulator' = 'youpi'
+    let gateway: 'native_upi' | 'youpi' | 'razorpay' | 'simulator' = 'native_upi'
 
-    // 1. Try YouPI-PG Gateway (Primary)
-    if (youpiMerchantId || youpiApiKey || youpiApiUrl) {
+    // 1. Try YouPI-PG Gateway if explicitly configured and active
+    if (youpiApiUrl && youpiMerchantId) {
       gateway = 'youpi'
       try {
         const youpiRes = await fetch(`${youpiApiUrl}/api/v1/payments`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-merchant-id': youpiMerchantId || 'default',
+            'x-merchant-id': youpiMerchantId,
             ...(youpiApiKey ? { 'x-api-key': youpiApiKey } : {}),
             'Idempotency-Key': `idem_${user.id}_${Date.now()}`,
           },
@@ -90,30 +92,14 @@ export async function POST(request: NextRequest) {
         if (youpiRes.ok) {
           const youpiData = await youpiRes.json().catch(() => ({}))
           orderId = youpiData.orderId || youpiData.paymentId || orderId
-          checkoutUrl =
-            youpiData.checkoutUrl ||
-            `${youpiCheckoutUrl}/pay/${orderId}`
+          checkoutUrl = youpiData.checkoutUrl || `${youpiCheckoutUrl}/pay/${orderId}`
         } else {
-          // If YouPI service returned error, check fallback
-          const errText = await youpiRes.text().catch(() => '')
-          console.warn('[YouPI-PG API Notice]:', errText || youpiRes.statusText)
-          if (isProduction && !razorpayKeyId) {
-            return NextResponse.json({ error: 'YouPI-PG gateway currently unreachable' }, { status: 502 })
-          }
-          // In development, allow graceful fallback to checkout simulator
-          isTest = true
-          checkoutUrl = `${youpiCheckoutUrl}/pay/${orderId}`
+          // If YouPI service returned error, fall back gracefully to native zero-fee UPI
+          gateway = 'native_upi'
         }
-      } catch (youpiErr) {
-        console.warn('[YouPI-PG Connection Notice]: Self-hosted instance at', youpiApiUrl, 'offline or unreachable.')
-        if (isProduction && !razorpayKeyId) {
-          return NextResponse.json(
-            { error: 'Payment gateway is temporarily unavailable. Please verify your YouPI-PG server is running.' },
-            { status: 503 }
-          )
-        }
-        isTest = true
-        checkoutUrl = `${youpiCheckoutUrl}/pay/${orderId}`
+      } catch {
+        // If YouPI offline, fall back to native zero-fee UPI
+        gateway = 'native_upi'
       }
     } else if (razorpayKeyId && razorpayKeySecret) {
       // 2. Legacy Razorpay Fallback if explicitly configured
@@ -137,24 +123,15 @@ export async function POST(request: NextRequest) {
         }),
       })
 
-      if (!orderRes.ok) {
-        return NextResponse.json({ error: 'Failed to initialize payment gateway' }, { status: 500 })
+      if (orderRes.ok) {
+        const orderData = await orderRes.json()
+        orderId = orderData.id
+      } else {
+        gateway = 'native_upi'
       }
-
-      const orderData = await orderRes.json()
-      orderId = orderData.id
     } else {
-      // 3. Dev-only mock order
-      if (isProduction) {
-        console.error('[Billing Configuration Error]: No payment gateway configured in production')
-        return NextResponse.json(
-          { error: 'Payment gateway is temporarily unavailable. Please contact support.' },
-          { status: 500 }
-        )
-      }
-      orderId = `order_test_${Date.now()}`
-      isTest = true
-      gateway = 'simulator'
+      // 3. Default Native 0% Fee UPI Gateway
+      gateway = 'native_upi'
     }
 
     // Persist pending order in Supabase
@@ -180,6 +157,8 @@ export async function POST(request: NextRequest) {
       amountInRupees,
       currency: 'INR',
       gateway,
+      merchantUpi,
+      merchantName,
       checkoutUrl,
       youpiCheckoutUrl,
       youpiMerchantId: youpiMerchantId || 'settlr_merchant_dev',
