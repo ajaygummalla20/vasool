@@ -26,6 +26,16 @@ export default async function BillingRoute() {
     subscription = null
   }
 
+  // Early Beta: Grant 100% Free All-Access Pro to all users
+  if (!subscription || subscription.plan_id === 'free') {
+    subscription = {
+      plan_id: 'pro',
+      status: 'active',
+      current_period_end: '2099-12-31T23:59:59.000Z',
+      billing_cycle: 'yearly',
+    }
+  }
+
   // Count active usage for free plan limits display
   const { count: invoiceCount } = await supabase
     .from('invoices')

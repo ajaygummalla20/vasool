@@ -1364,10 +1364,10 @@ export default function LandingPage() {
       <section className="pricing-section" id="pricing" ref={pricingSection.ref}>
         <div className={`reveal ${pricingSection.visible ? 'visible' : ''}`}>
           <div className="section-header">
-            <span className="section-tag">Simple, Transparent Pricing</span>
-            <h2 className="section-title">Built for Indian Freelancers & MSMEs</h2>
+            <span className="section-tag">🎉 100% Free Early Beta</span>
+            <h2 className="section-title">All Premium Features Unlocked for ₹0</h2>
             <p className="section-subtitle">
-              Start 100% free with core statutory rights enforcement. Upgrade anytime as your billing scales.
+              We are making Settlr completely free for Indian freelancers, contractors, and MSMEs to help you get paid on time without software costs. No credit card or payment required.
             </p>
           </div>
 
@@ -1378,19 +1378,17 @@ export default function LandingPage() {
                 className={`pricing-toggle-btn ${pricingCycle === 'monthly' ? 'active' : ''}`}
                 onClick={() => setPricingCycle('monthly')}
               >
-                Monthly Billing
+                Monthly Plan View
               </button>
               <button
                 type="button"
                 className={`pricing-toggle-btn ${pricingCycle === 'yearly' ? 'active' : ''}`}
                 onClick={() => setPricingCycle('yearly')}
               >
-                Annual Billing
+                Annual Plan View
               </button>
             </div>
-            {pricingCycle === 'yearly' && (
-              <span className="save-badge">Save ~33% with Annual</span>
-            )}
+            <span className="save-badge">✨ 100% Free for Early Adopters</span>
           </div>
 
           <div className="pricing-grid">
@@ -1408,11 +1406,11 @@ export default function LandingPage() {
                 <ul className="pricing-features">
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
-                    <span>Up to 5 GST invoices per month</span>
+                    <span>GST Invoices & dynamic UPI QR codes</span>
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
-                    <span>Zero-MDR Direct NPCI Dynamic UPI QR billing</span>
+                    <span>Zero-MDR Direct NPCI UPI bank settlement</span>
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
@@ -1420,7 +1418,7 @@ export default function LandingPage() {
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
-                    <span>Automatic Section 16 compound interest calculator (20.25% p.a.)</span>
+                    <span>Section 16 compound interest calculator (20.25% p.a.)</span>
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
@@ -1438,10 +1436,10 @@ export default function LandingPage() {
             <div className="pricing-card featured">
               <div style={{ position: 'absolute', top: 14, right: 20 }}>
                 <span style={{
-                  background: '#10B981', color: '#FFF', fontSize: 10, fontWeight: 800,
+                  background: '#10B981', color: '#000', fontSize: 10, fontWeight: 800,
                   textTransform: 'uppercase', padding: '3px 10px', borderRadius: 100, letterSpacing: '0.08em'
                 }}>
-                  Most Popular
+                  100% Free Beta
                 </span>
               </div>
               <div>
@@ -1451,10 +1449,13 @@ export default function LandingPage() {
                   Complete cashflow enforcement, automated reminders, and tax compliance.
                 </p>
                 <div className="pricing-price">
-                  {pricingCycle === 'monthly' ? '₹499' : '₹3,999'}
+                  ₹0
+                  <span style={{ fontSize: 16, textDecoration: 'line-through', opacity: 0.5, fontWeight: 500, marginLeft: 8 }}>
+                    {pricingCycle === 'monthly' ? '₹499' : '₹3,999'}
+                  </span>
                 </div>
                 <div className="pricing-period">
-                  {pricingCycle === 'monthly' ? 'per month + GST' : 'per year (equivalent to ₹333/mo)'}
+                  100% Free during Early Access (Zero Card Required)
                 </div>
 
                 <ul className="pricing-features">
@@ -1468,7 +1469,7 @@ export default function LandingPage() {
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
-                    <span>Automated Email & WhatsApp payment escalation reminders</span>
+                    <span>Automated WhatsApp & Email payment escalation reminders</span>
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
@@ -1480,7 +1481,7 @@ export default function LandingPage() {
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
-                    <span>0% Fee Direct UPI Payment Gateway (YouPI-PG)</span>
+                    <span>0% Fee Direct UPI Payment Gateway & QR Codes</span>
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
@@ -1490,12 +1491,20 @@ export default function LandingPage() {
               </div>
 
               <Link href="/login" className="btn-glow" style={{ textAlign: 'center', width: '100%', marginTop: 24 }}>
-                Start Pro Experience →
+                Claim Free Pro Access →
               </Link>
             </div>
 
             {/* Agency Plan */}
             <div className="pricing-card">
+              <div style={{ position: 'absolute', top: 14, right: 20 }}>
+                <span style={{
+                  background: 'rgba(59,130,246,0.2)', color: '#60A5FA', border: '1px solid rgba(59,130,246,0.4)',
+                  fontSize: 10, fontWeight: 800, textTransform: 'uppercase', padding: '3px 10px', borderRadius: 100, letterSpacing: '0.08em'
+                }}>
+                  Unlocked Free
+                </span>
+              </div>
               <div>
                 <span className="pricing-tag pricing-tag-agency">For Agencies & Firms</span>
                 <h3 className="pricing-title">Agency & Growth</h3>
@@ -1503,10 +1512,13 @@ export default function LandingPage() {
                   AI legal intelligence, multi-client management, and quarterly advance tax forecasting.
                 </p>
                 <div className="pricing-price">
-                  {pricingCycle === 'monthly' ? '₹1,499' : '₹11,999'}
+                  ₹0
+                  <span style={{ fontSize: 16, textDecoration: 'line-through', opacity: 0.5, fontWeight: 500, marginLeft: 8 }}>
+                    {pricingCycle === 'monthly' ? '₹1,499' : '₹11,999'}
+                  </span>
                 </div>
                 <div className="pricing-period">
-                  {pricingCycle === 'monthly' ? 'per month + GST' : 'per year (equivalent to ₹999/mo)'}
+                  100% Free during Early Access (Zero Card Required)
                 </div>
 
                 <ul className="pricing-features">
@@ -1528,13 +1540,13 @@ export default function LandingPage() {
                   </li>
                   <li className="pricing-feat-item">
                     <span className="pricing-check">✓</span>
-                    <span>Dedicated Data Protection & Grievance SLA</span>
+                    <span>Multi-client and branch management</span>
                   </li>
                 </ul>
               </div>
 
               <Link href="/login" className="btn-secondary" style={{ textAlign: 'center', width: '100%', marginTop: 24 }}>
-                Get Agency Access
+                Claim Free Agency Access →
               </Link>
             </div>
           </div>

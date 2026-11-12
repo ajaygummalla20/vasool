@@ -68,12 +68,15 @@ export default function BillingPage({
 }: Props) {
   const router = useRouter()
   const [subscription, setSubscription] = useState<Subscription>(
-    initialSub || {
-      plan_id: 'free',
-      status: 'active',
-      billing_cycle: 'monthly',
-      amount: 0,
-    }
+    initialSub && initialSub.plan_id !== 'free'
+      ? initialSub
+      : {
+          plan_id: 'pro',
+          status: 'active',
+          current_period_end: '2099-12-31T23:59:59.000Z',
+          billing_cycle: 'yearly',
+          amount: 0,
+        }
   )
 
   const [cycle, setCycle] = useState<'monthly' | 'yearly'>('yearly')
@@ -468,33 +471,16 @@ export default function BillingPage({
             <div className="bl-status-banner">
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span
-                    className={`bl-badge-curr ${currentPlan === 'agency'
-                        ? 'bl-badge-agency'
-                        : isPro
-                          ? 'bl-badge-pro'
-                          : 'bl-badge-free'
-                      }`}
-                  >
-                    {currentPlan === 'agency'
-                      ? '🏢 Agency Plan'
-                      : isPro
-                        ? '⚡ Pro Growth Member'
-                        : '🌱 Free Starter Plan'}
+                  <span className="bl-badge-curr bl-badge-pro">
+                    ✨ Early Adopter — 100% Free All-Access
                   </span>
-                  {subscription.status === 'active' && isPro && (
-                    <span style={{ fontSize: 11, color: '#34D399' }}>● Active</span>
-                  )}
+                  <span style={{ fontSize: 11, color: '#34D399' }}>● Active Public Beta</span>
                 </div>
                 <div style={{ fontSize: 16, fontWeight: 700, color: '#FFF', marginTop: 10 }}>
-                  {isPro
-                    ? `Unlimited access active · Renews on ${fmtDate(subscription.current_period_end)}`
-                    : 'You are on the Free Starter tier (3 invoices/month & 2 clients)'}
+                  All Pro & Agency features are 100% Free during Early Public Access!
                 </div>
                 <div style={{ fontSize: 12, color: 'rgba(255,255,255,.45)', marginTop: 4 }}>
-                  {isPro
-                    ? 'Includes AI Risk Redlines, AI Receipt OCR Scanner, and MSMED Legal Notice Generator.'
-                    : 'Upgrade to Pro for unlimited invoices, AI contract audits, and dynamic UPI QR billing.'}
+                  No payment or credit card required. Enjoy unlimited GST invoices, AI contract risk redlines, camera receipt OCR, and dynamic UPI QR billing.
                 </div>
               </div>
 
@@ -509,41 +495,60 @@ export default function BillingPage({
                 }}
               >
                 <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,.4)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: 6 }}>
-                  Monthly Quota Usage
+                  Plan Privileges & Quota
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
                   <span>Invoices Issued:</span>
-                  <strong>{isPro ? 'Unlimited (∞)' : `${usage.invoicesCreated} / 3`}</strong>
+                  <strong style={{ color: '#34D399' }}>Unlimited (∞)</strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
+                  <span>Clients Managed:</span>
+                  <strong style={{ color: '#34D399' }}>Unlimited (∞)</strong>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-                  <span>Clients Managed:</span>
-                  <strong>{isPro ? 'Unlimited (∞)' : `${usage.clientsAdded} / 2`}</strong>
+                  <span>AI Legal & OCR:</span>
+                  <strong style={{ color: '#34D399' }}>Full Access (✓)</strong>
                 </div>
               </div>
             </div>
 
             {activeTab === 'plans' && (
               <>
-                {/* Billing Cycle Switcher */}
-                <div className="bl-cycle-wrap">
-                  <div className="bl-cycle-box">
-                    <button
-                      className={`bl-cycle-btn ${cycle === 'monthly' ? 'active' : ''}`}
-                      onClick={() => setCycle('monthly')}
-                    >
-                      Monthly Billing
-                    </button>
-                    <button
-                      className={`bl-cycle-btn ${cycle === 'yearly' ? 'active' : ''}`}
-                      onClick={() => setCycle('yearly')}
-                    >
-                      Annual Billing <span className="bl-save-tag">SAVE 33%</span>
-                    </button>
+                {/* Early Adopter Free Access Notice */}
+                <div
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(59,130,246,0.08) 100%)',
+                    border: '1px solid rgba(16,185,129,0.3)',
+                    borderRadius: 20,
+                    padding: '24px 28px',
+                    margin: '12px 0 6px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 20,
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                      <span style={{ background: '#10B981', color: '#000', fontSize: 11, fontWeight: 800, padding: '2px 8px', borderRadius: 6, textTransform: 'uppercase' }}>
+                        Free for Early Users
+                      </span>
+                      <span style={{ fontSize: 15, fontWeight: 700, color: '#FFF' }}>
+                        Zero Fees · Zero Commissions · All Features Unlocked
+                      </span>
+                    </div>
+                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
+                      We are on a mission to eliminate delayed payments for Indian freelancers, contractors, and MSMEs. All premium tools are 100% free while we onboard our early community. No credit card or payment gateway setup required.
+                    </p>
+                  </div>
+                  <div style={{ background: 'rgba(16,185,129,0.2)', border: '1px solid #10B981', padding: '10px 18px', borderRadius: 12, color: '#34D399', fontWeight: 700, fontSize: 13 }}>
+                    ✓ 100% Free Active
                   </div>
                 </div>
 
                 {/* Pricing Grid */}
-                <div className="bl-grid">
+                <div className="bl-grid" style={{ marginTop: 12 }}>
                   {/* FREE PLAN */}
                   <div className="bl-card">
                     <div>
@@ -559,52 +564,43 @@ export default function BillingPage({
                       <div className="bl-feat-list">
                         <div className="bl-feat-item">
                           <span className="bl-feat-icon">✓</span>
-                          <span>Up to 3 Invoices per month</span>
+                          <span>GST Tax Invoicing & Credit Notes</span>
                         </div>
                         <div className="bl-feat-item">
                           <span className="bl-feat-icon">✓</span>
-                          <span>Up to 2 Client records</span>
+                          <span>Zero-MDR Direct UPI QR generation</span>
                         </div>
                         <div className="bl-feat-item">
                           <span className="bl-feat-icon">✓</span>
-                          <span>Basic GST Tax Calculation (CGST/SGST)</span>
+                          <span>MSMED Act 45-day statutory tracking</span>
                         </div>
                         <div className="bl-feat-item">
                           <span className="bl-feat-icon">✓</span>
-                          <span>Manual WhatsApp Reminder logs</span>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon dim">✕</span>
-                          <span style={{ color: 'rgba(255,255,255,.35)' }}>AI Contract Risk Redlines</span>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon dim">✕</span>
-                          <span style={{ color: 'rgba(255,255,255,.35)' }}>AI Receipt OCR Camera Scanner</span>
+                          <span>WhatsApp & PDF invoice sharing</span>
                         </div>
                       </div>
                     </div>
 
                     <button className="bl-btn-plan bl-btn-free" disabled>
-                      {currentPlan === 'free' ? 'Current Active Plan' : 'Free Tier'}
+                      ✓ Included Free
                     </button>
                   </div>
 
                   {/* PRO GROWTH PLAN (FEATURED) */}
                   <div className="bl-card featured">
-                    <span className="bl-pop-tag">⚡ Most Popular for MSMEs</span>
+                    <span className="bl-pop-tag">⚡ 100% Free Beta Access</span>
                     <div>
                       <div className="bl-card-title" style={{ color: '#34D399' }}>
                         ⚡ Pro Growth
                       </div>
                       <div className="bl-card-desc">
-                        Full financial and legal operating system for established contractors & MSMEs.
+                        Full financial and statutory operating system for contractors & MSMEs.
                       </div>
                       <div className="bl-price">
-                        <span className="bl-price-num">
-                          {cycle === 'yearly' ? '₹3,999' : '₹499'}
-                        </span>
+                        <span className="bl-price-num">₹0</span>
                         <span className="bl-price-period">
-                          {cycle === 'yearly' ? '/ year (₹333/mo)' : '/ month'}
+                          <span style={{ textDecoration: 'line-through', opacity: 0.5, marginRight: 6 }}>₹499/mo</span>
+                          Free Early Access
                         </span>
                       </div>
 
@@ -638,14 +634,10 @@ export default function BillingPage({
 
                     <button
                       className="bl-btn-plan bl-btn-pro"
-                      onClick={() => handleUpgrade('pro')}
-                      disabled={loadingPlan === 'pro'}
+                      disabled
+                      style={{ cursor: 'default' }}
                     >
-                      {loadingPlan === 'pro'
-                        ? 'Opening YouPI Gateway...'
-                        : currentPlan === 'pro'
-                          ? '✓ Renew / Extend Pro'
-                          : '⚡ Upgrade with 0% Fee UPI'}
+                      ✓ Unlocked & Active (Free)
                     </button>
                   </div>
 
@@ -657,11 +649,10 @@ export default function BillingPage({
                         For multi-client agencies, accounting firms, and high-volume practices.
                       </div>
                       <div className="bl-price">
-                        <span className="bl-price-num">
-                          {cycle === 'yearly' ? '₹11,999' : '₹1,499'}
-                        </span>
+                        <span className="bl-price-num">₹0</span>
                         <span className="bl-price-period">
-                          {cycle === 'yearly' ? '/ year (₹999/mo)' : '/ month'}
+                          <span style={{ textDecoration: 'line-through', opacity: 0.5, marginRight: 6 }}>₹1,499/mo</span>
+                          Free Early Access
                         </span>
                       </div>
 
@@ -676,29 +667,21 @@ export default function BillingPage({
                         </div>
                         <div className="bl-feat-item">
                           <span className="bl-feat-icon">✓</span>
-                          <span>Multi-user team access (5 Seats)</span>
+                          <span>Multi-user team management</span>
                         </div>
                         <div className="bl-feat-item">
                           <span className="bl-feat-icon">✓</span>
-                          <span>Bulk WhatsApp Reminders API</span>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <span>Priority Phone & WhatsApp Support</span>
+                          <span>Priority Community Support</span>
                         </div>
                       </div>
                     </div>
 
                     <button
                       className="bl-btn-plan bl-btn-agency"
-                      onClick={() => handleUpgrade('agency')}
-                      disabled={loadingPlan === 'agency'}
+                      disabled
+                      style={{ cursor: 'default' }}
                     >
-                      {loadingPlan === 'agency'
-                        ? 'Opening YouPI Gateway...'
-                        : currentPlan === 'agency'
-                          ? '✓ Active Agency License'
-                          : '🏢 Upgrade to Agency'}
+                      ✓ Unlocked & Active (Free)
                     </button>
                   </div>
                 </div>
@@ -782,28 +765,37 @@ export default function BillingPage({
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: '#34D399' }}>
-                      Can I claim GST Input Tax Credit (ITC) on my Settlr subscription?
+                      Is Settlr really 100% free right now?
                     </div>
                     <div style={{ fontSize: 13, color: 'rgba(255,255,255,.6)', marginTop: 4 }}>
-                      Yes! When you upgrade, your GSTIN will be recorded on the subscription tax invoice, allowing you to claim full 18% GST Input Tax Credit against your business.
+                      Yes! Settlr is completely free during our public early access phase. You have full access to unlimited GST invoicing, AI contract risk redlines, camera receipt scanning, MSMED Act legal notice generation, and direct 0% MDR UPI QR payments without providing any credit card or payment.
                     </div>
                   </div>
 
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: '#34D399' }}>
-                      What payment methods are accepted?
+                      Why is Settlr free for early users?
                     </div>
                     <div style={{ fontSize: 13, color: 'rgba(255,255,255,.6)', marginTop: 4 }}>
-                      Through our zero-fee YouPI Payment Gateway, we accept direct bank-to-bank UPI across all Indian apps (Google Pay, PhonePe, Paytm, BHIM, CRED), along with NetBanking and RuPay cards.
+                      We are on a mission to eliminate delayed payments and help Indian freelancers and MSMEs enforce their statutory rights. We want our early community to use the platform, provide feedback, and grow without software cost barriers.
                     </div>
                   </div>
 
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: '#34D399' }}>
-                      Can I cancel anytime?
+                      Are there any fees deducted when my clients pay my invoices?
                     </div>
                     <div style={{ fontSize: 13, color: 'rgba(255,255,255,.6)', marginTop: 4 }}>
-                      Yes, you can cancel or switch plans at any time. Your Pro benefits remain active until the end of your prepaid billing period.
+                      Zero (0%) platform fees! Settlr generates dynamic NPCI UPI QR codes directly linked to your personal or business UPI ID. When clients scan and pay via Google Pay, PhonePe, Paytm, or BHIM, 100% of the funds settle directly into your bank account.
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#34D399' }}>
+                      What happens when paid plans are introduced in the future?
+                    </div>
+                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,.6)', marginTop: 4 }}>
+                      You will never be surprised with sudden charges. Early users who joined during our public beta will receive generous grandfathered perks, free trial extensions, and priority discounts.
                     </div>
                   </div>
                 </div>
