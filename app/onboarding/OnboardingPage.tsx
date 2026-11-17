@@ -374,7 +374,7 @@ export default function OnboardingPage({ initialProfile, userId, userEmail }: Pr
               </button>
             ) : (
               <button className="ob-btn-pri" onClick={handleFinish} disabled={saving || !dpdpConsent} style={{ opacity: (!dpdpConsent || saving) ? 0.6 : 1, cursor: (!dpdpConsent || saving) ? 'not-allowed' : 'pointer' }}>
-                {saving ? 'Setting up...' : '🚀 Launch Settlr OS'}
+                {saving ? 'Setting up...' : 'Launch Settlr OS'}
               </button>
             )}
           </div>

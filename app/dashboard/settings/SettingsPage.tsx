@@ -184,11 +184,11 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
     .split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() || '?'
 
   const tabs = [
-    { id: 'profile'  as const, label: 'Personal',          icon: '👤' },
-    { id: 'business' as const, label: 'Business & GST',     icon: '🏢' },
-    { id: 'payments' as const, label: 'UPI & Bank Wire',    icon: '💳' },
-    { id: 'invoice'  as const, label: 'Invoicing',          icon: '🧾' },
-    { id: 'privacy'  as const, label: 'DPDP & Data Rights', icon: '🛡️' },
+    { id: 'profile'  as const, label: 'Personal',          icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> },
+    { id: 'business' as const, label: 'Business & GST',     icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg> },
+    { id: 'payments' as const, label: 'UPI & Bank Wire',    icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> },
+    { id: 'invoice'  as const, label: 'Invoicing',          icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> },
+    { id: 'privacy'  as const, label: 'DPDP & Data Rights', icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg> },
   ]
 
   if (loading) {
@@ -255,6 +255,7 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
         .s-card{background:white;border:1px solid rgba(26,20,13,.08);border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(26,20,13,.04);margin-bottom:14px}
         .s-card-hdr{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid rgba(26,20,13,.06)}
         .s-card-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+        .s-nav-icon svg, .s-card-icon svg{width:14px;height:14px;flex-shrink:0;display:block}
         .s-card-title{font-size:13px;font-weight:600;color:#1A140D}
         .s-card-sub{font-size:10px;color:rgba(26,20,13,.40);margin-top:1px}
         .s-card-body{padding:18px}
@@ -273,8 +274,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
         .in:focus{background:white;border-color:#2D8A58;box-shadow:0 0 0 3px rgba(45,138,88,.10)}
         .in[disabled]{background:#EDEAE5;color:rgba(26,20,13,.45);cursor:not-allowed}
 
-        .sl{width:100%;background:#F7F5F0;border:1.5px solid rgba(26,20,13,.11);border-radius:9px;padding:10px 32px 10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1A140D;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231A140D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:all .18s;display:block}
+        .sl{width:100%;color-scheme:light;background:#F7F5F0;border:1.5px solid rgba(26,20,13,.11);border-radius:9px;padding:10px 32px 10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1A140D;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231A140D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:all .18s;display:block}
         .sl:focus{background-color:white;border-color:#2D8A58;box-shadow:0 0 0 3px rgba(45,138,88,.10)}
+        .sl option{background-color:#FFFFFF;color:#1A140D}
 
         /* invoice preview badge */
         .inv-preview{background:linear-gradient(135deg,#0C1A10,#0F2116);border-radius:12px;padding:20px;margin-top:4px}
@@ -380,7 +382,7 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
                   <div className="s-completion">
                     <div>
                       <div style={{fontSize:12,fontWeight:600,color:'#1A140D',marginBottom:2}}>Profile completion</div>
-                      <div className="s-comp-label">{pct < 100 ? `${fields.length - filled} fields left to complete` : 'Profile fully complete ✓'}</div>
+                      <div className="s-comp-label">{pct < 100 ? `${fields.length - filled} fields left to complete` : 'Profile fully complete'}</div>
                     </div>
                     <div className="s-comp-bar-wrap">
                       <div className="s-comp-bar" style={{width:`${pct}%`}}/>
@@ -398,7 +400,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
 
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(27,94,59,.10)'}}>👤</div>
+                      <div className="s-card-icon" style={{background:'rgba(27,94,59,.10)', color:'#1B5E3B'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">Your name</div>
                         <div className="s-card-sub">Appears as the sender on all invoices</div>
@@ -420,7 +424,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
 
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(24,95,165,.10)'}}>📱</div>
+                      <div className="s-card-icon" style={{background:'rgba(24,95,165,.10)', color:'#185FA5'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">Contact numbers</div>
                         <div className="s-card-sub">Used for client communication</div>
@@ -442,7 +448,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
 
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(133,79,11,.10)'}}>📍</div>
+                      <div className="s-card-icon" style={{background:'rgba(133,79,11,.10)', color:'#854F0B'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">Your address</div>
                         <div className="s-card-sub">Printed on invoice PDF as sender address</div>
@@ -482,7 +490,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
 
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(27,94,59,.10)'}}>🏢</div>
+                      <div className="s-card-icon" style={{background:'rgba(27,94,59,.10)', color:'#1B5E3B'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">Business identity</div>
                         <div className="s-card-sub">Appears on invoice header</div>
@@ -504,7 +514,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
 
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(124,58,237,.10)'}}>🧮</div>
+                      <div className="s-card-icon" style={{background:'rgba(124,58,237,.10)', color:'#7C3AED'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">GST registration</div>
                         <div className="s-card-sub">Required for GST-compliant invoices</div>
@@ -537,7 +549,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
                   {/* MSME Udyam Registration (MSMED Act 2006) */}
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(59,130,246,.12)'}}>🛡️</div>
+                      <div className="s-card-icon" style={{background:'rgba(59,130,246,.12)', color:'#3B82F6'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">MSME / Udyam Registration (MSMED Act 2006)</div>
                         <div className="s-card-sub">Enables 45-day statutory payment enforcement & 3x RBI bank rate interest claims</div>
@@ -564,7 +578,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
 
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(16,185,129,.12)'}}>📱</div>
+                      <div className="s-card-icon" style={{background:'rgba(16,185,129,.12)', color:'#10B981'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">Dynamic UPI ID (Google Pay / PhonePe / Paytm)</div>
                         <div className="s-card-sub">Generates dynamic scan-to-pay QR codes with invoice amount and notes auto-filled</div>
@@ -594,7 +610,7 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
                             style={{ width: 60, height: 60, borderRadius: 6, background: 'white', border: '1px solid rgba(0,0,0,.1)' }}
                           />
                           <div>
-                            <div style={{ fontSize: 12, fontWeight: 700, color: '#1B5E3B' }}>✓ Dynamic QR Code Enabled</div>
+                            <div style={{ fontSize: 12, fontWeight: 700, color: '#1B5E3B' }}>Dynamic QR Code Enabled</div>
                             <div style={{ fontSize: 10, color: 'rgba(26,20,13,.6)', marginTop: 2 }}>
                               Every new invoice will automatically display a customized scan-to-pay QR code linked to <strong>{profile.upi_id}</strong>.
                             </div>
@@ -606,7 +622,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
 
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(24,95,165,.10)'}}>🏦</div>
+                      <div className="s-card-icon" style={{background:'rgba(24,95,165,.10)', color:'#185FA5'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">Bank Wire Details (NEFT / RTGS / IMPS)</div>
                         <div className="s-card-sub">Printed on invoice PDFs for client direct bank transfers</div>
@@ -644,7 +662,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
 
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(232,105,42,.10)'}}>🔢</div>
+                      <div className="s-card-icon" style={{background:'rgba(232,105,42,.10)', color:'#E8692A'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">Invoice numbering</div>
                         <div className="s-card-sub">Prefix + sequential number — e.g. INV-001, INV-002…</div>
@@ -698,7 +718,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
 
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(27,94,59,.10)'}}>💡</div>
+                      <div className="s-card-icon" style={{background:'rgba(27,94,59,.10)', color:'#1B5E3B'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">Tip — complete your profile first</div>
                         <div className="s-card-sub">Your business name and GST appear on every invoice PDF</div>
@@ -738,7 +760,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
                 <>
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(16,185,129,.12)'}}>🛡️</div>
+                      <div className="s-card-icon" style={{background:'rgba(16,185,129,.12)', color:'#10B981'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">Digital Personal Data Protection (DPDP Act, 2023)</div>
                         <div className="s-card-sub">Statutory transparency, data portability, and Data Principal rights</div>
@@ -762,7 +786,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
                   {/* Section 11: Right to Access & Portability */}
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(59,130,246,.10)'}}>📥</div>
+                      <div className="s-card-icon" style={{background:'rgba(59,130,246,.10)', color:'#3B82F6'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">Right to Access Information & Data Portability (Section 11)</div>
                         <div className="s-card-sub">Download an encrypted, machine-readable JSON archive of your personal records</div>
@@ -782,7 +808,7 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
                           boxShadow: '0 2px 6px rgba(27,94,59,.2)'
                         }}
                       >
-                        {exporting ? 'Generating JSON Archive…' : '📥 Download Personal Data Archive (.json)'}
+                        {exporting ? 'Generating JSON Archive…' : 'Download Personal Data Archive (.json)'}
                       </button>
                     </div>
                   </div>
@@ -790,7 +816,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
                   {/* Grievance Redressal Officer */}
                   <div className="s-card">
                     <div className="s-card-hdr">
-                      <div className="s-card-icon" style={{background:'rgba(245,158,11,.12)'}}>⚖️</div>
+                      <div className="s-card-icon" style={{background:'rgba(245,158,11,.12)', color:'#D97706'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title">Grievance Redressal Officer (Section 8(10) & 13)</div>
                         <div className="s-card-sub">Designated Data Protection & Grievance Officer details</div>
@@ -817,7 +845,9 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
                   {/* Section 12: Danger Zone - Erasure */}
                   <div className="s-card" style={{borderColor:'rgba(239,68,68,.3)'}}>
                     <div className="s-card-hdr" style={{background:'rgba(239,68,68,.04)', borderBottom:'1px solid rgba(239,68,68,.12)'}}>
-                      <div className="s-card-icon" style={{background:'rgba(239,68,68,.12)'}}>🗑️</div>
+                      <div className="s-card-icon" style={{background:'rgba(239,68,68,.12)', color:'#DC2626'}}>
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                      </div>
                       <div>
                         <div className="s-card-title" style={{color:'#DC2626'}}>Right to Erasure & Account Deletion (Section 12)</div>
                         <div className="s-card-sub">Permanently delete your account and erase all associated personal data</div>
@@ -861,7 +891,7 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
             boxShadow: '0 20px 50px rgba(0,0,0,0.3)', border: '1px solid rgba(239,68,68,0.2)'
           }}>
             <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:12}}>
-              <span style={{fontSize:24}}>⚠️</span>
+              <svg width="24" height="24" fill="none" stroke="#DC2626" viewBox="0 0 24 24" style={{ flexShrink: 0 }}><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
               <h3 style={{fontSize:18, fontWeight:700, color:'#DC2626', margin:0}}>Confirm Account & Data Erasure</h3>
             </div>
             <p style={{fontSize:13, color:'rgba(26,20,13,0.7)', lineHeight:1.5, marginBottom:16}}>
@@ -879,7 +909,7 @@ export default function SettingsPage({ initialTab = 'profile' }: Props) {
               style={{marginBottom:12}}
             />
             {deleteError && (
-              <div style={{fontSize:12, color:'#DC2626', marginBottom:12}}>⚠️ {deleteError}</div>
+              <div style={{fontSize:12, color:'#DC2626', marginBottom:12}}>{deleteError}</div>
             )}
             <div style={{display:'flex', gap:10, justifyContent:'flex-end'}}>
               <button

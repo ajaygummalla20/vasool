@@ -348,8 +348,9 @@ export default function CreateInvoicePage({
         .in[readonly]{background:#EDEAE5;color:rgba(26,20,13,.55);cursor:default}
         .in[readonly]:focus{border-color:rgba(26,20,13,.12);box-shadow:none}
 
-        .sl{width:100%;background:#F7F5F0;border:1.5px solid rgba(26,20,13,.12);border-radius:9px;padding:10px 32px 10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1A140D;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231A140D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:all .18s;display:block}
+        .sl{width:100%;color-scheme:light;background:#F7F5F0;border:1.5px solid rgba(26,20,13,.12);border-radius:9px;padding:10px 32px 10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1A140D;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231A140D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;transition:all .18s;display:block}
         .sl:focus{background-color:white;border-color:#2D8A58;box-shadow:0 0 0 3px rgba(45,138,88,.11)}
+        .sl option{background-color:#FFFFFF;color:#1A140D}
 
         .ta{width:100%;background:#F7F5F0;border:1.5px solid rgba(26,20,13,.12);border-radius:9px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1A140D;outline:none;resize:vertical;min-height:72px;line-height:1.55;transition:all .18s;display:block}
         .ta:focus{background:white;border-color:#2D8A58;box-shadow:0 0 0 3px rgba(45,138,88,.11)}
@@ -393,8 +394,9 @@ export default function CreateInvoicePage({
         .ii::placeholder{color:rgba(26,20,13,.32)}
         .ii:focus{background:white;border-color:#2D8A58;box-shadow:0 0 0 2px rgba(45,138,88,.10)}
         .ii.r{text-align:right}
-        .ii-sl{width:100%;background:#F7F5F0;border:1.5px solid rgba(26,20,13,.12);border-radius:7px;padding:7px 24px 7px 8px;font-family:'DM Sans',sans-serif;font-size:11px;color:#1A140D;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231A140D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;display:block;box-sizing:border-box}
+        .ii-sl{width:100%;color-scheme:light;background:#F7F5F0;border:1.5px solid rgba(26,20,13,.12);border-radius:7px;padding:7px 24px 7px 8px;font-family:'DM Sans',sans-serif;font-size:11px;color:#1A140D;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='8' height='5' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231A140D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;display:block;box-sizing:border-box}
         .ii-sl:focus{background-color:white;border-color:#2D8A58;box-shadow:0 0 0 2px rgba(45,138,88,.10)}
+        .ii-sl option{background-color:#FFFFFF;color:#1A140D}
         .item-amt{font-size:12px;font-weight:600;color:#1A140D;text-align:right;padding-right:2px;white-space:nowrap}
         .del-btn{width:28px;height:28px;border-radius:7px;background:rgba(192,57,43,.08);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0}
         .del-btn:hover{background:rgba(192,57,43,.20)}
@@ -529,7 +531,9 @@ export default function CreateInvoicePage({
 
               {contractId && (
                 <div className="ai-ban">
-                  <div className="ai-ic">🤖</div>
+                  <div className="ai-ic" style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1B5E3B" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                  </div>
                   <div>
                     <div className="ai-t">Auto-filled from contract</div>
                     <div className="ai-s">Amount, due date & payment terms extracted from <strong>{selContract?.title}</strong></div>
@@ -541,7 +545,9 @@ export default function CreateInvoicePage({
               <div className="sc">
                 <div className="sc-hd" onClick={() => toggle('client')}>
                   <div className="sc-hd-l">
-                    <div className="sc-ic" style={{background:'rgba(27,94,59,.10)'}}>🤝</div>
+                    <div className="sc-ic" style={{background:'rgba(27,94,59,.10)', color:'#1B5E3B', display:'flex', alignItems:'center', justifyContent:'center'}}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
                     <div>
                       <div className="sc-t">Client</div>
                       <div className="sc-s">{selClient ? selClient.name : 'Select who you are billing'}</div>
@@ -627,7 +633,9 @@ export default function CreateInvoicePage({
               <div className="sc">
                 <div className="sc-hd" onClick={() => toggle('details')}>
                   <div className="sc-hd-l">
-                    <div className="sc-ic" style={{background:'rgba(24,95,165,.10)'}}>📋</div>
+                    <div className="sc-ic" style={{background:'rgba(24,95,165,.10)', color:'#185FA5', display:'flex', alignItems:'center', justifyContent:'center'}}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
                     <div>
                       <div className="sc-t">Invoice details</div>
                       <div className="sc-s">Number · Dates · Payment terms</div>
@@ -642,9 +650,9 @@ export default function CreateInvoicePage({
                       <div className="lb">Document Type</div>
                       <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
                         {([
-                          { id: 'tax_invoice', label: '🧾 Tax Invoice', desc: 'Standard GST' },
-                          { id: 'proforma',    label: '📑 Proforma Bill', desc: '0 GST Liability' },
-                          { id: 'credit_note', label: '📄 GST Credit Note', desc: 'Sec 34 CGST' },
+                          { id: 'tax_invoice', label: 'Tax Invoice', desc: 'Standard GST' },
+                          { id: 'proforma',    label: 'Proforma Bill', desc: '0 GST Liability' },
+                          { id: 'credit_note', label: 'GST Credit Note', desc: 'Sec 34 CGST' },
                         ] as const).map(dt => (
                           <button
                             key={dt.id}
@@ -727,7 +735,9 @@ export default function CreateInvoicePage({
               <div className="sc">
                 <div className="sc-hd" onClick={() => toggle('items')}>
                   <div className="sc-hd-l">
-                    <div className="sc-ic" style={{background:'rgba(133,79,11,.10)'}}>📦</div>
+                    <div className="sc-ic" style={{background:'rgba(133,79,11,.10)', color:'#854F0B', display:'flex', alignItems:'center', justifyContent:'center'}}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                    </div>
                     <div>
                       <div className="sc-t">Line items</div>
                       <div className="sc-s">{items.length} item{items.length !== 1 ? 's' : ''} · Subtotal {fmtINR(subtotal)}</div>
@@ -783,7 +793,9 @@ export default function CreateInvoicePage({
               <div className="sc">
                 <div className="sc-hd" onClick={() => toggle('gst')}>
                   <div className="sc-hd-l">
-                    <div className="sc-ic" style={{background:'rgba(124,58,237,.10)'}}>🧮</div>
+                    <div className="sc-ic" style={{background:'rgba(124,58,237,.10)', color:'#7C3AED', display:'flex', alignItems:'center', justifyContent:'center'}}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/></svg>
+                    </div>
                     <div>
                       <div className="sc-t">GST & totals</div>
                       <div className="sc-s">Tax · Discount · Grand total {fmtINR(total)}</div>
@@ -854,7 +866,9 @@ export default function CreateInvoicePage({
               <div className="sc">
                 <div className="sc-hd" onClick={() => toggle('notes')}>
                   <div className="sc-hd-l">
-                    <div className="sc-ic" style={{background:'rgba(232,105,42,.10)'}}>💬</div>
+                    <div className="sc-ic" style={{background:'rgba(232,105,42,.10)', color:'#E8692A', display:'flex', alignItems:'center', justifyContent:'center'}}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
                     <div>
                       <div className="sc-t">Payment & notes</div>
                       <div className="sc-s">UPI link · Message to client</div>

@@ -88,9 +88,9 @@ function getSupabase() {
 }
 
 const RISK_CFG = {
-  high:   { emoji: '🔴', bg: 'rgba(192,57,43,.07)', border: 'rgba(192,57,43,.18)', color: '#791F1F', label: 'High Risk' },
-  medium: { emoji: '🟡', bg: 'rgba(186,117,23,.07)', border: 'rgba(186,117,23,.18)', color: '#633806', label: 'Medium Risk' },
-  low:    { emoji: '🟢', bg: 'rgba(27,94,59,.06)',    border: 'rgba(27,94,59,.15)',   color: '#085041', label: 'Low Risk' },
+  high:   { dotColor: '#EF4444', bg: 'rgba(192,57,43,.07)', border: 'rgba(192,57,43,.18)', color: '#791F1F', label: 'High Risk' },
+  medium: { dotColor: '#F59E0B', bg: 'rgba(186,117,23,.07)', border: 'rgba(186,117,23,.18)', color: '#633806', label: 'Medium Risk' },
+  low:    { dotColor: '#10B981', bg: 'rgba(27,94,59,.06)',    border: 'rgba(27,94,59,.15)',   color: '#085041', label: 'Low Risk' },
 }
 
 // ── Component ──────────────────────────────────────────────────
@@ -341,14 +341,14 @@ export default function ContractsPageClient({
       {/* Risks */}
       {risks.length > 0 && (
         <div>
-          <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(26,20,13,.40)', textTransform: 'uppercase' as const, letterSpacing: '.07em', marginBottom: 8 }}>⚠️ Legal Risks & Loopholes</div>
+          <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(26,20,13,.40)', textTransform: 'uppercase' as const, letterSpacing: '.07em', marginBottom: 8 }}>Legal Risks & Loopholes</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {risks.map((r, i) => {
               const cfg = RISK_CFG[r.risk_level] || RISK_CFG.medium
               return (
                 <div key={i} style={{ background: cfg.bg, border: `.5px solid ${cfg.border}`, borderRadius: 10, padding: '10px 12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 5 }}>
-                    <span style={{ fontSize: 11 }}>{cfg.emoji}</span>
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: cfg.dotColor, display: 'inline-block' }} />
                     <span style={{ fontSize: 10, fontWeight: 700, color: cfg.color }}>{cfg.label}</span>
                     <span style={{ fontSize: 10, color: 'rgba(26,20,13,.45)', marginLeft: 'auto' }}>
                       {r.clause}
@@ -358,7 +358,7 @@ export default function ContractsPageClient({
                     {r.description}
                   </div>
                   <div style={{ fontSize: 10, color: '#1B5E3B', fontWeight: 500, display: 'flex', alignItems: 'flex-start', gap: 4 }}>
-                    <span>💡</span> {r.recommendation}
+                    <span style={{ fontWeight: 700 }}>Recommendation:</span> {r.recommendation}
                   </div>
                 </div>
               )
@@ -370,13 +370,13 @@ export default function ContractsPageClient({
       {/* Missing Clauses */}
       {missing.length > 0 && (
         <div>
-          <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(26,20,13,.40)', textTransform: 'uppercase' as const, letterSpacing: '.07em', marginBottom: 8 }}>📋 Missing Clauses</div>
+          <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(26,20,13,.40)', textTransform: 'uppercase' as const, letterSpacing: '.07em', marginBottom: 8 }}>Missing Clauses</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {missing.map((m, i) => {
               const cfg = RISK_CFG[m.importance] || RISK_CFG.medium
               return (
                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, padding: '8px 10px', background: 'rgba(26,20,13,.03)', borderRadius: 8, border: '.5px solid rgba(26,20,13,.06)' }}>
-                  <span style={{ fontSize: 11 }}>{cfg.emoji}</span>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: cfg.dotColor, display: 'inline-block', marginTop: 4 }} />
                   <div>
                     <div style={{ fontSize: 11, fontWeight: 600, color: '#1A140D', marginBottom: 2 }}>{m.clause}</div>
                     <div style={{ fontSize: 10, color: 'rgba(26,20,13,.55)', lineHeight: 1.45 }}>{m.description}</div>
@@ -410,7 +410,7 @@ export default function ContractsPageClient({
         {redlines.length > 0 && (
           <div>
             <div style={{ fontSize: 10, fontWeight: 700, color: '#1B5E3B', textTransform: 'uppercase' as const, letterSpacing: '.07em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}>
-              <span>🛡️</span> Proposed Counter-Clauses & Amendments
+              Proposed Counter-Clauses & Amendments
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {redlines.map((item, idx) => (
@@ -432,7 +432,7 @@ export default function ContractsPageClient({
                         transition: 'all .15s'
                       }}
                     >
-                      {copiedIdx === idx ? '✓ Wording Copied' : '📋 Copy Clause Wording'}
+                      {copiedIdx === idx ? 'Copied' : 'Copy Clause Wording'}
                     </button>
                   </div>
 
@@ -448,7 +448,7 @@ export default function ContractsPageClient({
                   </div>
 
                   <div style={{ fontSize: 10, color: 'rgba(26,20,13,.60)', display: 'flex', alignItems: 'flex-start', gap: 4 }}>
-                    <span style={{ fontSize: 11 }}>🤝</span> <strong>Win-Win Justification:</strong> {item.win_win_justification}
+                    <strong>Win-Win Justification:</strong> {item.win_win_justification}
                   </div>
                 </div>
               ))}
@@ -460,7 +460,7 @@ export default function ContractsPageClient({
         {msmeRights.length > 0 && (
           <div>
             <div style={{ fontSize: 10, fontWeight: 700, color: '#185FA5', textTransform: 'uppercase' as const, letterSpacing: '.07em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 4 }}>
-              <span>⚖️</span> Statutory Indian MSME Protections
+              Statutory MSME Protections (MSMED Act 2006)
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {msmeRights.map((r, idx) => (
@@ -568,7 +568,8 @@ export default function ContractsPageClient({
         .co-label{font-size:10px;font-weight:600;color:rgba(26,20,13,.45);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
         .co-input{width:100%;border:1px solid rgba(26,20,13,.12);border-radius:8px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:#1A140D;outline:none;background:white}
         .co-input:focus{border-color:#2D8A58}
-        .co-select{width:100%;border:1px solid rgba(26,20,13,.12);border-radius:8px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:#1A140D;outline:none;background:white;cursor:pointer}
+        .co-select{width:100%;border:1px solid rgba(26,20,13,.12);border-radius:8px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:#1A140D;outline:none;background:white;cursor:pointer;color-scheme:light}
+        .co-select option{background-color:#FFFFFF;color:#1A140D}
         .co-textarea{width:100%;border:1px solid rgba(26,20,13,.12);border-radius:8px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:#1A140D;outline:none;resize:vertical;min-height:50px}
         .co-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
         .co-modal-actions{display:flex;gap:8px;padding:14px 24px;border-top:.5px solid rgba(26,20,13,.08);background:#FCFAF6;justify-content:flex-end;flex-shrink:0}
@@ -646,17 +647,17 @@ export default function ContractsPageClient({
                         {c.clients ? <div className="co-card-client">{c.clients.name}</div> : <div className="co-card-no-client">No client linked</div>}
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 4 }}>
-                          <div className="co-detail-row"><span className="co-detail-icon">💰</span><div><strong>Value:</strong> {c.extracted_amount ? fmtINR(c.extracted_amount) : '—'}</div></div>
-                          <div className="co-detail-row"><span className="co-detail-icon">⏰</span><div><strong>Terms:</strong> {c.extracted_payment_terms || '—'}</div></div>
-                          <div className="co-detail-row"><span className="co-detail-icon">⚖️</span><div><strong>Late Fee:</strong> {c.extracted_late_fee || '—'}</div></div>
+                          <div className="co-detail-row"><div><strong>Value:</strong> {c.extracted_amount ? fmtINR(c.extracted_amount) : '—'}</div></div>
+                          <div className="co-detail-row"><div><strong>Terms:</strong> {c.extracted_payment_terms || '—'}</div></div>
+                          <div className="co-detail-row"><div><strong>Late Fee:</strong> {c.extracted_late_fee || '—'}</div></div>
                         </div>
 
                         {/* Risk pills */}
                         {(rc.high > 0 || rc.medium > 0) && (
                           <div className="co-risk-row">
-                            {rc.high > 0 && <span className="co-risk-pill" style={{ background: 'rgba(192,57,43,.08)', color: '#791F1F' }}>🔴 {rc.high} high</span>}
-                            {rc.medium > 0 && <span className="co-risk-pill" style={{ background: 'rgba(186,117,23,.08)', color: '#633806' }}>🟡 {rc.medium} medium</span>}
-                            {rc.low > 0 && <span className="co-risk-pill" style={{ background: 'rgba(27,94,59,.06)', color: '#085041' }}>🟢 {rc.low} low</span>}
+                            {rc.high > 0 && <span className="co-risk-pill" style={{ background: 'rgba(192,57,43,.08)', color: '#791F1F', display: 'inline-flex', alignItems: 'center', gap: 4 }}><span style={{ width: 6, height: 6, borderRadius: '50%', background: '#EF4444' }} /> {rc.high} high</span>}
+                            {rc.medium > 0 && <span className="co-risk-pill" style={{ background: 'rgba(186,117,23,.08)', color: '#633806', display: 'inline-flex', alignItems: 'center', gap: 4 }}><span style={{ width: 6, height: 6, borderRadius: '50%', background: '#F59E0B' }} /> {rc.medium} medium</span>}
+                            {rc.low > 0 && <span className="co-risk-pill" style={{ background: 'rgba(27,94,59,.06)', color: '#085041', display: 'inline-flex', alignItems: 'center', gap: 4 }}><span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10B981' }} /> {rc.low} low</span>}
                           </div>
                         )}
                       </div>
@@ -701,7 +702,9 @@ export default function ContractsPageClient({
                     onClick={() => document.getElementById('contract-file-input')?.click()}
                   >
                     <input type="file" id="contract-file-input" style={{ display: 'none' }} accept=".pdf,.docx,.doc,.txt" onChange={handleFileSelect} />
-                    <div className="co-dropzone-icon">📄</div>
+                    <div className="co-dropzone-icon">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 8px', display: 'block', color: 'rgba(26,20,13,0.4)' }}><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
                     <div className="co-dropzone-title">Upload Contract Document</div>
                     <div className="co-dropzone-sub">Drag & drop or click · PDF, DOCX, TXT</div>
                     <div style={{ fontSize: 9, color: 'rgba(26,20,13,.30)', marginTop: 8 }}>AI will extract terms and analyze legal risks</div>
@@ -723,18 +726,18 @@ export default function ContractsPageClient({
                 <>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ fontSize: 10, color: 'rgba(26,20,13,.45)' }}>File: <strong>{fileName}</strong></div>
-                    <div className="co-badge-ai">✨ AI Analysis</div>
+                    <div className="co-badge-ai">AI Analysis</div>
                   </div>
 
                   <div className="co-tabs">
                     <button className={`co-tab ${activeTab === 'terms' ? 'active' : ''}`} onClick={() => setActiveTab('terms')}>
-                      📋 Extracted Terms
+                      Extracted Terms
                     </button>
                     <button className={`co-tab ${activeTab === 'analysis' ? 'active' : ''}`} onClick={() => setActiveTab('analysis')}>
-                      ⚠️ Legal Risks {aiRisks.length > 0 && <span style={{ background: 'rgba(192,57,43,.12)', color: '#791F1F', padding: '1px 5px', borderRadius: 100, fontSize: 9, marginLeft: 4 }}>{aiRisks.length}</span>}
+                      Legal Risks {aiRisks.length > 0 && <span style={{ background: 'rgba(192,57,43,.12)', color: '#791F1F', padding: '1px 5px', borderRadius: 100, fontSize: 9, marginLeft: 4 }}>{aiRisks.length}</span>}
                     </button>
                     <button className={`co-tab ${activeTab === 'redlines' ? 'active' : ''}`} onClick={() => setActiveTab('redlines')}>
-                      🛡️ Contractor Counter-Proposals {aiRedlines.length > 0 && <span style={{ background: 'rgba(27,94,59,.12)', color: '#1B5E3B', padding: '1px 5px', borderRadius: 100, fontSize: 9, marginLeft: 4 }}>{aiRedlines.length}</span>}
+                      Contractor Counter-Proposals {aiRedlines.length > 0 && <span style={{ background: 'rgba(27,94,59,.12)', color: '#1B5E3B', padding: '1px 5px', borderRadius: 100, fontSize: 9, marginLeft: 4 }}>{aiRedlines.length}</span>}
                     </button>
                   </div>
 
@@ -829,10 +832,10 @@ export default function ContractsPageClient({
               {/* Modal tabs for viewing saved analysis */}
               <div className="co-tabs" style={{ marginTop: 10 }}>
                 <button className={`co-tab ${activeTab === 'analysis' ? 'active' : ''}`} onClick={() => setActiveTab('analysis')}>
-                  ⚠️ Legal Risks & Missing Clauses
+                  Legal Risks & Missing Clauses
                 </button>
                 <button className={`co-tab ${activeTab === 'redlines' ? 'active' : ''}`} onClick={() => setActiveTab('redlines')}>
-                  🛡️ Contractor Counter-Proposals & MSME Rights
+                  Contractor Counter-Proposals & MSME Rights
                 </button>
               </div>
 

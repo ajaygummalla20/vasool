@@ -2,6 +2,11 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+// Trust corporate proxy SSL certificate chain when running locally
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+}
+
 /**
  * Next.js 16 Proxy Convention (formerly Middleware)
  * Runs server-side before route execution to refresh auth session tokens and guard private routes.

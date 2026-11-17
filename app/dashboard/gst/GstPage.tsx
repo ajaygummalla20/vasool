@@ -463,10 +463,12 @@ export default function GstPageClient({
 
             <div className="gst-actions">
               <button className="gst-btn-secondary" onClick={handleExportCaCsv}>
-                📊 Export CA Summary (CSV)
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6 }}><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                Export CA Summary (CSV)
               </button>
               <button className="gst-btn-primary" onClick={handleExportGstr1Json}>
-                📥 Download GSTR-1 JSON
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6 }}><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download GSTR-1 JSON
               </button>
             </div>
           </div>
@@ -515,32 +517,33 @@ export default function GstPageClient({
             {/* Banner */}
             <div className="gst-banner">
               <div>
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#1B5E3B' }}>⚡ Ready to File GSTR-1 for {period === 'current_month' ? 'This Month' : 'Selected Period'}</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#1B5E3B' }}>Ready to File GSTR-1 for {period === 'current_month' ? 'This Month' : 'Selected Period'}</div>
                 <div style={{ fontSize: 11, color: 'rgba(26,20,13,.5)', marginTop: 2 }}>
                   Download GSTR-1 JSON payload and import it directly into the official GST Portal offline tool.
                 </div>
               </div>
               <button className="gst-btn-primary" onClick={handleExportGstr1Json}>
-                📥 Download GSTR-1 JSON
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6 }}><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Download GSTR-1 JSON
               </button>
             </div>
 
             {/* Tabs */}
             <div className="gst-tabs-deck">
               <button className={`gst-tab-btn ${activeTab === 'summary' ? 'active' : ''}`} onClick={() => setActiveTab('summary')}>
-                📊 Tax Liability Summary (GSTR-3B)
+                Tax Liability Summary (GSTR-3B)
               </button>
               <button className={`gst-tab-btn ${activeTab === 'b2b' ? 'active' : ''}`} onClick={() => setActiveTab('b2b')}>
-                📄 B2B Invoice Directory ({taxMetrics.b2bCount})
+                B2B Invoice Directory ({taxMetrics.b2bCount})
               </button>
               <button className={`gst-tab-btn ${activeTab === 'hsn' ? 'active' : ''}`} onClick={() => setActiveTab('hsn')}>
-                📑 HSN / SAC Summary
+                HSN / SAC Summary
               </button>
               <button className={`gst-tab-btn ${activeTab === 'advancetax' ? 'active' : ''}`} onClick={() => setActiveTab('advancetax')}>
-                📈 Advance Tax & Sec 44ADA
+                Advance Tax & Sec 44ADA
               </button>
               <button className={`gst-tab-btn ${activeTab === 'payment' ? 'active' : ''}`} onClick={() => setActiveTab('payment')}>
-                💳 GST Portal Payment & Challan Guide
+                GST Portal Payment Guide
               </button>
             </div>
 
@@ -653,7 +656,7 @@ export default function GstPageClient({
                       </div>
                     </div>
                     <span style={{ fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 100, background: advanceTaxCalc.isAdvanceTaxMandatory ? 'rgba(192,57,43,.1)' : 'rgba(27,94,59,.1)', color: advanceTaxCalc.isAdvanceTaxMandatory ? '#C0392B' : '#1B5E3B' }}>
-                      {advanceTaxCalc.isAdvanceTaxMandatory ? '⚠️ Advance Tax Mandatory (> ₹10k)' : '✓ Below Advance Tax Limit'}
+                      {advanceTaxCalc.isAdvanceTaxMandatory ? 'Advance Tax Mandatory (> ₹10k)' : 'Below Advance Tax Limit'}
                     </span>
                   </div>
 
@@ -689,7 +692,7 @@ export default function GstPageClient({
                   {/* 4 Quarterly Installments */}
                   <div style={{ background: 'white', border: '1px solid rgba(26,20,13,.08)', borderRadius: 12, padding: 16 }}>
                     <div style={{ fontSize: 12, fontWeight: 700, color: '#1A140D', marginBottom: 12 }}>
-                      🗓️ Statutory Advance Tax Installment Schedule (Section 208 / 211)
+                      Statutory Advance Tax Installment Schedule (Section 208 / 211)
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
                       <div style={{ background: 'rgba(26,20,13,.02)', border: '1px solid rgba(26,20,13,.06)', borderRadius: 8, padding: 12 }}>
@@ -719,7 +722,7 @@ export default function GstPageClient({
 
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 14, paddingTop: 12, borderTop: '1px dashed rgba(26,20,13,.1)' }}>
                       <div style={{ fontSize: 11, color: 'rgba(26,20,13,.55)' }}>
-                        💡 <em>Section 44ADA benefit: Professionals opting for presumptive scheme can pay 100% advance tax in a single installment on or before March 15 without Section 234C interest penalty.</em>
+                        <em>Section 44ADA benefit: Professionals opting for presumptive scheme can pay 100% advance tax in a single installment on or before March 15 without Section 234C interest penalty.</em>
                       </div>
                       <a
                         href="https://eportal.incometax.gov.in/iec/foservices/#/e-pay-tax-prelogin/user-details"
@@ -728,7 +731,7 @@ export default function GstPageClient({
                         className="gst-btn-primary"
                         style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}
                       >
-                        💳 Pay Challan 280 (e-Pay Tax) →
+                        Pay Challan 280 (e-Pay Tax) →
                       </a>
                     </div>
                   </div>
@@ -770,7 +773,7 @@ export default function GstPageClient({
                       rel="noopener noreferrer"
                       style={{ textDecoration: 'none' }}
                     >
-                      🔗 Open Official GST Payment Portal →
+                      Open Official GST Payment Portal →
                     </a>
                   </div>
                 </div>

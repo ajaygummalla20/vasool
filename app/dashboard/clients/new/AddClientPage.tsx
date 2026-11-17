@@ -149,8 +149,9 @@ export default function AddClientPage({ userName = '', userEmail = '' }: { userN
         .inp.err{border-color:#E53E3E;background:white}
         .inp.err:focus{box-shadow:0 0 0 3px rgba(229,62,62,.10)}
 
-        .sel{width:100%;background:#FAFAF8;border:1.5px solid rgba(26,20,13,.10);border-radius:9px;padding:10px 32px 10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1A140D;outline:none;cursor:pointer;appearance:none;transition:all .18s;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231A140D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+        .sel{width:100%;color-scheme:light;background:#FAFAF8;border:1.5px solid rgba(26,20,13,.10);border-radius:9px;padding:10px 32px 10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1A140D;outline:none;cursor:pointer;appearance:none;transition:all .18s;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231A140D' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
         .sel:focus{background-color:white;border-color:#2D8A58;box-shadow:0 0 0 3px rgba(45,138,88,.12)}
+        .sel option{background-color:#FFFFFF;color:#1A140D}
 
         .textarea{width:100%;background:#FAFAF8;border:1.5px solid rgba(26,20,13,.10);border-radius:9px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:13px;color:#1A140D;outline:none;resize:vertical;min-height:80px;line-height:1.55;transition:all .18s}
         .textarea:focus{background:white;border-color:#2D8A58;box-shadow:0 0 0 3px rgba(45,138,88,.12)}
@@ -269,7 +270,9 @@ export default function AddClientPage({ userName = '', userEmail = '' }: { userN
               {/* Contact */}
               <div className="sec">
                 <div className="sec-hdr">
-                  <div className="sec-icon" style={{ background: 'rgba(27,94,59,.10)' }}>🤝</div>
+                  <div className="sec-icon" style={{ background: 'rgba(27,94,59,.10)', color: '#1B5E3B', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
+                  </div>
                   <div><div className="sec-title">Contact details</div><div className="sec-sub">Basic information about this client</div></div>
                 </div>
                 <div className="sec-body">
@@ -309,7 +312,9 @@ export default function AddClientPage({ userName = '', userEmail = '' }: { userN
               {/* Address */}
               <div className="sec">
                 <div className="sec-hdr">
-                  <div className="sec-icon" style={{ background: 'rgba(24,95,165,.10)' }}>📍</div>
+                  <div className="sec-icon" style={{ background: 'rgba(24,95,165,.10)', color: '#185FA5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                  </div>
                   <div><div className="sec-title">Address</div><div className="sec-sub">Used on invoice PDF — all optional</div></div>
                 </div>
                 <div className="sec-body">
@@ -339,7 +344,9 @@ export default function AddClientPage({ userName = '', userEmail = '' }: { userN
               {/* Reminders */}
               <div className="sec">
                 <div className="sec-hdr">
-                  <div className="sec-icon" style={{ background: 'rgba(232,105,42,.10)' }}>💬</div>
+                  <div className="sec-icon" style={{ background: 'rgba(232,105,42,.10)', color: '#E8692A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+                  </div>
                   <div><div className="sec-title">WhatsApp reminder schedule</div><div className="sec-sub">Sent automatically after invoice due date — toggle to customise</div></div>
                 </div>
                 <div className="sec-body">
@@ -361,7 +368,9 @@ export default function AddClientPage({ userName = '', userEmail = '' }: { userN
               {/* Notes */}
               <div className="sec">
                 <div className="sec-hdr">
-                  <div className="sec-icon" style={{ background: 'rgba(133,79,11,.10)' }}>📝</div>
+                  <div className="sec-icon" style={{ background: 'rgba(133,79,11,.10)', color: '#854F0B', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                  </div>
                   <div><div className="sec-title">Internal notes</div><div className="sec-sub">Not shown on invoices — just for your reference</div></div>
                 </div>
                 <div className="sec-body">

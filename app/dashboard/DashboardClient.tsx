@@ -204,10 +204,19 @@ export default function DashboardClient({
 
             <div className="kd-actions">
               <button className="kokonut-btn-secondary" onClick={() => router.push('/dashboard/contracts')}>
-                🛡️ Contracts AI
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                Contracts AI
               </button>
               <button className="kokonut-btn-secondary" onClick={() => router.push('/dashboard/gst')}>
-                🧾 GST & Tax Hub
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+                GST & Tax Hub
               </button>
               <button className="kokonut-btn-primary" onClick={() => router.push('/dashboard/invoices/new')}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
@@ -219,12 +228,17 @@ export default function DashboardClient({
           </div>
 
           <div className="kd-content">
-            {/* Kokonut Motion Stat Cards */}
+            {/* Core Developed Stat Cards */}
             <div className="kd-stats-grid">
               <div className="kd-stat-card">
                 <div className="kd-stat-header">
                   <span className="kd-stat-label">Total Receivable</span>
-                  <span className="kd-stat-icon">💰</span>
+                  <span className="kd-stat-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="4" width="20" height="16" rx="2" />
+                      <line x1="2" y1="10" x2="22" y2="10" />
+                    </svg>
+                  </span>
                 </div>
                 <div className="kd-stat-val">{fmtINR(metrics.totalReceivable)}</div>
                 <div className="kd-stat-sub">
@@ -235,20 +249,38 @@ export default function DashboardClient({
               <div className="kd-stat-card">
                 <div className="kd-stat-header">
                   <span className="kd-stat-label">Overdue Balance</span>
-                  <span className="kd-stat-icon" style={{ background: 'rgba(248, 113, 113, 0.15)', color: '#F87171' }}>⚠️</span>
+                  <span className="kd-stat-icon" style={{ background: 'rgba(248, 113, 113, 0.15)', color: '#F87171' }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                      <line x1="12" y1="9" x2="12" y2="13" />
+                      <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                  </span>
                 </div>
                 <div className="kd-stat-val" style={{ color: metrics.overdueAmount > 0 ? '#F87171' : '#FFFFFF' }}>
                   {fmtINR(metrics.overdueAmount)}
                 </div>
                 <div className="kd-stat-sub">
-                  {metrics.overdueAmount > 0 ? '🔴 Requires WhatsApp Follow-up' : '🟢 All payments on time'}
+                  {metrics.overdueAmount > 0 ? (
+                    <span style={{ color: '#F87171', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#F87171' }} /> Requires Follow-up
+                    </span>
+                  ) : (
+                    <span style={{ color: '#34D399', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#34D399' }} /> All payments on time
+                    </span>
+                  )}
                 </div>
               </div>
 
               <div className="kd-stat-card">
                 <div className="kd-stat-header">
                   <span className="kd-stat-label">Collected This Month</span>
-                  <span className="kd-stat-icon">✅</span>
+                  <span className="kd-stat-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </span>
                 </div>
                 <div className="kd-stat-val" style={{ color: '#34D399' }}>{fmtINR(metrics.collectedThisMonth)}</div>
                 <div className="kd-stat-sub">Via Bank Transfer & UPI</div>
@@ -257,7 +289,11 @@ export default function DashboardClient({
               <div className="kd-stat-card">
                 <div className="kd-stat-header">
                   <span className="kd-stat-label">Reminders Dispatched</span>
-                  <span className="kd-stat-icon" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60A5FA' }}>💬</span>
+                  <span className="kd-stat-icon" style={{ background: 'rgba(59, 130, 246, 0.15)', color: '#60A5FA' }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </span>
                 </div>
                 <div className="kd-stat-val">{metrics.remindersSent}</div>
                 <div className="kd-stat-sub">Automated WhatsApp logs</div>
@@ -267,24 +303,42 @@ export default function DashboardClient({
             {/* Quick Launch Banner */}
             <div className="kd-banner">
               <div>
-                <div className="kd-banner-title">✨ MSME Operating System · Quick Workflows</div>
+                <div className="kd-banner-title">MSME Operating System · Quick Workflows</div>
                 <div className="kd-banner-sub">
-                  Create client proposals, track expenses for GST ITC, run recurring retainers, or analyze legal contract risks.
+                  Issue client proposals, track expenses for GST ITC, run recurring retainers, or analyze legal contract risks.
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 <button className="kokonut-btn-secondary" onClick={() => router.push('/dashboard/proposals')}>
-                  📝 Proposals
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                  </svg>
+                  Proposals
                 </button>
                 <button className="kokonut-btn-secondary" onClick={() => router.push('/dashboard/expenses')}>
-                  💸 Expenses
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <line x1="12" y1="8" x2="12" y2="16" />
+                    <line x1="8" y1="12" x2="16" y2="12" />
+                  </svg>
+                  Expenses
                 </button>
                 <button className="kokonut-btn-secondary" onClick={() => router.push('/dashboard/invoices/recurring')}>
-                  🔁 Retainers
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="23 4 23 10 17 10" />
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                  </svg>
+                  Retainers
                 </button>
                 <button className="kokonut-btn-secondary" onClick={() => router.push('/dashboard/reports')}>
-                  📊 Reports
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                  </svg>
+                  Reports
                 </button>
                 <button className="kokonut-btn-primary" onClick={() => router.push('/dashboard/gst')}>
                   Calculate GST
@@ -297,7 +351,7 @@ export default function DashboardClient({
               {/* Recent Invoices */}
               <div className="kd-card">
                 <div className="kd-card-hdr">
-                  <div className="kd-card-title">📄 Recent Invoices</div>
+                  <div className="kd-card-title">Recent Invoices</div>
                   <button className="kd-card-action" onClick={() => router.push('/dashboard/invoices')}>View All Invoices →</button>
                 </div>
 
@@ -333,7 +387,7 @@ export default function DashboardClient({
               {/* Activity Feed */}
               <div className="kd-card">
                 <div className="kd-card-hdr">
-                  <div className="kd-card-title">💬 Reminders Activity</div>
+                  <div className="kd-card-title">Reminders Activity</div>
                   <button className="kd-card-action" onClick={() => router.push('/dashboard/reminders/log')}>View Log →</button>
                 </div>
 
@@ -345,7 +399,11 @@ export default function DashboardClient({
                   <div>
                     {recentActivity.map(act => (
                       <div key={act.id} style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span style={{ fontSize: 14 }}>💬</span>
+                        <span style={{ color: '#60A5FA', display: 'flex', alignItems: 'center' }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                          </svg>
+                        </span>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ fontSize: 12, fontWeight: 600, color: '#FFFFFF' }}>
                             {act.invoices?.[0]?.clients?.[0]?.name || 'Client'}

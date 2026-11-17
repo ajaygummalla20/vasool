@@ -43,8 +43,15 @@ export default function ContactPage() {
           padding: 20px;
         }
         .info-card-icon {
-          font-size: 24px;
-          margin-bottom: 8px;
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          background: rgba(16, 185, 129, 0.1);
+          color: #10B981;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 12px;
         }
         .info-card-title {
           font-family: 'Outfit', sans-serif;
@@ -85,7 +92,9 @@ export default function ContactPage() {
         <div className="grid-cards">
           {/* Email Support */}
           <div className="info-card">
-            <div className="info-card-icon">📧</div>
+            <div className="info-card-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
             <div className="info-card-title">Customer & Billing Support</div>
             <div className="info-card-text">
               For account, billing, or technical queries:<br />
@@ -96,7 +105,9 @@ export default function ContactPage() {
 
           {/* Grievance Officer */}
           <div className="info-card">
-            <div className="info-card-icon">⚖️</div>
+            <div className="info-card-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+            </div>
             <div className="info-card-title">Grievance & Privacy Officer</div>
             <div className="info-card-text">
               Under DPDP Act 2023 & Consumer Protection Rules:<br />
@@ -107,7 +118,9 @@ export default function ContactPage() {
 
           {/* Operational Address */}
           <div className="info-card">
-            <div className="info-card-icon">📍</div>
+            <div className="info-card-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            </div>
             <div className="info-card-title">Operating Location</div>
             <div className="info-card-text">
               <strong>Settlr Technologies</strong><br />
@@ -118,7 +131,9 @@ export default function ContactPage() {
 
           {/* Support Hours */}
           <div className="info-card">
-            <div className="info-card-icon">🕒</div>
+            <div className="info-card-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
             <div className="info-card-title">Business Hours</div>
             <div className="info-card-text">
               Monday – Saturday<br />

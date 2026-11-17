@@ -195,28 +195,28 @@ export default function PrivacyPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16, margin: '16px 0' }}>
           <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: 16 }}>
-            <h4 style={{ color: '#34D399', margin: '0 0 8px' }}>📥 Right to Access & Portability (Sec 11)</h4>
+            <h4 style={{ color: '#34D399', margin: '0 0 8px' }}>Right to Access & Portability (Sec 11)</h4>
             <p style={{ fontSize: 13, color: '#9CA3AF', margin: 0 }}>
               You can download a complete, structured JSON archive of your personal profile, clients, invoices, and expenses anytime via <Link href="/dashboard/settings">Settings → Data Rights</Link>.
             </p>
           </div>
 
           <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: 16 }}>
-            <h4 style={{ color: '#34D399', margin: '0 0 8px' }}>✏️ Right to Correction (Sec 12)</h4>
+            <h4 style={{ color: '#34D399', margin: '0 0 8px' }}>Right to Correction (Sec 12)</h4>
             <p style={{ fontSize: 13, color: '#9CA3AF', margin: 0 }}>
               You have the right to correct, update, or complete any inaccurate or obsolete personal and business details directly in your Profile settings.
             </p>
           </div>
 
           <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: 16 }}>
-            <h4 style={{ color: '#EF4444', margin: '0 0 8px' }}>🗑️ Right to Erasure / Forgotten (Sec 12)</h4>
+            <h4 style={{ color: '#EF4444', margin: '0 0 8px' }}>Right to Erasure / Forgotten (Sec 12)</h4>
             <p style={{ fontSize: 13, color: '#9CA3AF', margin: 0 }}>
               You may trigger an immediate account deletion and personal data purge through the Data Rights tab, subject to statutory tax compliance hold periods.
             </p>
           </div>
 
           <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, padding: 16 }}>
-            <h4 style={{ color: '#34D399', margin: '0 0 8px' }}>🤝 Right to Nominate (Sec 14)</h4>
+            <h4 style={{ color: '#34D399', margin: '0 0 8px' }}>Right to Nominate (Sec 14)</h4>
             <p style={{ fontSize: 13, color: '#9CA3AF', margin: 0 }}>
               You have the right to nominate an individual who shall, in the event of your death or incapacity, exercise your rights as a Data Principal.
             </p>

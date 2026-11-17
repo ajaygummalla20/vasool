@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
+// Trust corporate proxy SSL certificate chain when running locally
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+}
+
 export async function GET(request: NextRequest) {
   const url = new URL(request.url)
   const code = url.searchParams.get('code')
@@ -9,7 +14,11 @@ export async function GET(request: NextRequest) {
   const next = (rawNext && rawNext.startsWith('/') && !rawNext.startsWith('//') && !rawNext.includes('\\'))
     ? rawNext
     : '/dashboard'
-  const origin = url.origin
+
+  // Dynamically determine origin from incoming request headers (supports localhost, custom domain, Vercel preview URLs automatically)
+  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || url.host
+  const proto = request.headers.get('x-forwarded-proto') || (url.protocol.replace(':', ''))
+  const origin = `${proto}://${host}`
 
   if (!code) {
     return NextResponse.redirect(`${origin}/login?error=no_code`)

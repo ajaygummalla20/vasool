@@ -74,6 +74,19 @@ export default function LandingPage() {
   // Prefetch login page for instant navigation
   useEffect(() => { router.prefetch('/login') }, [router])
 
+  // Handle Supabase OAuth code if delivered to root / by default Site URL fallback
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const code = params.get('code')
+      if (code) {
+        const next = params.get('next') || '/dashboard'
+        // If this root page was opened on production but user wants local or vice versa:
+        window.location.href = `/auth/callback?code=${encodeURIComponent(code)}&next=${encodeURIComponent(next)}`
+      }
+    }
+  }, [])
+
   // Scroll progress bar
   const [scrollProgress, setScrollProgress] = useState(0)
 
@@ -179,10 +192,10 @@ export default function LandingPage() {
   ]
 
   const howItWorks = [
-    { step: '01', icon: '📝', title: 'Create Invoice', desc: 'Generate a professional GST-compliant invoice in under 60 seconds with auto-calculated CGST/SGST/IGST splits.' },
-    { step: '02', icon: '⚡', title: 'Send & Track', desc: 'Share via WhatsApp/Email with embedded UPI QR. Real-time payment tracking with automatic 45-day MSMED deadline monitoring.' },
-    { step: '03', icon: '🛡️', title: 'Auto-Enforce', desc: 'If payment crosses 45 days, Settlr auto-generates compound interest notices and MSME Samadhaan filing documents.' },
-    { step: '04', icon: '📊', title: 'File & Grow', desc: 'Export GSTR-1 JSON, track advance tax, reconcile TDS, and forecast 90-day cashflow — all from one dashboard.' },
+    { step: '01', title: 'Create Invoice', desc: 'Generate a professional GST-compliant invoice in under 60 seconds with auto-calculated CGST/SGST/IGST splits.' },
+    { step: '02', title: 'Send & Track', desc: 'Share via WhatsApp/Email with embedded UPI QR. Real-time payment tracking with automatic 45-day MSMED deadline monitoring.' },
+    { step: '03', title: 'Auto-Enforce', desc: 'If payment crosses 45 days, Settlr auto-generates compound interest notices and MSME Samadhaan filing documents.' },
+    { step: '04', title: 'File & Grow', desc: 'Export GSTR-1 JSON, track advance tax, reconcile TDS, and forecast 90-day cashflow — all from one dashboard.' },
   ]
 
   const testimonials = [
@@ -201,292 +214,238 @@ export default function LandingPage() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body {
-          background-color: #060A08;
+          background-color: #08090B;
           color: #F3F4F6;
           font-family: 'DM Sans', sans-serif;
           overflow-x: hidden;
           line-height: 1.5;
+          -webkit-font-smoothing: antialiased;
         }
 
         /* ── SCROLL PROGRESS BAR ── */
         .scroll-progress {
-          position: fixed; top: 0; left: 0; height: 3px; z-index: 9999;
-          background: linear-gradient(90deg, #10B981 0%, #34D399 40%, #F59E0B 100%);
-          box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+          position: fixed; top: 0; left: 0; height: 2px; z-index: 9999;
+          background: #10B981;
           transition: width 0.1s linear;
         }
 
-        /* ── AMBIENT GLOW EFFECTS (Parallax) ── */
-        .glow-bg {
-          position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+        /* ── PRECISION CANVAS BACKGROUND (Dot Grid & Radial Mask) ── */
+        .canvas-bg {
+          position: fixed; inset: 0; pointer-events: none; z-index: 0;
+          background-color: #08090B;
+          background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+          background-size: 32px 32px;
+          mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 60%, transparent 100%);
+          -webkit-mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 60%, transparent 100%);
         }
-        .glow-orb-1 {
-          position: absolute; top: -150px; left: 15%; width: 600px; height: 600px;
-          background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 65%);
-          filter: blur(80px); animation: floatOrb 14s infinite alternate ease-in-out;
-        }
-        .glow-orb-2 {
-          position: absolute; top: 40%; right: -100px; width: 500px; height: 500px;
-          background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 65%);
-          filter: blur(90px); animation: floatOrb 18s infinite alternate-reverse ease-in-out;
-        }
-        .glow-orb-3 {
-          position: absolute; bottom: 10%; left: 10%; width: 550px; height: 550px;
-          background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 65%);
-          filter: blur(80px);
-        }
-
-        /* ── PARALLAX FLOATING SHAPES ── */
-        .parallax-shapes {
-          position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
-        }
-        .pshape {
-          position: absolute; border-radius: 50%; opacity: 0.04;
-          border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-        .pshape-1 { width: 300px; height: 300px; top: 20%; right: 5%; }
-        .pshape-2 { width: 200px; height: 200px; top: 50%; left: 3%; }
-        .pshape-3 { width: 150px; height: 150px; top: 75%; right: 15%; border-color: rgba(245,158,11,0.3); }
-        .pshape-sq { border-radius: 16px; transform: rotate(45deg); }
-
-        @keyframes floatOrb {
-          0% { transform: translateY(0px) scale(1); }
-          100% { transform: translateY(40px) scale(1.08); }
+        .hero-ambient-glow {
+          position: absolute; top: -140px; left: 50%; transform: translateX(-50%);
+          width: 900px; height: 420px;
+          background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+          pointer-events: none; z-index: 0;
         }
 
         /* ── REVEAL ANIMATION CLASSES ── */
         .reveal {
-          opacity: 0; transform: translateY(40px);
-          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+          opacity: 0; transform: translateY(30px);
+          transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
-        .reveal-left {
-          opacity: 0; transform: translateX(-50px);
-          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal-left.visible { opacity: 1; transform: translateX(0); }
-
-        .reveal-right {
-          opacity: 0; transform: translateX(50px);
-          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal-right.visible { opacity: 1; transform: translateX(0); }
-
         .reveal-scale {
-          opacity: 0; transform: scale(0.9);
-          transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+          opacity: 0; transform: scale(0.97);
+          transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .reveal-scale.visible { opacity: 1; transform: scale(1); }
 
         /* ── TOP NAVIGATION ── */
         .navbar {
           position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-          background: rgba(6, 10, 8, 0.75);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-          transition: all 0.3s ease;
+          background: rgba(8, 9, 11, 0.82);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          transition: all 0.25s ease;
         }
         .navbar.scrolled {
-          background: rgba(6, 10, 8, 0.92);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+          background: rgba(8, 9, 11, 0.95);
+          border-bottom-color: rgba(255, 255, 255, 0.09);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
         .nav-inner {
           max-width: 1240px; margin: 0 auto;
           display: flex; align-items: center; justify-content: space-between;
-          padding: 16px 24px;
+          padding: 14px 24px;
         }
         .brand {
-          display: flex; align-items: center; gap: 12px; text-decoration: none;
+          display: flex; align-items: center; gap: 10px; text-decoration: none;
         }
         .brand-logo {
-          width: 36px; height: 36px; border-radius: 10px; overflow: hidden;
+          width: 30px; height: 30px; border-radius: 8px; overflow: hidden;
           background: #10B981; display: flex; align-items: center; justify-content: center;
-          box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+          border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .brand-logo img { width: 100%; height: 100%; object-fit: cover; }
         .brand-title {
-          font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; color: #FFFFFF;
+          font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700; color: #FFFFFF;
           letter-spacing: -0.02em; line-height: 1;
         }
         .brand-badge {
-          font-size: 9px; font-weight: 700; color: #34D399; background: rgba(16, 185, 129, 0.12);
-          border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 100px; padding: 2px 7px;
-          margin-left: 6px; letter-spacing: 0.05em; text-transform: uppercase;
+          font-size: 9px; font-weight: 600; color: rgba(255, 255, 255, 0.7);
+          background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 100px; padding: 2px 8px; margin-left: 6px; letter-spacing: 0.05em; text-transform: uppercase;
         }
         .nav-links {
           display: flex; align-items: center; gap: 28px;
         }
         .nav-link {
-          font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.7);
-          text-decoration: none; transition: color 0.2s ease;
-          position: relative;
+          font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.65);
+          text-decoration: none; transition: color 0.15s ease;
         }
-        .nav-link::after {
-          content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
-          background: #10B981; border-radius: 2px; transition: width 0.3s ease;
-        }
-        .nav-link:hover { color: #34D399; }
-        .nav-link:hover::after { width: 100%; }
-        .nav-actions { display: flex; align-items: center; gap: 14px; }
+        .nav-link:hover { color: #FFFFFF; }
+        .nav-actions { display: flex; align-items: center; gap: 12px; }
         .btn-ghost {
-          font-size: 13px; font-weight: 600; color: #FFFFFF; text-decoration: none;
-          padding: 8px 16px; border-radius: 8px; transition: all 0.2s;
+          font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.8); text-decoration: none;
+          padding: 7px 14px; border-radius: 8px; transition: all 0.15s;
         }
-        .btn-ghost:hover { background: rgba(255, 255, 255, 0.06); }
+        .btn-ghost:hover { background: rgba(255, 255, 255, 0.06); color: #FFFFFF; }
         .btn-glow {
-          display: inline-flex; align-items: center; gap: 8px;
-          background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-          color: white; text-decoration: none; font-size: 13px; font-weight: 700;
-          padding: 9px 20px; border-radius: 10px;
-          box-shadow: 0 0 20px rgba(16, 185, 129, 0.35);
-          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-          position: relative; overflow: hidden;
-        }
-        .btn-glow::after {
-          content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-          background: linear-gradient(60deg, transparent, rgba(255,255,255,0.15), transparent);
-          transform: rotate(30deg); animation: btnShimmer 4s infinite;
-        }
-        @keyframes btnShimmer {
-          0% { transform: translate(-100%, -100%) rotate(30deg); }
-          100% { transform: translate(100%, 100%) rotate(30deg); }
+          display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+          background: #FFFFFF; color: #08090B; text-decoration: none; font-size: 13px; font-weight: 600;
+          padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.12);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+          transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .btn-glow:hover {
-          transform: translateY(-2px); box-shadow: 0 0 28px rgba(16, 185, 129, 0.55);
+          background: #EDEDED; transform: translateY(-1px);
         }
 
         /* ── HERO SECTION ── */
         .hero {
-          position: relative; z-index: 1; padding: 160px 24px 80px;
+          position: relative; z-index: 1; padding: 140px 24px 60px;
           max-width: 1240px; margin: 0 auto; text-align: center;
         }
         .hero-pill {
           display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25);
-          border-radius: 100px; padding: 6px 16px; font-size: 12px; font-weight: 600;
-          color: #34D399; margin-bottom: 24px; box-shadow: 0 0 16px rgba(16, 185, 129, 0.1);
-          animation: fadeInDown 0.8s ease-out;
+          background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.09);
+          border-radius: 100px; padding: 5px 14px; font-size: 12px; font-weight: 500;
+          color: rgba(255, 255, 255, 0.85); margin-bottom: 24px;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+          animation: fadeInDown 0.6s ease-out;
         }
         @keyframes fadeInDown {
-          from { opacity: 0; transform: translateY(-20px); }
+          from { opacity: 0; transform: translateY(-12px); }
           to { opacity: 1; transform: translateY(0); }
         }
         .pulse-dot {
           width: 6px; height: 6px; border-radius: 50%; background: #10B981;
-          box-shadow: 0 0 8px #10B981; animation: pulseGlow 2s infinite;
-        }
-        @keyframes pulseGlow {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.4; transform: scale(0.8); }
         }
         .hero-title {
-          font-family: 'Outfit', sans-serif; font-size: clamp(36px, 5.2vw, 68px);
-          font-weight: 900; line-height: 1.08; letter-spacing: -0.035em; color: #FFFFFF;
-          max-width: 980px; margin: 0 auto 20px;
-          animation: fadeInUp 0.8s 0.2s ease-out both;
+          font-family: 'Outfit', sans-serif; font-size: clamp(34px, 5vw, 64px);
+          font-weight: 800; line-height: 1.1; letter-spacing: -0.035em; color: #FFFFFF;
+          max-width: 960px; margin: 0 auto 20px;
+          animation: fadeInUp 0.6s 0.15s ease-out both;
         }
         @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(30px); }
+          from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
         .hero-gradient {
-          background: linear-gradient(135deg, #34D399 0%, #10B981 50%, #F59E0B 100%);
+          background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.72) 100%);
           -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-          background-size: 200% 200%;
-          animation: gradientShift 4s ease infinite;
-        }
-        @keyframes gradientShift {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
         }
         .typewriter-cursor {
-          display: inline-block; width: 3px; height: 0.9em; background: #34D399;
+          display: inline-block; width: 2px; height: 0.9em; background: #10B981;
           margin-left: 4px; vertical-align: text-bottom;
-          animation: blink 0.7s infinite;
+          animation: blink 0.8s infinite;
         }
         @keyframes blink {
           0%, 50% { opacity: 1; }
           51%, 100% { opacity: 0; }
         }
         .hero-subtitle {
-          font-size: clamp(15px, 1.8vw, 18px); color: rgba(255, 255, 255, 0.65);
-          max-width: 760px; margin: 0 auto 36px; line-height: 1.65; font-weight: 400;
-          animation: fadeInUp 0.8s 0.5s ease-out both;
+          font-size: clamp(15px, 1.6vw, 17px); color: rgba(255, 255, 255, 0.6);
+          max-width: 720px; margin: 0 auto 36px; line-height: 1.65; font-weight: 400;
+          animation: fadeInUp 0.6s 0.3s ease-out both;
         }
         .hero-buttons {
-          display: flex; align-items: center; justify-content: center; gap: 16px;
+          display: flex; align-items: center; justify-content: center; gap: 14px;
           flex-wrap: wrap; margin-bottom: 48px;
-          animation: fadeInUp 0.8s 0.7s ease-out both;
+          animation: fadeInUp 0.6s 0.45s ease-out both;
         }
         .btn-large {
-          font-size: 15px; padding: 14px 28px; border-radius: 12px;
+          font-size: 14px; padding: 12px 24px; border-radius: 9px;
         }
         .btn-secondary {
-          background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12);
-          color: white; text-decoration: none; font-size: 14px; font-weight: 600;
-          padding: 13px 24px; border-radius: 12px; transition: all 0.2s;
+          background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #F3F4F6; text-decoration: none; font-size: 14px; font-weight: 500;
+          padding: 11px 22px; border-radius: 9px; transition: all 0.15s;
           display: inline-flex; align-items: center; gap: 8px;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+        .btn-secondary:hover {
+          background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.18);
+          transform: translateY(-1px);
+        }
 
         /* Trust Badges */
         .trust-row {
           display: flex; align-items: center; justify-content: center; gap: 32px;
-          flex-wrap: wrap; opacity: 0.8; margin-top: 20px; font-size: 12px; font-weight: 500;
-          color: rgba(255, 255, 255, 0.5);
-          animation: fadeInUp 0.8s 0.9s ease-out both;
+          flex-wrap: wrap; margin-top: 16px; font-size: 12px; font-weight: 500;
+          color: rgba(255, 255, 255, 0.45);
+          animation: fadeInUp 0.6s 0.6s ease-out both;
         }
         .trust-item {
           display: flex; align-items: center; gap: 8px;
-          transition: all 0.3s ease;
+          transition: color 0.15s ease;
         }
-        .trust-item:hover { color: rgba(255, 255, 255, 0.8); transform: translateY(-2px); }
+        .trust-item:hover { color: rgba(255, 255, 255, 0.75); }
 
         /* ── INTERACTIVE APP SHOWCASE ── */
         .showcase {
-          position: relative; z-index: 1; max-width: 1180px; margin: 40px auto 100px;
+          position: relative; z-index: 1; max-width: 1180px; margin: 30px auto 100px;
           padding: 0 24px;
         }
         .showcase-card {
-          background: rgba(12, 20, 15, 0.7);
+          background: rgba(12, 14, 16, 0.85);
           backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 20px; overflow: hidden;
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(16, 185, 129, 0.1);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 16px; overflow: hidden;
+          box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
         .showcase-header {
           display: flex; align-items: center; justify-content: space-between;
-          padding: 18px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          background: rgba(6, 10, 8, 0.5); flex-wrap: wrap; gap: 12px;
+          padding: 14px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          background: rgba(8, 10, 12, 0.6); flex-wrap: wrap; gap: 12px;
         }
         .showcase-tabs {
-          display: flex; gap: 8px; flex-wrap: wrap;
+          display: inline-flex; gap: 4px; flex-wrap: wrap;
+          background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06);
+          border-radius: 8px; padding: 3px;
         }
         .tab-btn {
-          padding: 7px 16px; border-radius: 8px; border: 1px solid transparent;
-          font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
-          cursor: pointer; transition: all 0.25s; background: transparent; color: rgba(255, 255, 255, 0.6);
+          padding: 6px 14px; border-radius: 6px; border: 1px solid transparent;
+          font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+          cursor: pointer; transition: all 0.15s; background: transparent; color: rgba(255, 255, 255, 0.6);
         }
-        .tab-btn:hover { background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.8); }
+        .tab-btn:hover { color: #FFFFFF; }
         .tab-btn.active {
-          background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4);
-          color: #34D399; box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+          background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.1);
+          color: #FFFFFF; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
         }
         .showcase-body {
-          padding: 32px; min-height: 420px; display: flex; flex-direction: column; justify-content: center;
+          padding: 32px; min-height: 400px; display: flex; flex-direction: column; justify-content: center;
         }
 
         /* Showcase Preview Views */
         .preview-grid {
           display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: center;
-          animation: fadeInUp 0.5s ease-out;
         }
-        .preview-left { display: flex; flex-direction: column; gap: 16px; }
+        .preview-left { display: flex; flex-direction: column; gap: 14px; }
         .preview-right {
-          background: rgba(6, 10, 8, 0.8); border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 14px; padding: 24px; position: relative;
+          background: rgba(8, 10, 11, 0.8); border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px; padding: 22px; position: relative;
         }
 
         /* ── HOW IT WORKS SECTION ── */
@@ -495,51 +454,29 @@ export default function LandingPage() {
           padding: 0 24px;
         }
         .hiw-grid {
-          display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+          display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
           position: relative;
         }
-        .hiw-connector {
-          position: absolute; top: 44px; left: 12.5%; right: 12.5%; height: 2px; z-index: 0;
-          background: linear-gradient(90deg, #10B981 0%, #059669 33%, #10B981 66%, #34D399 100%);
-          opacity: 0.3;
-        }
-        .hiw-connector::after {
-          content: ''; position: absolute; top: 0; left: 0; height: 100%;
-          background: linear-gradient(90deg, #10B981, #34D399);
-          animation: connectorFill 2s ease-out forwards;
-          width: 0;
-        }
-        .hiw-connector.visible::after { width: 100%; }
         .hiw-card {
-          display: flex; flex-direction: column; align-items: center; text-align: center;
-          padding: 0 16px; position: relative; z-index: 1;
+          display: flex; flex-direction: column; align-items: flex-start; text-align: left;
+          padding: 24px 20px; position: relative; z-index: 1;
+          background: rgba(12, 15, 14, 0.6); border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 14px; transition: all 0.2s ease;
+        }
+        .hiw-card:hover {
+          border-color: rgba(255, 255, 255, 0.16); transform: translateY(-2px);
         }
         .hiw-num {
-          width: 88px; height: 88px; border-radius: 50%;
-          background: rgba(16, 185, 129, 0.08); border: 2px solid rgba(16, 185, 129, 0.3);
-          display: flex; flex-direction: column; align-items: center; justify-content: center;
-          margin-bottom: 20px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .hiw-card:hover .hiw-num {
-          transform: scale(1.1); background: rgba(16, 185, 129, 0.15);
-          box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
-          border-color: rgba(16, 185, 129, 0.6);
-        }
-        .hiw-icon { font-size: 28px; line-height: 1; }
-        .hiw-step {
-          font-size: 9px; font-weight: 800; color: #34D399; letter-spacing: 0.12em;
-          text-transform: uppercase; margin-top: 4px;
+          font-family: monospace; font-size: 12px; font-weight: 700; color: #10B981;
+          background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);
+          border-radius: 6px; padding: 4px 10px; margin-bottom: 16px;
         }
         .hiw-title {
-          font-family: 'Outfit', sans-serif; font-size: 17px; font-weight: 700;
+          font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700;
           color: #FFFFFF; margin-bottom: 8px;
         }
         .hiw-desc {
           font-size: 13px; color: rgba(255, 255, 255, 0.6); line-height: 1.55;
-        }
-        @keyframes connectorFill {
-          from { width: 0; }
-          to { width: 100%; }
         }
 
         /* ── STATS SECTION ── */
@@ -548,35 +485,25 @@ export default function LandingPage() {
           padding: 0 24px;
         }
         .stats-grid {
-          display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+          display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
         }
         .stat-card {
-          background: rgba(14, 24, 18, 0.6);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 18px; padding: 28px 24px; text-align: center;
-          transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          background: rgba(12, 15, 14, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 14px; padding: 24px 20px; text-align: left;
+          transition: all 0.2s ease;
           position: relative; overflow: hidden;
         }
-        .stat-card::before {
-          content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-          background: linear-gradient(90deg, transparent, #10B981, transparent);
-          opacity: 0; transition: opacity 0.3s;
-        }
-        .stat-card:hover::before { opacity: 1; }
         .stat-card:hover {
-          transform: translateY(-6px); border-color: rgba(16, 185, 129, 0.3);
-          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(16, 185, 129, 0.1);
+          border-color: rgba(255, 255, 255, 0.16); transform: translateY(-2px);
         }
         .stat-value {
-          font-family: 'Outfit', sans-serif; font-size: 42px; font-weight: 900;
-          color: #34D399; line-height: 1; margin-bottom: 6px;
-          background: linear-gradient(135deg, #34D399, #10B981);
-          -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+          font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 800;
+          color: #FFFFFF; line-height: 1; margin-bottom: 8px; font-variant-numeric: tabular-nums;
         }
         .stat-label {
-          font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.65);
+          font-size: 12px; font-weight: 500; color: rgba(255, 255, 255, 0.6); line-height: 1.4;
         }
-        .stat-icon { font-size: 24px; margin-bottom: 12px; display: block; }
 
         /* ── STATUTORY CALCULATOR SECTION ── */
         .calc-section {
@@ -584,39 +511,39 @@ export default function LandingPage() {
           padding: 0 24px;
         }
         .calc-box {
-          background: linear-gradient(145deg, rgba(16, 28, 20, 0.85), rgba(8, 14, 10, 0.95));
-          border: 1px solid rgba(16, 185, 129, 0.25);
-          border-radius: 24px; padding: 48px;
-          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(16, 185, 129, 0.1);
+          background: rgba(12, 16, 14, 0.8);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 18px; padding: 40px;
+          box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
         }
         .calc-grid {
-          display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+          display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
         }
-        .slider-wrap { margin-bottom: 24px; }
+        .slider-wrap { margin-bottom: 22px; }
         .slider-label {
-          display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;
-          color: rgba(255, 255, 255, 0.8); margin-bottom: 8px;
+          display: flex; justify-content: space-between; font-size: 13px; font-weight: 500;
+          color: rgba(255, 255, 255, 0.75); margin-bottom: 8px;
         }
-        .slider-val { color: #34D399; font-weight: 700; font-family: 'Outfit', sans-serif; font-size: 16px; }
+        .slider-val { color: #FFFFFF; font-weight: 700; font-family: 'Outfit', sans-serif; font-size: 15px; font-variant-numeric: tabular-nums; }
         .custom-slider {
-          width: 100%; -webkit-appearance: none; height: 6px; border-radius: 6px;
-          background: rgba(255, 255, 255, 0.1); outline: none; transition: background 0.2s;
+          width: 100%; -webkit-appearance: none; height: 5px; border-radius: 4px;
+          background: rgba(255, 255, 255, 0.1); outline: none; transition: background 0.15s;
         }
         .custom-slider::-webkit-slider-thumb {
-          -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
-          background: #10B981; cursor: pointer; box-shadow: 0 0 10px #10B981;
-          transition: all 0.2s;
+          -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
+          background: #FFFFFF; cursor: pointer; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+          transition: transform 0.15s;
         }
         .custom-slider::-webkit-slider-thumb:hover {
-          transform: scale(1.2); box-shadow: 0 0 18px #10B981;
+          transform: scale(1.15);
         }
         .calc-result-card {
-          background: rgba(6, 10, 8, 0.9); border: 1px solid rgba(16, 185, 129, 0.3);
-          border-radius: 18px; padding: 32px; text-align: center;
+          background: rgba(7, 9, 8, 0.9); border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 14px; padding: 30px; text-align: center;
         }
         .calc-highlight {
-          font-family: 'Outfit', sans-serif; font-size: 38px; font-weight: 900;
-          color: #34D399; line-height: 1; margin: 12px 0 6px;
+          font-family: 'Outfit', sans-serif; font-size: 38px; font-weight: 800;
+          color: #FFFFFF; line-height: 1; margin: 12px 0 8px; font-variant-numeric: tabular-nums;
         }
 
         /* ── FEATURE PILLARS GRID ── */
@@ -624,50 +551,39 @@ export default function LandingPage() {
           position: relative; z-index: 1; max-width: 1240px; margin: 0 auto 120px;
           padding: 0 24px;
         }
-        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header { text-align: center; margin-bottom: 56px; }
         .section-tag {
-          font-size: 11px; font-weight: 700; color: #34D399; text-transform: uppercase;
-          letter-spacing: 0.12em; margin-bottom: 10px; display: block;
+          font-size: 11px; font-weight: 600; color: #10B981; text-transform: uppercase;
+          letter-spacing: 0.1em; margin-bottom: 10px; display: block;
         }
         .section-title {
-          font-family: 'Outfit', sans-serif; font-size: clamp(28px, 3.5vw, 44px);
+          font-family: 'Outfit', sans-serif; font-size: clamp(28px, 3.5vw, 42px);
           font-weight: 800; color: #FFFFFF; letter-spacing: -0.025em; line-height: 1.15;
         }
         .section-subtitle {
-          font-size: 16px; color: rgba(255, 255, 255, 0.55); max-width: 600px;
+          font-size: 15px; color: rgba(255, 255, 255, 0.55); max-width: 580px;
           margin: 12px auto 0; line-height: 1.6;
         }
         .features-grid {
-          display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+          display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
         }
         .feat-card {
-          background: rgba(14, 24, 18, 0.6);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 18px; padding: 32px;
-          transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          background: rgba(12, 15, 14, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 14px; padding: 28px;
+          transition: all 0.2s ease;
           display: flex; flex-direction: column; justify-content: space-between;
         }
         .feat-card:hover {
-          transform: translateY(-6px);
-          border-color: rgba(16, 185, 129, 0.4);
-          background: rgba(18, 32, 24, 0.8);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(16, 185, 129, 0.15);
-        }
-        .feat-icon {
-          width: 48px; height: 48px; border-radius: 12px;
-          background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3);
-          display: flex; align-items: center; justify-content: center; font-size: 22px;
-          margin-bottom: 20px; transition: all 0.3s;
-        }
-        .feat-card:hover .feat-icon {
-          transform: scale(1.1); box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+          transform: translateY(-2px);
+          border-color: rgba(255, 255, 255, 0.16);
         }
         .feat-title {
-          font-family: 'Outfit', sans-serif; font-size: 19px; font-weight: 700;
-          color: #FFFFFF; margin-bottom: 10px;
+          font-family: 'Outfit', sans-serif; font-size: 17px; font-weight: 700;
+          color: #FFFFFF; margin-bottom: 8px;
         }
         .feat-desc {
-          font-size: 13px; color: rgba(255, 255, 255, 0.65); line-height: 1.6;
+          font-size: 13px; color: rgba(255, 255, 255, 0.6); line-height: 1.6;
         }
 
         /* ── COMPARISON MATRIX ── */
@@ -677,20 +593,20 @@ export default function LandingPage() {
         }
         .comp-table {
           width: 100%; border-collapse: separate; border-spacing: 0;
-          background: rgba(12, 20, 15, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 20px; overflow: hidden;
+          background: rgba(10, 13, 11, 0.7); border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 14px; overflow: hidden;
         }
         .comp-table th, .comp-table td {
           padding: 16px 20px; text-align: left; font-size: 13px;
           border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
         .comp-table th {
-          background: rgba(6, 10, 8, 0.8); font-family: 'Outfit', sans-serif;
-          font-weight: 700; color: rgba(255, 255, 255, 0.9); font-size: 14px;
+          background: rgba(7, 9, 8, 0.85); font-family: 'Outfit', sans-serif;
+          font-weight: 700; color: rgba(255, 255, 255, 0.85); font-size: 13px;
         }
         .col-settlr {
-          background: rgba(16, 185, 129, 0.08); border-left: 1px solid rgba(16, 185, 129, 0.2);
-          border-right: 1px solid rgba(16, 185, 129, 0.2); font-weight: 600; color: #34D399;
+          background: rgba(16, 185, 129, 0.04); border-left: 1px solid rgba(16, 185, 129, 0.15);
+          border-right: 1px solid rgba(16, 185, 129, 0.15); font-weight: 600; color: #FFFFFF;
         }
 
         /* ── PRICING SECTION ── */
@@ -699,60 +615,56 @@ export default function LandingPage() {
           padding: 0 24px;
         }
         .pricing-toggle {
-          display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 48px;
+          display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 44px;
         }
         .pricing-toggle-pill {
-          background: rgba(14, 24, 18, 0.9); border: 1px solid rgba(255, 255, 255, 0.12);
-          padding: 4px; border-radius: 100px; display: inline-flex; gap: 4px;
+          background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 3px; border-radius: 8px; display: inline-flex; gap: 4px;
         }
         .pricing-toggle-btn {
-          padding: 8px 18px; border-radius: 100px; font-size: 13px; font-weight: 700;
-          border: none; cursor: pointer; transition: all 0.25s; font-family: 'DM Sans', sans-serif;
+          padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
+          border: none; cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif;
           color: rgba(255, 255, 255, 0.6); background: transparent;
         }
         .pricing-toggle-btn.active {
-          background: #10B981; color: #FFFFFF; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+          background: rgba(255, 255, 255, 0.08); color: #FFFFFF;
+          border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .save-badge {
-          background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3);
-          color: #F59E0B; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px;
+          background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2);
+          color: #34D399; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 100px;
         }
         .pricing-grid {
-          display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: stretch;
+          display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: stretch;
         }
         .pricing-card {
-          background: rgba(14, 24, 18, 0.65); border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 20px; padding: 36px 28px; display: flex; flex-direction: column;
-          justify-content: space-between; transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          background: rgba(12, 15, 14, 0.6); border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 16px; padding: 32px 24px; display: flex; flex-direction: column;
+          justify-content: space-between; transition: all 0.2s ease;
           position: relative; overflow: hidden;
         }
         .pricing-card.featured {
-          background: linear-gradient(145deg, rgba(16, 32, 22, 0.85), rgba(8, 16, 12, 0.95));
-          border: 1.5px solid #10B981;
-          box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 30px rgba(16, 185, 129, 0.15);
-          transform: scale(1.02);
+          background: rgba(14, 20, 16, 0.7);
+          border: 1px solid rgba(16, 185, 129, 0.35);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
         .pricing-card:hover {
-          transform: translateY(-6px); border-color: rgba(16, 185, 129, 0.4);
-          box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 0 25px rgba(16, 185, 129, 0.1);
-        }
-        .pricing-card.featured:hover {
-          transform: scale(1.02) translateY(-6px);
+          transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.16);
         }
         .pricing-tag {
-          font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em;
-          padding: 4px 10px; border-radius: 100px; display: inline-block; margin-bottom: 16px; width: fit-content;
+          font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+          padding: 3px 8px; border-radius: 6px; display: inline-block; margin-bottom: 14px; width: fit-content;
         }
-        .pricing-tag-free { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.7); }
-        .pricing-tag-pro { background: rgba(16, 185, 129, 0.2); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .pricing-tag-agency { background: rgba(245, 158, 11, 0.15); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.3); }
-        .pricing-title { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #FFFFFF; margin-bottom: 8px; }
-        .pricing-desc { font-size: 13px; color: rgba(255, 255, 255, 0.6); margin-bottom: 24px; min-height: 40px; line-height: 1.5; }
-        .pricing-price { font-family: 'Outfit', sans-serif; font-size: 40px; font-weight: 900; color: #FFFFFF; line-height: 1; margin-bottom: 4px; }
-        .pricing-period { font-size: 12px; color: rgba(255, 255, 255, 0.5); font-weight: 500; margin-bottom: 24px; }
-        .pricing-features { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
-        .pricing-feat-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: rgba(255, 255, 255, 0.75); line-height: 1.4; }
-        .pricing-check { color: #10B981; font-weight: 800; font-size: 14px; flex-shrink: 0; }
+        .pricing-tag-free { background: rgba(255, 255, 255, 0.06); color: rgba(255, 255, 255, 0.7); }
+        .pricing-tag-pro { background: rgba(16, 185, 129, 0.15); color: #34D399; border: 1px solid rgba(16, 185, 129, 0.25); }
+        .pricing-tag-agency { background: rgba(59, 130, 246, 0.15); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.25); }
+        .pricing-title { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; color: #FFFFFF; margin-bottom: 6px; }
+        .pricing-desc { font-size: 13px; color: rgba(255, 255, 255, 0.6); margin-bottom: 20px; min-height: 40px; line-height: 1.5; }
+        .pricing-price { font-family: 'Outfit', sans-serif; font-size: 38px; font-weight: 800; color: #FFFFFF; line-height: 1; margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+        .pricing-period { font-size: 12px; color: rgba(255, 255, 255, 0.5); font-weight: 500; margin-bottom: 20px; }
+        .pricing-features { list-style: none; margin-bottom: 28px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .pricing-feat-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: rgba(255, 255, 255, 0.75); line-height: 1.4; }
+        .pricing-check { color: #10B981; font-weight: 700; font-size: 13px; flex-shrink: 0; }
 
         /* ── TESTIMONIALS ── */
         .testi-section {
@@ -760,39 +672,38 @@ export default function LandingPage() {
           padding: 0 24px;
         }
         .testi-grid {
-          display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+          display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
         }
         .testi-card {
-          background: rgba(14, 24, 18, 0.6);
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 18px; padding: 28px;
-          transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          background: rgba(12, 15, 14, 0.6);
+          border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 14px; padding: 26px;
+          transition: all 0.2s ease;
           display: flex; flex-direction: column; justify-content: space-between;
         }
         .testi-card:hover {
-          transform: translateY(-4px); border-color: rgba(16, 185, 129, 0.3);
-          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3), 0 0 18px rgba(16, 185, 129, 0.1);
+          transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.16);
         }
-        .testi-stars { color: #F59E0B; font-size: 14px; margin-bottom: 12px; letter-spacing: 2px; }
+        .testi-stars { color: #F59E0B; font-size: 13px; margin-bottom: 12px; letter-spacing: 2px; }
         .testi-quote {
-          font-size: 14px; color: rgba(255, 255, 255, 0.8); line-height: 1.65;
-          font-style: italic; margin-bottom: 20px; flex: 1;
+          font-size: 13px; color: rgba(255, 255, 255, 0.75); line-height: 1.6;
+          margin-bottom: 20px; flex: 1;
         }
         .testi-footer { display: flex; justify-content: space-between; align-items: center; }
-        .testi-author { display: flex; align-items: center; gap: 12px; }
+        .testi-author { display: flex; align-items: center; gap: 10px; }
         .testi-avatar {
-          width: 40px; height: 40px; border-radius: 50%;
-          background: linear-gradient(135deg, #10B981, #059669);
+          width: 34px; height: 34px; border-radius: 50%;
+          background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.1);
           display: flex; align-items: center; justify-content: center;
-          font-size: 13px; font-weight: 800; color: white;
+          font-size: 12px; font-weight: 700; color: #FFFFFF;
           flex-shrink: 0;
         }
-        .testi-name-text { font-size: 14px; font-weight: 700; color: #FFFFFF; }
-        .testi-role-text { font-size: 11px; color: rgba(255, 255, 255, 0.5); margin-top: 2px; }
+        .testi-name-text { font-size: 13px; font-weight: 600; color: #FFFFFF; }
+        .testi-role-text { font-size: 11px; color: rgba(255, 255, 255, 0.5); margin-top: 1px; }
         .testi-metric {
-          font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 800; color: #34D399;
-          background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25);
-          padding: 5px 12px; border-radius: 8px; white-space: nowrap;
+          font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 700; color: #10B981;
+          background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2);
+          padding: 4px 10px; border-radius: 6px; white-space: nowrap;
         }
 
         /* ── FAQ ACCORDION ── */
@@ -801,24 +712,17 @@ export default function LandingPage() {
           padding: 0 24px;
         }
         .faq-item {
-          background: rgba(14, 24, 18, 0.6); border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 14px; margin-bottom: 12px; overflow: hidden; transition: all 0.25s;
+          background: rgba(12, 15, 14, 0.6); border: 1px solid rgba(255, 255, 255, 0.07);
+          border-radius: 12px; margin-bottom: 10px; overflow: hidden; transition: all 0.15s;
         }
-        .faq-item:hover { border-color: rgba(16, 185, 129, 0.2); }
-        .faq-item.open { border-color: rgba(16, 185, 129, 0.3); background: rgba(18, 32, 24, 0.6); }
+        .faq-item:hover { border-color: rgba(255, 255, 255, 0.16); }
+        .faq-item.open { border-color: rgba(255, 255, 255, 0.16); background: rgba(14, 18, 16, 0.7); }
         .faq-q {
-          padding: 20px 24px; font-weight: 600; font-size: 15px; color: #FFFFFF;
+          padding: 18px 22px; font-weight: 600; font-size: 14px; color: #FFFFFF;
           display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-          transition: color 0.2s;
         }
-        .faq-q:hover { color: #34D399; }
         .faq-a {
-          padding: 0 24px 20px; font-size: 14px; color: rgba(255, 255, 255, 0.65); line-height: 1.6;
-          animation: faqReveal 0.3s ease-out;
-        }
-        @keyframes faqReveal {
-          from { opacity: 0; transform: translateY(-8px); }
-          to { opacity: 1; transform: translateY(0); }
+          padding: 0 22px 18px; font-size: 13px; color: rgba(255, 255, 255, 0.65); line-height: 1.6;
         }
 
         /* ── BOTTOM CTA BANNER ── */
@@ -827,25 +731,16 @@ export default function LandingPage() {
           padding: 0 24px; text-align: center;
         }
         .cta-card {
-          background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%);
-          border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 28px; padding: 64px 32px;
-          box-shadow: 0 0 60px rgba(16, 185, 129, 0.2);
+          background: rgba(12, 16, 14, 0.85);
+          border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 20px; padding: 56px 32px;
+          box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
           position: relative; overflow: hidden;
-        }
-        .cta-card::before {
-          content: ''; position: absolute; inset: -2px; border-radius: 30px;
-          background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), transparent, rgba(245, 158, 11, 0.2));
-          z-index: -1; animation: ctaRotate 6s linear infinite;
-        }
-        @keyframes ctaRotate {
-          from { filter: hue-rotate(0deg); }
-          to { filter: hue-rotate(360deg); }
         }
 
         /* ── FOOTER ── */
         .footer {
-          border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 48px 24px 32px;
-          background: #040705; position: relative; z-index: 1;
+          border-top: 1px solid rgba(255, 255, 255, 0.07); padding: 40px 24px 32px;
+          background: #08090B; position: relative; z-index: 1;
         }
         .footer-inner {
           max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between;
@@ -859,35 +754,24 @@ export default function LandingPage() {
           .pricing-grid { grid-template-columns: 1fr; }
           .calc-grid { grid-template-columns: 1fr; gap: 32px; }
           .preview-grid { grid-template-columns: 1fr; }
-          .calc-box { padding: 28px; }
-          .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
-          .hiw-connector { display: none; }
+          .calc-box { padding: 24px; }
+          .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
           .stats-grid { grid-template-columns: repeat(2, 1fr); }
           .testi-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 600px) {
           .hiw-grid { grid-template-columns: 1fr; }
           .stats-grid { grid-template-columns: 1fr; }
-          .hero { padding: 120px 16px 60px; }
+          .hero { padding: 110px 16px 50px; }
         }
       `}</style>
 
       {/* Scroll Progress Bar */}
       <div className="scroll-progress" style={{ width: `${scrollProgress}%` }} />
 
-      {/* Background Ambient Glows */}
-      <div className="glow-bg">
-        <div className="glow-orb-1" style={{ transform: `translateY(${scrollY * 0.05}px)` }} />
-        <div className="glow-orb-2" style={{ transform: `translateY(${scrollY * -0.03}px)` }} />
-        <div className="glow-orb-3" style={{ transform: `translateY(${scrollY * 0.04}px)` }} />
-      </div>
-
-      {/* Parallax Floating Shapes */}
-      <div className="parallax-shapes">
-        <div className="pshape pshape-1" style={{ transform: `translateY(${scrollY * -0.08}px)` }} />
-        <div className="pshape pshape-2 pshape-sq" style={{ transform: `rotate(45deg) translateY(${scrollY * 0.06}px)` }} />
-        <div className="pshape pshape-3" style={{ transform: `translateY(${scrollY * -0.04}px)` }} />
-      </div>
+      {/* Precision Canvas Background */}
+      <div className="canvas-bg" />
+      <div className="hero-ambient-glow" />
 
       {/* ── TOP NAVIGATION ── */}
       <nav className={`navbar ${scrollY > 50 ? 'scrolled' : ''}`}>
@@ -944,15 +828,15 @@ export default function LandingPage() {
             Get Started Free (Zero Cost) →
           </Link>
           <a href="#calculator" className="btn-secondary">
-            ⚡ Calculate MSME Late Interest
+            Calculate MSME Late Interest
           </a>
         </div>
 
         <div className="trust-row">
-          <div className="trust-item">🛡️ MSMED Act 2006 Compliant</div>
-          <div className="trust-item">🧾 GST & GSTR-1 JSON Export Ready</div>
-          <div className="trust-item">⚡ 0% MDR Direct NPCI UPI</div>
-          <div className="trust-item">🔒 End-to-End Encrypted</div>
+          <div className="trust-item">MSMED Act 2006 Compliant</div>
+          <div className="trust-item">GST & GSTR-1 JSON Ready</div>
+          <div className="trust-item">0% MDR Direct NPCI UPI</div>
+          <div className="trust-item">End-to-End Encrypted</div>
         </div>
       </header>
 
@@ -961,30 +845,30 @@ export default function LandingPage() {
         <div className={`reveal-scale ${showcaseSection.visible ? 'visible' : ''}`}>
           <div className="showcase-card">
             <div className="showcase-header">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#EF4444' }} />
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#F59E0B' }} />
-                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#10B981' }} />
-                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginLeft: 8, fontWeight: 600 }}>
-                  settlr-os // interactive-preview
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#27272A', border: '1px solid rgba(255,255,255,0.1)' }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#27272A', border: '1px solid rgba(255,255,255,0.1)' }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#27272A', border: '1px solid rgba(255,255,255,0.1)' }} />
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', marginLeft: 8, fontFamily: 'monospace' }}>
+                  settlr-core // v2.4.0
                 </span>
               </div>
 
               <div className="showcase-tabs">
                 <button className={`tab-btn ${activeTab === 'msme' ? 'active' : ''}`} onClick={() => setActiveTab('msme')}>
-                  🛡️ 45-Day MSMED Shield
+                  45-Day MSMED Shield
                 </button>
                 <button className={`tab-btn ${activeTab === 'gst' ? 'active' : ''}`} onClick={() => setActiveTab('gst')}>
-                  🧾 Smart GST Invoicing
+                  Smart GST Invoicing
                 </button>
                 <button className={`tab-btn ${activeTab === 'upi' ? 'active' : ''}`} onClick={() => setActiveTab('upi')}>
-                  💳 Direct UPI QR
+                  Direct UPI QR
                 </button>
                 <button className={`tab-btn ${activeTab === 'ai' ? 'active' : ''}`} onClick={() => setActiveTab('ai')}>
-                  🤖 AI Contract Analyzer
+                  AI Contract Analyzer
                 </button>
                 <button className={`tab-btn ${activeTab === 'tax' ? 'active' : ''}`} onClick={() => setActiveTab('tax')}>
-                  📊 Advance Tax Planner
+                  Advance Tax Planner
                 </button>
               </div>
             </div>
@@ -1026,7 +910,7 @@ export default function LandingPage() {
                       Statutory Interest (17 Overdue Days): <strong style={{ color: '#34D399' }}>₹1,442</strong>
                     </div>
                     <div style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 8, padding: 12, fontSize: 12, color: '#A7F3D0' }}>
-                      ⚖️ <em>&ldquo;Notice served under Section 16 of MSMED Act, 2006. Failure to clear within 7 days will be reported to the MSME Facilitation Council.&rdquo;</em>
+                      <em>&ldquo;Notice served under Section 16 of MSMED Act, 2006. Failure to clear within 7 days will be reported to the MSME Facilitation Council.&rdquo;</em>
                     </div>
                   </div>
                 </div>
@@ -1074,7 +958,7 @@ export default function LandingPage() {
                     </p>
                   </div>
                   <div className="preview-right" style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#FFF', marginBottom: 8 }}>⚡ 1-Tap UPI Settlement</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#FFF', marginBottom: 8 }}>1-Tap UPI Settlement</div>
                     <div style={{ width: 120, height: 120, background: '#FFF', borderRadius: 12, margin: '0 auto 12px', padding: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <div style={{ width: '100%', height: '100%', border: '2px dashed #10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: '#047857', fontWeight: 800 }}>
                         NPCI UPI QR
@@ -1100,10 +984,10 @@ export default function LandingPage() {
                       <span style={{ fontSize: 11, color: '#34D399', fontWeight: 700 }}>HIGH PROTECTION</span>
                     </div>
                     <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 8, padding: 10, fontSize: 11, color: '#FCA5A5', marginBottom: 8 }}>
-                      ⚠️ <strong>Uncapped Liability Risk:</strong> Section 8.2 exposes freelancer to unlimited damages.
+                      <strong>Uncapped Liability Risk:</strong> Section 8.2 exposes freelancer to unlimited damages.
                     </div>
                     <div style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 8, padding: 10, fontSize: 11, color: '#A7F3D0' }}>
-                      ✅ <strong>Proposed Redline:</strong> &ldquo;Liability shall be capped at 100% of total fees paid.&rdquo;
+                      <strong>Proposed Redline:</strong> &ldquo;Liability shall be capped at 100% of total fees paid.&rdquo;
                     </div>
                   </div>
                 </div>
@@ -1123,11 +1007,11 @@ export default function LandingPage() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 11 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(255,255,255,0.04)', padding: 8, borderRadius: 6 }}>
                         <span>Q1 (June 15 - 15%)</span>
-                        <span style={{ color: '#10B981', fontWeight: 700 }}>PAID ✓</span>
+                        <span style={{ color: '#10B981', fontWeight: 700 }}>PAID</span>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(255,255,255,0.04)', padding: 8, borderRadius: 6 }}>
                         <span>Q2 (Sept 15 - 45%)</span>
-                        <span style={{ color: '#F59E0B', fontWeight: 700 }}>DUE SOON ⚠️</span>
+                        <span style={{ color: '#F59E0B', fontWeight: 700 }}>DUE SOON</span>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(255,255,255,0.04)', padding: 8, borderRadius: 6 }}>
                         <span>Form 26AS TDS Offset</span>
@@ -1161,7 +1045,6 @@ export default function LandingPage() {
               style={stagger(idx)}
             >
               <div className="hiw-num">
-                <span className="hiw-icon">{item.icon}</span>
                 <span className="hiw-step">Step {item.step}</span>
               </div>
               <h3 className="hiw-title">{item.title}</h3>
@@ -1182,22 +1065,30 @@ export default function LandingPage() {
 
         <div className="stats-grid">
           <div className={`stat-card reveal ${statsSection.visible ? 'visible' : ''}`} ref={stat1.ref} style={stagger(0)}>
-            <span className="stat-icon">💰</span>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(16, 185, 129, 0.1)', color: '#34D399', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
             <div className="stat-value">₹{(stat1.value / 100).toFixed(0)}L+</div>
             <div className="stat-label">Overdue Amount Recovered</div>
           </div>
           <div className={`stat-card reveal ${statsSection.visible ? 'visible' : ''}`} ref={stat2.ref} style={stagger(1)}>
-            <span className="stat-icon">🧾</span>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(16, 185, 129, 0.1)', color: '#34D399', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
             <div className="stat-value">{stat2.value.toLocaleString('en-IN')}+</div>
             <div className="stat-label">GST Invoices Generated</div>
           </div>
           <div className={`stat-card reveal ${statsSection.visible ? 'visible' : ''}`} ref={stat3.ref} style={stagger(2)}>
-            <span className="stat-icon">⚡</span>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(16, 185, 129, 0.1)', color: '#34D399', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
             <div className="stat-value">{stat3.value}%</div>
             <div className="stat-label">UPI Payment Success Rate</div>
           </div>
           <div className={`stat-card reveal ${statsSection.visible ? 'visible' : ''}`} style={stagger(3)}>
-            <span className="stat-icon">🆓</span>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(16, 185, 129, 0.1)', color: '#34D399', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
             <div className="stat-value">₹0</div>
             <div className="stat-label">Platform Cost — Free Forever</div>
           </div>
@@ -1285,12 +1176,12 @@ export default function LandingPage() {
 
         <div className="features-grid">
           {[
-            { icon: '🛡️', title: '45-Day Statutory Enforcement', desc: 'Enforce your legal rights under Section 15 & 16 of the MSMED Act 2006. Automatically calculate 20.25% compound monthly interest and generate legal demand notices.' },
-            { icon: '💳', title: 'Zero-MDR Direct UPI Payments', desc: 'Embedded dynamic NPCI UPI QR codes directly on invoices. Instant bank settlements via GPay/PhonePe with 0% payment gateway processing fees.' },
-            { icon: '🧾', title: 'GST & Proforma Invoicing', desc: 'Full support for Intra-State CGST/SGST, Inter-State IGST, and GST Credit Notes. Instant GSTR-1 JSON export for hassle-free tax filing.' },
-            { icon: '📊', title: 'TDS Ledger & Form 26AS Matcher', desc: 'Track 10%/2% Section 194J and 1% Section 194C tax withholdings. Auto-generate WhatsApp reminders for Form 16A certificates.' },
-            { icon: '🤖', title: 'AI Contract Legal Redlining', desc: 'Powered by advanced AI capabilities. Upload client contracts to instantly detect missing MSME clauses, payment risks, and uncapped liabilities.' },
-            { icon: '📈', title: '90-Day Cashflow & DSO Runway', desc: 'Forecast cashflow runway across 30, 60, and 90-day buckets. Track Days Sales Outstanding (DSO) and optimize your working capital liquidity.' },
+            { tag: 'STATUTORY RIGHTS', title: '45-Day Statutory Enforcement', desc: 'Enforce legal rights under Section 15 & 16 of the MSMED Act 2006. Automatically calculate 20.25% compound monthly interest and generate legal demand notices.' },
+            { tag: 'PAYMENT GATEWAY', title: 'Zero-MDR Direct UPI Payments', desc: 'Embedded dynamic NPCI UPI QR codes directly on invoices. Instant bank settlements via GPay/PhonePe with 0% payment gateway processing fees.' },
+            { tag: 'INVOICING', title: 'GST & Proforma Invoicing', desc: 'Full support for Intra-State CGST/SGST, Inter-State IGST, and GST Credit Notes. Instant GSTR-1 JSON export for hassle-free tax filing.' },
+            { tag: 'TAX RECONCILIATION', title: 'TDS Ledger & Form 26AS Matcher', desc: 'Track 10%/2% Section 194J and 1% Section 194C tax withholdings. Auto-generate WhatsApp reminders for Form 16A certificates.' },
+            { tag: 'LEGAL INTELLIGENCE', title: 'AI Contract Legal Redlining', desc: 'Powered by advanced AI capabilities. Upload client contracts to instantly detect missing MSME clauses, payment risks, and uncapped liabilities.' },
+            { tag: 'FINANCIAL RUNWAY', title: '90-Day Cashflow & DSO Runway', desc: 'Forecast cashflow runway across 30, 60, and 90-day buckets. Track Days Sales Outstanding (DSO) and optimize your working capital liquidity.' },
           ].map((feat, idx) => (
             <div
               key={idx}
@@ -1298,7 +1189,9 @@ export default function LandingPage() {
               style={stagger(idx)}
             >
               <div>
-                <div className="feat-icon">{feat.icon}</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: '#34D399', letterSpacing: '0.08em', marginBottom: 8, textTransform: 'uppercase' }}>
+                  {feat.tag}
+                </div>
                 <h3 className="feat-title">{feat.title}</h3>
                 <p className="feat-desc">{feat.desc}</p>
               </div>
@@ -1311,15 +1204,15 @@ export default function LandingPage() {
       <section className="comp-section" id="comparison" ref={compSection.ref}>
         <div className={`reveal ${compSection.visible ? 'visible' : ''}`}>
           <div className="section-header">
-            <span className="section-tag">Why We Are 10x Better</span>
-            <h2 className="section-title">Settlr vs. Traditional Invoicing Apps</h2>
+            <span className="section-tag">Specifications & Comparison</span>
+            <h2 className="section-title">Settlr vs. Traditional Invoicing Software</h2>
           </div>
 
           <table className="comp-table">
             <thead>
               <tr>
                 <th>Feature Capability</th>
-                <th className="col-settlr">⚡ Settlr OS</th>
+                <th className="col-settlr">Settlr OS</th>
                 <th>Zoho Invoice</th>
                 <th>Khatabook / Vyapar</th>
               </tr>
@@ -1327,33 +1220,33 @@ export default function LandingPage() {
             <tbody>
               <tr>
                 <td>45-Day MSMED Act Statutory Interest (20.25% p.a.)</td>
-                <td className="col-settlr">✅ Automated & Legal Notice Ready</td>
-                <td>❌ No Statutory Engine</td>
-                <td>❌ Manual only</td>
+                <td className="col-settlr"><span style={{ color: '#34D399', fontWeight: 600 }}>✓ Automated & Notice Ready</span></td>
+                <td style={{ color: 'rgba(255,255,255,0.4)' }}>— No Statutory Engine</td>
+                <td style={{ color: 'rgba(255,255,255,0.4)' }}>— Manual only</td>
               </tr>
               <tr>
                 <td>Zero-MDR Direct NPCI Dynamic UPI QR</td>
-                <td className="col-settlr">✅ 1-Click Embedded (0% Fees)</td>
-                <td>⚠️ Gateway charges apply (2%)</td>
-                <td>⚠️ Static QR only</td>
+                <td className="col-settlr"><span style={{ color: '#34D399', fontWeight: 600 }}>✓ 1-Click Embedded (0% Fees)</span></td>
+                <td style={{ color: 'rgba(255,255,255,0.5)' }}>Gateway charges apply (2%)</td>
+                <td style={{ color: 'rgba(255,255,255,0.5)' }}>Static QR only</td>
               </tr>
               <tr>
                 <td>TDS Asset Ledger & Form 26AS Reconciliation</td>
-                <td className="col-settlr">✅ Built-in Section 194J/194C</td>
-                <td>⚠️ Partial / Add-on</td>
-                <td>❌ No TDS Ledger</td>
+                <td className="col-settlr"><span style={{ color: '#34D399', fontWeight: 600 }}>✓ Built-in Section 194J/194C</span></td>
+                <td style={{ color: 'rgba(255,255,255,0.5)' }}>Partial / Add-on</td>
+                <td style={{ color: 'rgba(255,255,255,0.4)' }}>— No TDS Ledger</td>
               </tr>
               <tr>
                 <td>Section 44ADA Presumptive Advance Tax Planner</td>
-                <td className="col-settlr">✅ 4 Quarterly Deadlines Tracked</td>
-                <td>❌ Not supported</td>
-                <td>❌ Not supported</td>
+                <td className="col-settlr"><span style={{ color: '#34D399', fontWeight: 600 }}>✓ 4 Quarterly Deadlines Tracked</span></td>
+                <td style={{ color: 'rgba(255,255,255,0.4)' }}>— Not supported</td>
+                <td style={{ color: 'rgba(255,255,255,0.4)' }}>— Not supported</td>
               </tr>
               <tr>
                 <td>AI Contract Legal Redlining & Risk Scoring</td>
-                <td className="col-settlr">✅ Advanced AI Capabilities Included</td>
-                <td>❌ No AI legal analysis</td>
-                <td>❌ No AI capabilities</td>
+                <td className="col-settlr"><span style={{ color: '#34D399', fontWeight: 600 }}>✓ Full AI Capability Included</span></td>
+                <td style={{ color: 'rgba(255,255,255,0.4)' }}>— No AI legal analysis</td>
+                <td style={{ color: 'rgba(255,255,255,0.4)' }}>— No AI capabilities</td>
               </tr>
             </tbody>
           </table>
@@ -1364,7 +1257,7 @@ export default function LandingPage() {
       <section className="pricing-section" id="pricing" ref={pricingSection.ref}>
         <div className={`reveal ${pricingSection.visible ? 'visible' : ''}`}>
           <div className="section-header">
-            <span className="section-tag">🎉 100% Free Early Beta</span>
+            <span className="section-tag">100% Free Early Access</span>
             <h2 className="section-title">All Premium Features Unlocked for ₹0</h2>
             <p className="section-subtitle">
               We are making Settlr completely free for Indian freelancers, contractors, and MSMEs to help you get paid on time without software costs. No credit card or payment required.
@@ -1388,7 +1281,7 @@ export default function LandingPage() {
                 Annual Plan View
               </button>
             </div>
-            <span className="save-badge">✨ 100% Free for Early Adopters</span>
+            <span className="save-badge">100% Free for Early Adopters</span>
           </div>
 
           <div className="pricing-grid">

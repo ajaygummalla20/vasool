@@ -164,10 +164,10 @@ export default function ReportsPage({ invoices, payments, expenses, userName, us
 
             {/* Tabs */}
             <div className="rp-tabs">
-              <button className={`rp-tab ${tab === 'revenue' ? 'active' : ''}`} onClick={() => setTab('revenue')}>💰 Revenue Trend</button>
-              <button className={`rp-tab ${tab === 'clients' ? 'active' : ''}`} onClick={() => setTab('clients')}>👥 Client Breakdown</button>
-              <button className={`rp-tab ${tab === 'aging' ? 'active' : ''}`} onClick={() => setTab('aging')}>⏰ Overdue Aging</button>
-              <button className={`rp-tab ${tab === 'pnl' ? 'active' : ''}`} onClick={() => setTab('pnl')}>📊 Monthly P&L</button>
+              <button className={`rp-tab ${tab === 'revenue' ? 'active' : ''}`} onClick={() => setTab('revenue')}>Revenue Trend</button>
+              <button className={`rp-tab ${tab === 'clients' ? 'active' : ''}`} onClick={() => setTab('clients')}>Client Breakdown</button>
+              <button className={`rp-tab ${tab === 'aging' ? 'active' : ''}`} onClick={() => setTab('aging')}>Overdue Aging</button>
+              <button className={`rp-tab ${tab === 'pnl' ? 'active' : ''}`} onClick={() => setTab('pnl')}>Monthly P&L</button>
             </div>
 
             <div className="rp-panel">

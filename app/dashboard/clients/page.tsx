@@ -304,8 +304,9 @@ export default function ClientsPage() {
 
           <div className="cl-content">
             {errorMsg && (
-              <div style={{ background: '#FEE2E2', border: '1px solid #F87171', borderRadius: 8, padding: '12px 16px', color: '#991B1B', marginBottom: 16, fontSize: 13 }}>
-                ⚠️ {errorMsg}
+              <div style={{ background: '#FEE2E2', border: '1px solid #F87171', borderRadius: 8, padding: '12px 16px', color: '#991B1B', marginBottom: 16, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#E11D48" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <span>{errorMsg}</span>
               </div>
             )}
             <div className="cl-grid">
@@ -313,7 +314,9 @@ export default function ClientsPage() {
                 Array(6).fill(0).map((_, i) => <div key={i} className="cl-skeleton" />)
               ) : filtered.length === 0 ? (
                 <div className="cl-empty">
-                  <div className="cl-empty-icon">🤝</div>
+                  <div className="cl-empty-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
                   <div className="cl-empty-title">
                     {search ? 'No clients found' : 'No clients yet'}
                   </div>
@@ -343,7 +346,7 @@ export default function ClientsPage() {
                       <div style={{ minWidth: 0 }}>
                         <div className="cl-name">{c.name}</div>
                         {c.company_name && <div className="cl-company">{c.company_name}</div>}
-                        {c.city && <div className="cl-city">📍 {c.city}</div>}
+                        {c.city && <div className="cl-city">{c.city}</div>}
                       </div>
                     </div>
 
@@ -362,7 +365,9 @@ export default function ClientsPage() {
 
                     <div className="cl-card-footer">
                       <div className="cl-contact">
-                        <span className="cl-contact-icon">💬</span>
+                        <span className="cl-contact-icon" style={{ display: 'inline-flex', alignItems: 'center' }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        </span>
                         <span className="cl-contact-val">{c.whatsapp || c.phone || 'No number'}</span>
                       </div>
                       <button

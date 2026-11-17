@@ -16,27 +16,27 @@ interface NavItem {
 }
 
 const NAV: NavItem[] = [
-  { label: 'Dashboard',       path: '/dashboard',                  icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-  { label: 'Invoices',        path: '/dashboard/invoices',          icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
-  { label: 'Recurring',       path: '/dashboard/invoices/recurring',icon: 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15' },
-  { label: 'Proposals',       path: '/dashboard/proposals',         icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
-  { label: 'Clients',         path: '/dashboard/clients',           icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z' },
-  { label: 'Contracts AI',    path: '/dashboard/contracts',         icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
-  { label: 'Expenses',        path: '/dashboard/expenses',          icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z' },
-  { label: 'TDS & 26AS',      path: '/dashboard/tds',               icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', badge: 'ITR' },
-  { label: 'Cashflow Runway', path: '/dashboard/cashflow',          icon: 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', badge: '90D' },
-  { label: 'GST & Tax Hub',   path: '/dashboard/gst',               icon: 'M9 14l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z' },
-  { label: 'Reports',         path: '/dashboard/reports',           icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+  { label: 'Dashboard', path: '/dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+  { label: 'Invoices', path: '/dashboard/invoices', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+  { label: 'Recurring', path: '/dashboard/invoices/recurring', icon: 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15' },
+  { label: 'Proposals', path: '/dashboard/proposals', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
+  { label: 'Clients', path: '/dashboard/clients', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z' },
+  { label: 'Contracts AI', path: '/dashboard/contracts', icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2' },
+  { label: 'Expenses', path: '/dashboard/expenses', icon: 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z' },
+  { label: 'TDS & 26AS', path: '/dashboard/tds', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', badge: 'ITR' },
+  { label: 'Cashflow Runway', path: '/dashboard/cashflow', icon: 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6', badge: '90D' },
+  { label: 'GST & Tax Hub', path: '/dashboard/gst', icon: 'M9 14l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { label: 'Reports', path: '/dashboard/reports', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
 ]
 
 const NAV2 = [
-  { label: 'Scheduled',     path: '/dashboard/reminders/scheduled', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
-  { label: 'Sent Log',      path: '/dashboard/reminders/log',       icon: 'M9 5l7 7-7 7' },
+  { label: 'Scheduled', path: '/dashboard/reminders/scheduled', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { label: 'Sent Log', path: '/dashboard/reminders/log', icon: 'M9 5l7 7-7 7' },
 ]
 
 const NAV3: NavItem[] = [
-  { label: 'Billing & Plans', path: '/dashboard/billing',  icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z', badge: '⚡ Pro' },
-  { label: 'Settings',        path: '/dashboard/settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
+  { label: 'Billing & Plans', path: '/dashboard/billing', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z', badge: 'Pro' },
+  { label: 'Settings', path: '/dashboard/settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
 ]
 
 import { useState, useEffect } from 'react'
@@ -45,7 +45,7 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [isNavigating, setIsNavigating] = useState(false)
-  const [mobileOpen,   setMobileOpen]   = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   useEffect(() => {
     setIsNavigating(false)
@@ -88,42 +88,39 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
         .sb-kokonut {
           width: 220px; min-width: 220px;
           height: 100vh;
-          background: rgba(10, 18, 12, 0.95);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
+          background: #090B0E;
           display: flex; flex-direction: column;
           position: fixed; left: 0; top: 0;
           z-index: 90;
-          font-family: 'Outfit', sans-serif;
-          border-right: 1px solid rgba(255, 255, 255, 0.08);
-          box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
-          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          font-family: 'DM Sans', sans-serif;
+          border-right: 1px solid rgba(255, 255, 255, 0.07);
+          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .sb-header {
           display: flex; align-items: center; gap: 10px;
-          padding: 22px 18px 20px;
+          padding: 20px 18px 18px;
           border-bottom: 1px solid rgba(255, 255, 255, 0.06);
           flex-shrink: 0;
           cursor: pointer;
         }
 
         .sb-logo-aura {
-          width: 36px; height: 36px; border-radius: 11px;
-          background: linear-gradient(135deg, #10B981, #059669);
+          width: 32px; height: 32px; border-radius: 8px;
+          background: #10B981;
           flex-shrink: 0;
           display: flex; align-items: center; justify-content: center;
-          box-shadow: 0 0 20px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .sb-brand-name {
           font-family: 'Outfit', sans-serif;
-          font-size: 18px; font-weight: 800;
+          font-size: 17px; font-weight: 700;
           color: #FFFFFF; letter-spacing: -.02em; line-height: 1;
         }
         .sb-brand-sub { font-size: 9px; color: rgba(255, 255, 255, 0.4); margin-top: 3px; font-weight: 500; }
 
-        .sb-nav-body { flex: 1; padding: 16px 0; overflow-y: auto; }
+        .sb-nav-body { flex: 1; padding: 14px 0; overflow-y: auto; }
 
         .sb-group-title {
           font-size: 9px; font-weight: 700;
@@ -134,8 +131,8 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
 
         .sb-link {
           display: flex; align-items: center; gap: 10px;
-          padding: 10px 18px; cursor: pointer;
-          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          padding: 9px 18px; cursor: pointer;
+          transition: all 0.15s ease;
           text-decoration: none;
           position: relative;
           color: rgba(255, 255, 255, 0.55);
@@ -149,41 +146,40 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
 
         .sb-link.active {
           color: #FFFFFF;
-          background: rgba(16, 185, 129, 0.14);
+          background: rgba(255, 255, 255, 0.06);
           font-weight: 600;
         }
 
         .sb-link.active::before {
-          content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3.5px;
-          border-top-right-radius: 4px; border-bottom-right-radius: 4px;
-          background: #10B981; box-shadow: 0 0 12px #10B981;
+          content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px;
+          border-top-right-radius: 3px; border-bottom-right-radius: 3px;
+          background: #10B981;
         }
 
         .sb-link-icon {
-          width: 17px; height: 17px; flex-shrink: 0;
+          width: 16px; height: 16px; flex-shrink: 0;
           stroke: currentColor; stroke-width: 1.8;
           fill: none; stroke-linecap: round; stroke-linejoin: round;
         }
 
         .sb-badge-pill {
-          font-size: 9px; font-weight: 700; background: rgba(16, 185, 129, 0.25); color: #34D399;
-          padding: 2px 7px; border-radius: 100px; margin-left: auto; border: 1px solid rgba(16, 185, 129, 0.3);
+          font-size: 9px; font-weight: 600; background: rgba(16, 185, 129, 0.15); color: #34D399;
+          padding: 2px 7px; border-radius: 100px; margin-left: auto; border: 1px solid rgba(16, 185, 129, 0.25);
         }
 
         .sb-user-card {
-          padding: 14px 18px;
+          padding: 12px 16px;
           border-top: 1px solid rgba(255, 255, 255, 0.06);
           display: flex; align-items: center; gap: 10px;
-          flex-shrink: 0; background: rgba(0, 0, 0, 0.3);
+          flex-shrink: 0; background: rgba(0, 0, 0, 0.2);
         }
 
         .sb-avatar-box {
-          width: 32px; height: 32px; border-radius: 9px;
-          background: rgba(16, 185, 129, 0.2); color: #34D399;
-          font-size: 11px; font-weight: 700;
+          width: 30px; height: 30px; border-radius: 8px;
+          background: rgba(255, 255, 255, 0.06); color: #FFFFFF;
+          font-size: 11px; font-weight: 600;
           display: flex; align-items: center; justify-content: center;
-          flex-shrink: 0; border: 1px solid rgba(16, 185, 129, 0.4);
-          box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+          flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sb-user-name { font-size: 12px; font-weight: 600; color: #FFFFFF; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px; }
@@ -283,9 +279,9 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
         </div>
         <button className="sb-hamburger-btn" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle navigation">
           {mobileOpen ? (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
           ) : (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
           )}
         </button>
       </div>
@@ -298,25 +294,25 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
       {/* Mobile Bottom Quick Dock */}
       <div className="sb-bottom-dock">
         <a className={`sb-dock-item ${pathname === '/dashboard' ? 'active' : ''}`} onClick={() => handleNavigate('/dashboard')}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
           <span>Home</span>
         </a>
         <a className={`sb-dock-item ${pathname.startsWith('/dashboard/invoices') && !pathname.includes('/new') ? 'active' : ''}`} onClick={() => handleNavigate('/dashboard/invoices')}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
           <span>Invoices</span>
         </a>
         <a className="sb-dock-item-create" onClick={() => handleNavigate('/dashboard/invoices/new')}>
           <div className="sb-dock-create-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4v16m8-8H4"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4v16m8-8H4" /></svg>
           </div>
           <span>+ Bill</span>
         </a>
         <a className={`sb-dock-item ${pathname.startsWith('/dashboard/cashflow') ? 'active' : ''}`} onClick={() => handleNavigate('/dashboard/cashflow')}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
           <span>Cashflow</span>
         </a>
         <a className={`sb-dock-item ${mobileOpen ? 'active' : ''}`} onClick={() => setMobileOpen(!mobileOpen)}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
           <span>Menu</span>
         </a>
       </div>
@@ -342,7 +338,7 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
               onClick={e => { e.preventDefault(); handleNavigate(item.path) }}
               href={item.path}
             >
-              <svg className="sb-link-icon" viewBox="0 0 24 24">
+              <svg className="sb-link-icon" width="16" height="16" viewBox="0 0 24 24">
                 <path d={item.icon} />
               </svg>
               <span>{item.label}</span>
@@ -358,7 +354,7 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
               onClick={e => { e.preventDefault(); handleNavigate(item.path) }}
               href={item.path}
             >
-              <svg className="sb-link-icon" viewBox="0 0 24 24">
+              <svg className="sb-link-icon" width="16" height="16" viewBox="0 0 24 24">
                 <path d={item.icon} />
               </svg>
               <span>{item.label}</span>
@@ -373,7 +369,7 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
               onClick={e => { e.preventDefault(); handleNavigate(item.path) }}
               href={item.path}
             >
-              <svg className="sb-link-icon" viewBox="0 0 24 24">
+              <svg className="sb-link-icon" width="16" height="16" viewBox="0 0 24 24">
                 <path d={item.icon} />
               </svg>
               <span>{item.label}</span>
@@ -390,7 +386,7 @@ export default function Sidebar({ userName, userEmail }: SidebarProps) {
           </div>
           <button className="sb-logout-btn" onClick={handleSignOut} title="Sign Out">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" />
             </svg>
           </button>
         </div>

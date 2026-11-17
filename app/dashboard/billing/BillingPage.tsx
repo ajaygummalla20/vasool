@@ -11,6 +11,116 @@ declare global {
   }
 }
 
+// ── CORE SVG ICON SYSTEM (REPLACING EMOJIS & AI ARTIFACTS) ─────────────
+function CheckIcon({ className = 'w-4 h-4 text-emerald-400' }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  )
+}
+
+function CrossIcon({ className = 'w-4 h-4 text-zinc-600' }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+  )
+}
+
+function ZapIcon({ className = 'w-4 h-4 text-emerald-400' }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+    </svg>
+  )
+}
+
+function BuildingIcon({ className = 'w-4 h-4 text-blue-400' }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
+      <path d="M9 22v-4h6v4" />
+      <path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01" />
+    </svg>
+  )
+}
+
+function SparklesIcon({ className = 'w-4 h-4 text-emerald-400' }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3l1.912 5.885L20 10.8l-4.756 3.692L16.824 21 12 17.5 7.176 21l1.58-6.508L4 10.8l6.088-1.915L12 3z" />
+    </svg>
+  )
+}
+
+function HelpCircleIcon({ className = 'w-4 h-4 text-zinc-400' }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  )
+}
+
+function CopyIcon({ className = 'w-3.5 h-3.5 text-zinc-400' }: { className?: string }) {
+  return (
+    <svg className={className} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  )
+}
+
+function CheckCircleIcon({ className = 'w-4 h-4 text-emerald-400' }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  )
+}
+
+function ShieldCheckIcon({ className = 'w-4 h-4 text-emerald-400' }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="M9 12l2 2 4-4" />
+    </svg>
+  )
+}
+
+function ArrowRightIcon({ className = 'w-4 h-4' }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
+    </svg>
+  )
+}
+
+function SmartphoneIcon({ className = 'w-4 h-4' }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+      <line x1="12" y1="18" x2="12.01" y2="18" />
+    </svg>
+  )
+}
+
+function AlertTriangleIcon({ className = 'w-4 h-4 text-amber-400' }: { className?: string }) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  )
+}
+
+// ── TYPES & INTERFACES ───────────────────────────────────────────────
 interface Subscription {
   id?: string
   plan_id: 'free' | 'pro' | 'agency'
@@ -82,7 +192,7 @@ export default function BillingPage({
   const [cycle, setCycle] = useState<'monthly' | 'yearly'>('yearly')
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
-  const [activeTab, setActiveTab] = useState<'plans' | 'faq' | 'invoices'>('plans')
+  const [activeTab, setActiveTab] = useState<'plans' | 'faq'>('plans')
 
   // Native 0% Fee UPI QR Modal State
   const [upiModal, setUpiModal] = useState<{
@@ -99,9 +209,8 @@ export default function BillingPage({
   const [utrError, setUtrError] = useState('')
   const [copiedUpi, setCopiedUpi] = useState(false)
 
-  // Load YouPI Checkout Script dynamically (with Razorpay fallback)
+  // Load Checkout scripts dynamically for future paid activation
   useEffect(() => {
-    // 1. Try loading YouPI checkout.js
     const youpiScript = document.createElement('script')
     youpiScript.src = `${youpiCheckoutUrl}/checkout.js`
     youpiScript.async = true
@@ -109,7 +218,6 @@ export default function BillingPage({
     youpiScript.setAttribute('data-currency', 'INR')
     document.body.appendChild(youpiScript)
 
-    // 2. Load legacy Razorpay checkout as fallback
     const rzpScript = document.createElement('script')
     rzpScript.src = 'https://checkout.razorpay.com/v1/checkout.js'
     rzpScript.async = true
@@ -124,7 +232,6 @@ export default function BillingPage({
   const handleUpgrade = async (planId: 'pro' | 'agency') => {
     setLoadingPlan(planId)
     try {
-      // 1. Create order on backend (YouPI-PG Gateway by default)
       const res = await fetch('/api/billing/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -134,31 +241,28 @@ export default function BillingPage({
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed to initialize order')
 
-      // 2. If Native 0% Fee UPI is selected (default for zero fees on Vercel)
       if (data.gateway === 'native_upi') {
         setUpiModal({
           open: true,
           orderId: data.orderId,
           planId,
           cycle,
-          amount: data.amountInRupees || (data.amount / 100),
+          amount: data.amount,
           merchantUpi: data.merchantUpi || 'settlr@upi',
           merchantName: data.merchantName || 'Settlr Technologies',
         })
         setUtrInput('')
         setUtrError('')
-        setLoadingPlan(null)
         return
       }
 
-      // 3. If YouPI JavaScript modal is loaded on window
-      if (typeof window.Youpi !== 'undefined' && typeof window.Youpi.pay === 'function') {
-        window.Youpi.pay({
+      if (typeof window !== 'undefined' && window.Youpi) {
+        window.Youpi.open({
           order_id: data.orderId,
-          amount: data.amountInRupees || (data.amount / 100),
+          amount: data.amount,
           currency: 'INR',
-          name: 'Settlr Technologies',
-          description: `${planId.toUpperCase()} Plan (${cycle === 'yearly' ? 'Annual' : 'Monthly'})`,
+          name: 'Settlr Pro Membership',
+          description: `Settlr ${planId.toUpperCase()} Subscription (${cycle})`,
           handler: async function (response: any) {
             const verifyRes = await fetch('/api/billing/verify-payment', {
               method: 'POST',
@@ -166,114 +270,33 @@ export default function BillingPage({
               body: JSON.stringify({
                 gateway: 'youpi',
                 orderId: data.orderId,
-                paymentId: response.payment_id || response.paymentId || response.utr,
-                signature: response.signature || response.x_gateway_signature,
-                utr: response.utr,
+                paymentId: response.payment_id || response.id,
+                signature: response.signature,
                 planId,
-                cycle,
-                isTest: false,
+                billing_cycle: cycle,
               }),
             })
-
             const verifyData = await verifyRes.json()
-            if (verifyData.success) {
+            if (verifyRes.ok) {
               setSubscription({
                 plan_id: planId,
                 status: 'active',
                 billing_cycle: cycle,
-                amount: verifyData.amount,
-                current_period_end: verifyData.expiresAt,
+                amount: data.amount,
+                current_period_end: new Date(
+                  Date.now() + (cycle === 'yearly' ? 365 : 30) * 86400000
+                ).toISOString(),
               })
               setShowSuccessModal(true)
+            } else {
+              alert(verifyData.error || 'Payment verification failed.')
             }
           },
-          onClose: function () {
-            setLoadingPlan(null)
-          },
         })
-      } else if (data.gateway === 'razorpay' && typeof window.Razorpay !== 'undefined' && data.keyId && !data.isTest) {
-        // 3. Fallback to legacy Razorpay if configured
-        const options = {
-          key: data.keyId,
-          amount: data.amount,
-          currency: data.currency,
-          name: 'Settlr Technologies',
-          description: `${planId.toUpperCase()} Plan (${cycle === 'yearly' ? 'Annual' : 'Monthly'})`,
-          order_id: data.orderId,
-          prefill: {
-            name: userName,
-            email: userEmail,
-            contact: userPhone || '',
-          },
-          theme: { color: '#10B981' },
-          modal: {
-            ondismiss: function () {
-              setLoadingPlan(null)
-            },
-          },
-          handler: async function (response: any) {
-            const verifyRes = await fetch('/api/billing/verify-payment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                gateway: 'razorpay',
-                ...response,
-                planId,
-                cycle,
-                isTest: false,
-              }),
-            })
-
-            const verifyData = await verifyRes.json()
-            if (verifyData.success) {
-              setSubscription({
-                plan_id: planId,
-                status: 'active',
-                billing_cycle: cycle,
-                amount: verifyData.amount,
-                current_period_end: verifyData.expiresAt,
-              })
-              setShowSuccessModal(true)
-            }
-          },
-        }
-
-        const rzp = new window.Razorpay(options)
-        rzp.open()
-      } else if (data.checkoutUrl && !data.isTest) {
-        // 4. Redirect to YouPI hosted checkout page
-        window.location.href = data.checkoutUrl
-      } else {
-        // 5. Test simulation mode (Instant upgrade for development / preview)
-        const verifyRes = await fetch('/api/billing/verify-payment', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            gateway: 'youpi',
-            orderId: data.orderId,
-            paymentId: `youpi_test_${Date.now()}`,
-            signature: 'test_signature',
-            planId,
-            cycle,
-            isTest: true,
-          }),
-        })
-
-        const verifyData = await verifyRes.json()
-        if (verifyData.success) {
-          setSubscription({
-            plan_id: planId,
-            status: 'active',
-            billing_cycle: cycle,
-            amount: verifyData.amount,
-            current_period_end: verifyData.expiresAt,
-          })
-          setShowSuccessModal(true)
-        }
+        return
       }
     } catch (err: any) {
-      console.error(err)
-      alert(err.message || 'Payment initiation failed. Please try again.')
+      alert(err.message || 'Unable to open checkout gateway.')
     } finally {
       setLoadingPlan(null)
     }
@@ -283,13 +306,15 @@ export default function BillingPage({
     e.preventDefault()
     if (!upiModal) return
     const cleanUtr = utrInput.trim()
-    if (!cleanUtr || cleanUtr.length < 6) {
-      setUtrError('Please enter a valid 6-12 digit UPI Transaction ID (UTR)')
+
+    if (!cleanUtr || cleanUtr.length < 6 || cleanUtr.length > 20) {
+      setUtrError('Please enter a valid 6 to 12 digit UPI reference / UTR number.')
       return
     }
 
     setVerifyingUtr(true)
     setUtrError('')
+
     try {
       const verifyRes = await fetch('/api/billing/verify-payment', {
         method: 'POST',
@@ -298,24 +323,24 @@ export default function BillingPage({
           gateway: 'native_upi',
           orderId: upiModal.orderId,
           paymentId: cleanUtr,
-          utr: cleanUtr,
           planId: upiModal.planId,
-          cycle: upiModal.cycle,
-          isTest: false,
+          billing_cycle: upiModal.cycle,
         }),
       })
 
       const verifyData = await verifyRes.json()
-      if (!verifyRes.ok || !verifyData.success) {
-        throw new Error(verifyData.error || 'Payment verification failed. Please verify your UTR reference.')
+      if (!verifyRes.ok) {
+        throw new Error(verifyData.error || 'Verification failed. Please double-check your UTR.')
       }
 
       setSubscription({
         plan_id: upiModal.planId,
         status: 'active',
         billing_cycle: upiModal.cycle,
-        amount: verifyData.amount,
-        current_period_end: verifyData.expiresAt,
+        amount: upiModal.amount,
+        current_period_end: new Date(
+          Date.now() + (upiModal.cycle === 'yearly' ? 365 : 30) * 86400000
+        ).toISOString(),
       })
       setUpiModal(null)
       setShowSuccessModal(true)
@@ -328,567 +353,436 @@ export default function BillingPage({
 
   const currentPlan = subscription.plan_id
   const isPro = currentPlan === 'pro' || currentPlan === 'agency'
-  const isAgency = currentPlan === 'agency'
 
   return (
-    <>
+    <div className="flex min-h-screen bg-[#090A0B] text-zinc-100 font-sans antialiased">
       <style>{`
-        .bl-root{display:flex;min-height:100vh;background:#080E0A;color:#F3F4F6;font-family:'Outfit',sans-serif}
-        .bl-main{flex:1;margin-left:220px;display:flex;flex-direction:column;min-height:100vh}
-        .bl-top{background:rgba(12,22,15,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40}
-        .bl-title{font-size:22px;font-weight:800;color:#FFF}
-        .bl-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:2px}
-        .bl-content{flex:1;padding:28px 32px;display:flex;flex-direction:column;gap:24px;max-width:1440px;width:100%;margin:0 auto}
-
-        /* Current Plan Banner */
-        .bl-status-banner{
-          background: rgba(18,30,22,.75);
-          backdrop-filter: blur(16px);
-          border: 1px solid rgba(255,255,255,.08);
-          border-radius: 20px; padding: 24px 28px;
-          display: flex; justify-content: space-between; align-items: center; gap: 24px;
+        .bp-main {
+          flex: 1;
+          margin-left: 220px;
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+          min-width: 0;
+          width: calc(100% - 220px);
         }
-        .bl-badge-curr{
-          display: inline-flex; align-items: center; gap: 6px;
-          padding: 4px 14px; border-radius: 100px; font-size: 11px; font-weight: 700;
-          text-transform: uppercase; letter-spacing: .08em;
-        }
-        .bl-badge-free{background: rgba(255,255,255,.08); color: rgba(255,255,255,.7); border: 1px solid rgba(255,255,255,.15);}
-        .bl-badge-pro{background: rgba(16,185,129,.15); color: #34D399; border: 1px solid rgba(16,185,129,.35); box-shadow: 0 0 15px rgba(16,185,129,.2);}
-        .bl-badge-agency{background: rgba(59,130,246,.15); color: #60A5FA; border: 1px solid rgba(59,130,246,.35); box-shadow: 0 0 15px rgba(59,130,246,.2);}
-
-        /* Switcher */
-        .bl-cycle-wrap{display: flex; align-items: center; justify-content: center; gap: 12px; margin: 12px 0 6px;}
-        .bl-cycle-box{background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 100px; padding: 4px; display: flex; gap: 4px;}
-        .bl-cycle-btn{padding: 8px 22px; border-radius: 100px; border: none; background: transparent; color: rgba(255,255,255,.6); font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Outfit', sans-serif; transition: all .2s;}
-        .bl-cycle-btn.active{background: #10B981; color: #FFF; box-shadow: 0 2px 10px rgba(16,185,129,.4);}
-        .bl-save-tag{background: linear-gradient(135deg,#F59E0B,#D97706); color: #000; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 100px;}
-
-        /* Pricing Grid */
-        .bl-grid{display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;}
-        .bl-card{
-          background: rgba(18,30,22,.7);
-          backdrop-filter: blur(16px);
-          border: 1px solid rgba(255,255,255,.08);
-          border-radius: 22px; padding: 32px 28px;
-          display: flex; flex-direction: column; justify-content: space-between;
-          position: relative; transition: all .25s cubic-bezier(.16,1,.3,1);
-        }
-        .bl-card:hover{transform: translateY(-4px); border-color: rgba(16,185,129,.3); box-shadow: 0 25px 50px -15px rgba(0,0,0,.8);}
-        
-        .bl-card.featured{
-          border-color: rgba(16,185,129,.4);
-          background: linear-gradient(180deg, rgba(16,185,129,.08) 0%, rgba(18,30,22,.85) 100%);
-          box-shadow: 0 0 35px rgba(16,185,129,.15);
-        }
-        .bl-pop-tag{
-          position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-          background: linear-gradient(135deg, #10B981, #059669);
-          color: #FFF; font-size: 10px; font-weight: 800; text-transform: uppercase;
-          letter-spacing: .08em; padding: 4px 14px; border-radius: 100px;
-          box-shadow: 0 4px 12px rgba(16,185,129,.4);
-        }
-
-        .bl-card-title{font-size: 20px; font-weight: 800; color: #FFF;}
-        .bl-card-desc{font-size: 12px; color: rgba(255,255,255,.5); margin-top: 4px; min-height: 36px;}
-        .bl-price{display: flex; align-items: baseline; gap: 4px; margin: 20px 0;}
-        .bl-price-num{font-size: 38px; font-weight: 900; color: #FFF; letter-spacing: -.03em;}
-        .bl-price-period{font-size: 13px; color: rgba(255,255,255,.45);}
-
-        .bl-feat-list{display: flex; flex-direction: column; gap: 12px; margin: 24px 0; border-top: 1px solid rgba(255,255,255,.06); padding-top: 20px;}
-        .bl-feat-item{display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: rgba(255,255,255,.8); line-height: 1.4;}
-        .bl-feat-icon{color: #34D399; font-size: 14px; flex-shrink: 0; margin-top: 1px;}
-        .bl-feat-icon.dim{color: rgba(255,255,255,.25);}
-
-        .bl-btn-plan{
-          width: 100%; padding: 13px; border-radius: 12px;
-          font-size: 13px; font-weight: 700; cursor: pointer;
-          font-family: 'Outfit', sans-serif; transition: all .2s;
-          display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .bl-btn-free{background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.7);}
-        .bl-btn-pro{background: linear-gradient(135deg,#10B981,#059669); border: none; color: #FFF; box-shadow: 0 4px 16px rgba(16,185,129,.4);}
-        .bl-btn-pro:hover{transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16,185,129,.6);}
-        .bl-btn-agency{background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.35); color: #60A5FA;}
-        .bl-btn-agency:hover{background: rgba(59,130,246,.25);}
-
-        /* Modal */
-        .bl-overlay{position: fixed; inset: 0; background: rgba(0,0,0,.75); backdrop-filter: blur(12px); z-index: 100; display: flex; align-items: center; justify-content: center;}
-        .bl-modal{
-          background: rgba(14,24,18,.95); backdrop-filter: blur(24px);
-          border: 1px solid rgba(16,185,129,.4); border-radius: 24px;
-          padding: 36px; max-width: 480px; width: 90vw; text-align: center;
-          box-shadow: 0 25px 60px rgba(0,0,0,.8), 0 0 50px rgba(16,185,129,.2);
-        }
-
-        /* Comparison Table */
-        .bl-comp-table{width: 100%; border-collapse: collapse; margin-top: 16px;}
-        .bl-comp-th{font-size: 11px; font-weight: 700; color: rgba(255,255,255,.4); text-transform: uppercase; letter-spacing: .08em; padding: 12px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,.08);}
-        .bl-comp-td{padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,.04); font-size: 13px; color: rgba(255,255,255,.85);}
-
-        @media(max-width:1024px){
-          .bl-main{margin-left:0; padding-top:56px; padding-bottom:80px}
-          .bl-top{padding:14px 16px; flex-wrap:wrap; gap:12px}
-          .bl-content{padding:16px}
-          .bl-grid{grid-template-columns:1fr}
-          .bl-status-banner{flex-direction:column; align-items:stretch; gap:16px}
-          .bl-comp-table-wrap{overflow-x:auto}
-          .bl-comp-table{min-width:540px}
-        }
-        @media(max-width:640px){
-          .bl-top{flex-direction:column; align-items:flex-start}
-          .bl-top div:last-child{width:100%}
-          .bl-top div:last-child button{flex:1; justify-content:center}
+        @media (max-width: 1024px) {
+          .bp-main {
+            margin-left: 0;
+            width: 100%;
+            padding-top: 56px;
+            padding-bottom: 80px;
+          }
         }
       `}</style>
 
-      <div className="bl-root">
-        <Sidebar userName={userName} userEmail={userEmail} />
-        <div className="bl-main">
-          <div className="bl-top">
-            <div>
-              <div className="bl-title">Subscription & Billing</div>
-              <div className="bl-sub">Manage your plan, payment methods, and GST business tier</div>
-            </div>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button
-                className={`ex-filter-btn ${activeTab === 'plans' ? 'active' : ''}`}
-                onClick={() => setActiveTab('plans')}
-              >
-                ⚡ Plans & Pricing
-              </button>
-              <button
-                className={`ex-filter-btn ${activeTab === 'faq' ? 'active' : ''}`}
-                onClick={() => setActiveTab('faq')}
-              >
-                ❓ FAQ & GST Tax Billing
-              </button>
-            </div>
+      <Sidebar userName={userName} userEmail={userEmail} />
+
+      <main className="bp-main">
+        {/* Top Header Bar */}
+        <header className="sticky top-0 z-40 bg-[#090A0B]/80 backdrop-blur-md border-b border-white/[0.08] px-6 lg:px-8 py-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-lg font-semibold tracking-tight text-white">Subscription & Licensing</h1>
+            <p className="text-xs text-zinc-400 mt-0.5">Manage business plan, statutory features, and platform quotas</p>
           </div>
 
-          <div className="bl-content">
-            {/* Current Status Header Banner */}
-            <div className="bl-status-banner">
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span className="bl-badge-curr bl-badge-pro">
-                    ✨ Early Adopter — 100% Free All-Access
-                  </span>
-                  <span style={{ fontSize: 11, color: '#34D399' }}>● Active Public Beta</span>
-                </div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: '#FFF', marginTop: 10 }}>
-                  All Pro & Agency features are 100% Free during Early Public Access!
-                </div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,.45)', marginTop: 4 }}>
-                  No payment or credit card required. Enjoy unlimited GST invoices, AI contract risk redlines, camera receipt OCR, and dynamic UPI QR billing.
-                </div>
+          <div className="flex items-center gap-1.5 bg-zinc-900/80 p-1 rounded-lg border border-white/[0.08]">
+            <button
+              type="button"
+              onClick={() => setActiveTab('plans')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                activeTab === 'plans'
+                  ? 'bg-zinc-800 text-white shadow-sm border border-white/[0.08]'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              Plans & Privileges
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('faq')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
+                activeTab === 'faq'
+                  ? 'bg-zinc-800 text-white shadow-sm border border-white/[0.08]'
+                  : 'text-zinc-400 hover:text-zinc-200'
+              }`}
+            >
+              Statutory FAQ
+            </button>
+          </div>
+        </header>
+
+        <div className="flex-1 p-6 lg:p-8 flex flex-col gap-6 max-w-6xl w-full mx-auto">
+          {/* Status Overview Card */}
+          <section className="bg-zinc-900/60 rounded-xl border border-white/[0.08] p-5 lg:p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2.5">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <SparklesIcon className="w-3.5 h-3.5 text-emerald-400" />
+                  Early Adopter · Full Access
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-xs text-emerald-400/90 font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Active Beta
+                </span>
               </div>
 
-              {/* Usage Progress */}
-              <div
-                style={{
-                  background: 'rgba(255,255,255,.03)',
-                  border: '1px solid rgba(255,255,255,.08)',
-                  borderRadius: 14,
-                  padding: '14px 20px',
-                  minWidth: 240,
-                }}
-              >
-                <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,.4)', textTransform: 'uppercase', letterSpacing: '.08em', marginBottom: 6 }}>
-                  Plan Privileges & Quota
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
-                  <span>Invoices Issued:</span>
-                  <strong style={{ color: '#34D399' }}>Unlimited (∞)</strong>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
-                  <span>Clients Managed:</span>
-                  <strong style={{ color: '#34D399' }}>Unlimited (∞)</strong>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-                  <span>AI Legal & OCR:</span>
-                  <strong style={{ color: '#34D399' }}>Full Access (✓)</strong>
-                </div>
+              <div>
+                <h2 className="text-base font-semibold text-white tracking-tight">
+                  All Pro & Agency capabilities are unlocked for free
+                </h2>
+                <p className="text-xs text-zinc-400 max-w-xl leading-relaxed mt-1">
+                  Enjoy unlimited GST tax invoicing, AI contract risk audits, camera receipt OCR, and direct 0% MDR UPI QR payments without subscription fees or credit card requirements.
+                </p>
               </div>
             </div>
 
-            {activeTab === 'plans' && (
-              <>
-                {/* Early Adopter Free Access Notice */}
-                <div
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(59,130,246,0.08) 100%)',
-                    border: '1px solid rgba(16,185,129,0.3)',
-                    borderRadius: 20,
-                    padding: '24px 28px',
-                    margin: '12px 0 6px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 20,
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                      <span style={{ background: '#10B981', color: '#000', fontSize: 11, fontWeight: 800, padding: '2px 8px', borderRadius: 6, textTransform: 'uppercase' }}>
-                        Free for Early Users
-                      </span>
-                      <span style={{ fontSize: 15, fontWeight: 700, color: '#FFF' }}>
-                        Zero Fees · Zero Commissions · All Features Unlocked
-                      </span>
-                    </div>
-                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.7)', margin: 0, maxWidth: 680, lineHeight: 1.5 }}>
-                      We are on a mission to eliminate delayed payments for Indian freelancers, contractors, and MSMEs. All premium tools are 100% free while we onboard our early community. No credit card or payment gateway setup required.
-                    </p>
+            {/* Quota Counters */}
+            <div className="bg-zinc-950/60 border border-white/[0.08] rounded-lg p-3.5 min-w-[220px] flex flex-col gap-2">
+              <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+                Monthly Quotas
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-zinc-400">GST Invoices:</span>
+                <span className="font-semibold text-emerald-400">Unlimited (∞)</span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-zinc-400">Clients Managed:</span>
+                <span className="font-semibold text-emerald-400">Unlimited (∞)</span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-zinc-400">AI Contract Audits:</span>
+                <span className="font-semibold text-emerald-400">Full Access</span>
+              </div>
+            </div>
+          </section>
+
+          {activeTab === 'plans' && (
+            <>
+              {/* Early Access Notice Banner */}
+              <div className="bg-gradient-to-r from-emerald-500/[0.08] via-zinc-900/60 to-blue-500/[0.06] border border-emerald-500/20 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wide">
+                      Zero Fees
+                    </span>
+                    <span className="text-sm font-semibold text-white">Community Early Access Release</span>
                   </div>
-                  <div style={{ background: 'rgba(16,185,129,0.2)', border: '1px solid #10B981', padding: '10px 18px', borderRadius: 12, color: '#34D399', fontWeight: 700, fontSize: 13 }}>
-                    ✓ 100% Free Active
+                  <p className="text-xs text-zinc-400 max-w-2xl leading-relaxed">
+                    Settlr is built to solve late payments and compliance burdens for Indian independent professionals and MSMEs. All premium tools are 100% free while we onboard early users.
+                  </p>
+                </div>
+                <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg whitespace-nowrap self-start sm:self-auto">
+                  <CheckCircleIcon className="w-4 h-4 text-emerald-400" />
+                  Active at ₹0
+                </div>
+              </div>
+
+              {/* Plans Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                {/* Free Starter */}
+                <div className="bg-zinc-900/40 rounded-xl border border-white/[0.08] p-6 flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div>
+                      <div className="text-xs font-semibold uppercase tracking-wider text-zinc-400">Individual</div>
+                      <h3 className="text-base font-semibold text-white mt-1">Starter</h3>
+                      <p className="text-xs text-zinc-400 mt-1">For freelancers issuing occasional statutory bills.</p>
+                    </div>
+
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-2xl font-bold text-white tracking-tight">₹0</span>
+                      <span className="text-xs text-zinc-400">/ forever</span>
+                    </div>
+
+                    <div className="h-px bg-white/[0.06] my-2" />
+
+                    <ul className="space-y-2.5 text-xs text-zinc-300">
+                      <li className="flex items-start gap-2">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>GST Tax Invoicing & Credit Notes</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>Direct 0% MDR UPI QR Bank Settlement</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>MSMED Act 45-Day Statutory Tracker</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>WhatsApp & PDF Invoice Sharing</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-white/[0.06]">
+                    <span className="w-full block text-center py-2 px-3 rounded-lg text-xs font-medium bg-zinc-800/80 text-zinc-300 border border-white/[0.08]">
+                      Included in Platform
+                    </span>
                   </div>
                 </div>
 
-                {/* Pricing Grid */}
-                <div className="bl-grid" style={{ marginTop: 12 }}>
-                  {/* FREE PLAN */}
-                  <div className="bl-card">
-                    <div>
-                      <div className="bl-card-title">🌱 Free Starter</div>
-                      <div className="bl-card-desc">
-                        For solo freelancers and new contractors issuing occasional bills.
-                      </div>
-                      <div className="bl-price">
-                        <span className="bl-price-num">₹0</span>
-                        <span className="bl-price-period">/ forever</span>
-                      </div>
-
-                      <div className="bl-feat-list">
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <span>GST Tax Invoicing & Credit Notes</span>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <span>Zero-MDR Direct UPI QR generation</span>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <span>MSMED Act 45-day statutory tracking</span>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <span>WhatsApp & PDF invoice sharing</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <button className="bl-btn-plan bl-btn-free" disabled>
-                      ✓ Included Free
-                    </button>
+                {/* Pro Growth (Featured) */}
+                <div className="bg-zinc-900/80 rounded-xl border border-emerald-500/30 p-6 flex flex-col justify-between relative shadow-lg shadow-black/40">
+                  <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
+                    <span className="bg-emerald-500 text-black text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                      Free During Beta
+                    </span>
                   </div>
 
-                  {/* PRO GROWTH PLAN (FEATURED) */}
-                  <div className="bl-card featured">
-                    <span className="bl-pop-tag">⚡ 100% Free Beta Access</span>
+                  <div className="space-y-4">
                     <div>
-                      <div className="bl-card-title" style={{ color: '#34D399' }}>
-                        ⚡ Pro Growth
-                      </div>
-                      <div className="bl-card-desc">
-                        Full financial and statutory operating system for contractors & MSMEs.
-                      </div>
-                      <div className="bl-price">
-                        <span className="bl-price-num">₹0</span>
-                        <span className="bl-price-period">
-                          <span style={{ textDecoration: 'line-through', opacity: 0.5, marginRight: 6 }}>₹499/mo</span>
-                          Free Early Access
-                        </span>
-                      </div>
-
-                      <div className="bl-feat-list">
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <strong>Unlimited Invoices & Client Records</strong>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <strong>AI Contract Redlines & Risk Flags</strong>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <strong>AI Receipt OCR Camera Scanner</strong>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <strong>Dynamic NPCI UPI QR Codes on Invoices</strong>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <strong>MSMED Act 45-Day 3x Interest & Legal Notice</strong>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <strong>GSTR-1 JSON & CA Audit Export Pack</strong>
-                        </div>
-                      </div>
+                      <div className="text-xs font-semibold uppercase tracking-wider text-emerald-400">Professional</div>
+                      <h3 className="text-base font-semibold text-white mt-1 flex items-center gap-1.5">
+                        <ZapIcon className="w-4 h-4 text-emerald-400" />
+                        Pro Growth
+                      </h3>
+                      <p className="text-xs text-zinc-400 mt-1">Full financial and statutory system for contractors & MSMEs.</p>
                     </div>
 
-                    <button
-                      className="bl-btn-plan bl-btn-pro"
-                      disabled
-                      style={{ cursor: 'default' }}
-                    >
-                      ✓ Unlocked & Active (Free)
-                    </button>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold text-white tracking-tight">₹0</span>
+                      <span className="text-xs text-zinc-400 line-through">₹499/mo</span>
+                      <span className="text-[11px] text-emerald-400 font-medium">Free Access</span>
+                    </div>
+
+                    <div className="h-px bg-white/[0.06] my-2" />
+
+                    <ul className="space-y-2.5 text-xs text-zinc-200">
+                      <li className="flex items-start gap-2 font-medium text-white">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>Unlimited GST Invoices & Client Records</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>AI Contract Risk Redlines & Clause Audits</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>AI Mobile Receipt OCR Scanner</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>MSMED Act Section 16 Notice Generator</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>One-Click GSTR-1 JSON & CA Audit Export</span>
+                      </li>
+                    </ul>
                   </div>
 
-                  {/* AGENCY PLAN */}
-                  <div className="bl-card">
-                    <div>
-                      <div className="bl-card-title">🏢 Agency & CA Pro</div>
-                      <div className="bl-card-desc">
-                        For multi-client agencies, accounting firms, and high-volume practices.
-                      </div>
-                      <div className="bl-price">
-                        <span className="bl-price-num">₹0</span>
-                        <span className="bl-price-period">
-                          <span style={{ textDecoration: 'line-through', opacity: 0.5, marginRight: 6 }}>₹1,499/mo</span>
-                          Free Early Access
-                        </span>
-                      </div>
-
-                      <div className="bl-feat-list">
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <strong>Everything in Pro included</strong>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <span>Multi-GSTIN & Branch support</span>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <span>Multi-user team management</span>
-                        </div>
-                        <div className="bl-feat-item">
-                          <span className="bl-feat-icon">✓</span>
-                          <span>Priority Community Support</span>
-                        </div>
-                      </div>
-                    </div>
-
+                  <div className="mt-6 pt-4 border-t border-white/[0.06]">
                     <button
-                      className="bl-btn-plan bl-btn-agency"
+                      type="button"
                       disabled
-                      style={{ cursor: 'default' }}
+                      className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 cursor-default"
                     >
-                      ✓ Unlocked & Active (Free)
+                      <CheckIcon className="w-3.5 h-3.5 text-emerald-400" />
+                      Unlocked & Active
                     </button>
                   </div>
                 </div>
 
-                {/* Features Breakdown Comparison */}
-                <div
-                  className="kokonut-card"
-                  style={{ marginTop: 24, padding: '28px 32px' }}
-                >
-                  <div style={{ fontSize: 18, fontWeight: 800, color: '#FFF', marginBottom: 4 }}>
-                    Detailed Feature Matrix
-                  </div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,.45)', marginBottom: 20 }}>
-                    Compare what each plan provides for your business operations.
+                {/* Agency Plan */}
+                <div className="bg-zinc-900/40 rounded-xl border border-white/[0.08] p-6 flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <div>
+                      <div className="text-xs font-semibold uppercase tracking-wider text-blue-400">Enterprise</div>
+                      <h3 className="text-base font-semibold text-white mt-1 flex items-center gap-1.5">
+                        <BuildingIcon className="w-4 h-4 text-blue-400" />
+                        Agency & Practice
+                      </h3>
+                      <p className="text-xs text-zinc-400 mt-1">Multi-client agencies, accounting firms, and CA practices.</p>
+                    </div>
+
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-2xl font-bold text-white tracking-tight">₹0</span>
+                      <span className="text-xs text-zinc-400 line-through">₹1,499/mo</span>
+                      <span className="text-[11px] text-blue-400 font-medium">Free Access</span>
+                    </div>
+
+                    <div className="h-px bg-white/[0.06] my-2" />
+
+                    <ul className="space-y-2.5 text-xs text-zinc-300">
+                      <li className="flex items-start gap-2 font-medium text-white">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>Everything in Pro Included</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>Multi-GSTIN & Multi-Branch Support</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>Section 44ADA Presumptive Tax Planner</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckIcon className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span>Predictive Cashflow & DSO Radar</span>
+                      </li>
+                    </ul>
                   </div>
 
-                  <table className="bl-comp-table">
+                  <div className="mt-6 pt-4 border-t border-white/[0.06]">
+                    <button
+                      type="button"
+                      disabled
+                      className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium bg-zinc-800/80 text-zinc-300 border border-white/[0.08] cursor-default"
+                    >
+                      <CheckIcon className="w-3.5 h-3.5 text-blue-400" />
+                      Unlocked & Active
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Feature Matrix Table */}
+              <div className="bg-zinc-900/60 rounded-xl border border-white/[0.08] overflow-hidden">
+                <div className="p-5 border-b border-white/[0.08]">
+                  <h3 className="text-sm font-semibold text-white">Feature Specifications</h3>
+                  <p className="text-xs text-zinc-400 mt-0.5">Comprehensive capabilities comparison across tiers</p>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse text-xs">
                     <thead>
-                      <tr>
-                        <th className="bl-comp-th">Feature</th>
-                        <th className="bl-comp-th" style={{ width: 140 }}>Free Starter</th>
-                        <th className="bl-comp-th" style={{ width: 160, color: '#34D399' }}>Pro Growth (₹499)</th>
-                        <th className="bl-comp-th" style={{ width: 160, color: '#60A5FA' }}>Agency (₹1,499)</th>
+                      <tr className="border-b border-white/[0.08] bg-zinc-950/40 text-[11px] font-semibold text-zinc-400 uppercase tracking-wider">
+                        <th className="py-3 px-5">Capability</th>
+                        <th className="py-3 px-4 w-36">Starter</th>
+                        <th className="py-3 px-4 w-40 text-emerald-400">Pro Growth</th>
+                        <th className="py-3 px-4 w-40 text-blue-400">Agency</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-white/[0.04] text-zinc-300">
                       <tr>
-                        <td className="bl-comp-td">Monthly Invoices</td>
-                        <td className="bl-comp-td">3 per month</td>
-                        <td className="bl-comp-td" style={{ color: '#34D399', fontWeight: 700 }}>Unlimited (∞)</td>
-                        <td className="bl-comp-td" style={{ color: '#60A5FA', fontWeight: 700 }}>Unlimited (∞)</td>
+                        <td className="py-3 px-5 font-medium text-white">Monthly GST Invoices</td>
+                        <td className="py-3 px-4 text-zinc-400">5 / month</td>
+                        <td className="py-3 px-4 font-semibold text-emerald-400">Unlimited (∞)</td>
+                        <td className="py-3 px-4 font-semibold text-blue-400">Unlimited (∞)</td>
                       </tr>
                       <tr>
-                        <td className="bl-comp-td">Client Management</td>
-                        <td className="bl-comp-td">2 clients</td>
-                        <td className="bl-comp-td" style={{ color: '#34D399', fontWeight: 700 }}>Unlimited (∞)</td>
-                        <td className="bl-comp-td" style={{ color: '#60A5FA', fontWeight: 700 }}>Unlimited (∞)</td>
+                        <td className="py-3 px-5 font-medium text-white">Client Management</td>
+                        <td className="py-3 px-4 text-zinc-400">5 Clients</td>
+                        <td className="py-3 px-4 font-semibold text-emerald-400">Unlimited (∞)</td>
+                        <td className="py-3 px-4 font-semibold text-blue-400">Unlimited (∞)</td>
                       </tr>
                       <tr>
-                        <td className="bl-comp-td">AI Contract Risk Analysis</td>
-                        <td className="bl-comp-td" style={{ color: 'rgba(255,255,255,.3)' }}>—</td>
-                        <td className="bl-comp-td" style={{ color: '#34D399' }}>✓ Full Redlines</td>
-                        <td className="bl-comp-td" style={{ color: '#60A5FA' }}>✓ Full Redlines</td>
+                        <td className="py-3 px-5 font-medium text-white">Direct NPCI UPI QR (0% MDR)</td>
+                        <td className="py-3 px-4"><CheckIcon className="w-4 h-4 text-emerald-400" /></td>
+                        <td className="py-3 px-4"><CheckIcon className="w-4 h-4 text-emerald-400" /></td>
+                        <td className="py-3 px-4"><CheckIcon className="w-4 h-4 text-blue-400" /></td>
                       </tr>
                       <tr>
-                        <td className="bl-comp-td">AI Mobile Camera Receipt OCR</td>
-                        <td className="bl-comp-td" style={{ color: 'rgba(255,255,255,.3)' }}>—</td>
-                        <td className="bl-comp-td" style={{ color: '#34D399' }}>✓ Instant Scanner</td>
-                        <td className="bl-comp-td" style={{ color: '#60A5FA' }}>✓ Instant Scanner</td>
+                        <td className="py-3 px-5 font-medium text-white">MSMED Act 45-Day 3x Interest Engine</td>
+                        <td className="py-3 px-4"><CheckIcon className="w-4 h-4 text-emerald-400" /></td>
+                        <td className="py-3 px-4"><CheckIcon className="w-4 h-4 text-emerald-400" /></td>
+                        <td className="py-3 px-4"><CheckIcon className="w-4 h-4 text-blue-400" /></td>
                       </tr>
                       <tr>
-                        <td className="bl-comp-td">Dynamic NPCI UPI QR Codes</td>
-                        <td className="bl-comp-td" style={{ color: 'rgba(255,255,255,.3)' }}>—</td>
-                        <td className="bl-comp-td" style={{ color: '#34D399' }}>✓ GPay/PhonePe</td>
-                        <td className="bl-comp-td" style={{ color: '#60A5FA' }}>✓ GPay/PhonePe</td>
+                        <td className="py-3 px-5 font-medium text-white">AI Contract Risk Audits & Redlines</td>
+                        <td className="py-3 px-4"><CrossIcon className="w-4 h-4 text-zinc-600" /></td>
+                        <td className="py-3 px-4 text-emerald-400 font-medium">Included</td>
+                        <td className="py-3 px-4 text-blue-400 font-medium">Included</td>
                       </tr>
                       <tr>
-                        <td className="bl-comp-td">MSMED Act 45-Day Demand Notice</td>
-                        <td className="bl-comp-td" style={{ color: 'rgba(255,255,255,.3)' }}>—</td>
-                        <td className="bl-comp-td" style={{ color: '#34D399' }}>✓ 3x RBI Rate Notice</td>
-                        <td className="bl-comp-td" style={{ color: '#60A5FA' }}>✓ 3x RBI Rate Notice</td>
+                        <td className="py-3 px-5 font-medium text-white">AI Camera Receipt OCR Scanner</td>
+                        <td className="py-3 px-4"><CrossIcon className="w-4 h-4 text-zinc-600" /></td>
+                        <td className="py-3 px-4 text-emerald-400 font-medium">Included</td>
+                        <td className="py-3 px-4 text-blue-400 font-medium">Included</td>
                       </tr>
                       <tr>
-                        <td className="bl-comp-td">GSTR-1 JSON & CA Audit Export</td>
-                        <td className="bl-comp-td">Basic</td>
-                        <td className="bl-comp-td" style={{ color: '#34D399' }}>✓ Full JSON & CSV</td>
-                        <td className="bl-comp-td" style={{ color: '#60A5FA' }}>✓ Full JSON & CSV</td>
+                        <td className="py-3 px-5 font-medium text-white">GSTR-1 JSON & CA Audit Export</td>
+                        <td className="py-3 px-4 text-zinc-500">Basic</td>
+                        <td className="py-3 px-4 text-emerald-400 font-medium">Full JSON & CSV</td>
+                        <td className="py-3 px-4 text-blue-400 font-medium">Full JSON & CSV</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-              </>
-            )}
+              </div>
+            </>
+          )}
 
-            {activeTab === 'faq' && (
-              <div className="kokonut-card" style={{ padding: '32px' }}>
-                <div style={{ fontSize: 18, fontWeight: 800, color: '#FFF', marginBottom: 16 }}>
-                  Frequently Asked Questions & Billing Details
+          {activeTab === 'faq' && (
+            <div className="bg-zinc-900/60 rounded-xl border border-white/[0.08] p-6 lg:p-8 space-y-6">
+              <div>
+                <h3 className="text-base font-semibold text-white">Statutory & Licensing FAQ</h3>
+                <p className="text-xs text-zinc-400 mt-0.5">Details regarding compliance, UPI settlements, and public beta terms</p>
+              </div>
+
+              <div className="space-y-4 divide-y divide-white/[0.06]">
+                <div className="pt-4 first:pt-0">
+                  <h4 className="text-xs font-semibold text-emerald-400">Is Settlr really 100% free right now?</h4>
+                  <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
+                    Yes. During our public early access phase, every registered account receives complete access to all Pro and Agency tier tools with zero charges, subscription commitments, or credit card requirements.
+                  </p>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#34D399' }}>
-                      Is Settlr really 100% free right now?
-                    </div>
-                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,.6)', marginTop: 4 }}>
-                      Yes! Settlr is completely free during our public early access phase. You have full access to unlimited GST invoicing, AI contract risk redlines, camera receipt scanning, MSMED Act legal notice generation, and direct 0% MDR UPI QR payments without providing any credit card or payment.
-                    </div>
-                  </div>
+                <div className="pt-4">
+                  <h4 className="text-xs font-semibold text-emerald-400">Why is Settlr offered at zero cost?</h4>
+                  <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
+                    Our initial priority is helping Indian freelancers and MSMEs resolve delayed payment challenges and automate GST statutory filings. We are building in public alongside our early users.
+                  </p>
+                </div>
 
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#34D399' }}>
-                      Why is Settlr free for early users?
-                    </div>
-                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,.6)', marginTop: 4 }}>
-                      We are on a mission to eliminate delayed payments and help Indian freelancers and MSMEs enforce their statutory rights. We want our early community to use the platform, provide feedback, and grow without software cost barriers.
-                    </div>
-                  </div>
+                <div className="pt-4">
+                  <h4 className="text-xs font-semibold text-emerald-400">Are gateway commissions deducted from invoice payments?</h4>
+                  <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
+                    No. Settlr generates direct NPCI-compliant UPI QR codes linked to your registered UPI ID. When clients scan and pay using PhonePe, Google Pay, Paytm, or BHIM, 100% of the funds route directly into your bank account with ₹0 platform commission.
+                  </p>
+                </div>
 
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#34D399' }}>
-                      Are there any fees deducted when my clients pay my invoices?
-                    </div>
-                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,.6)', marginTop: 4 }}>
-                      Zero (0%) platform fees! Settlr generates dynamic NPCI UPI QR codes directly linked to your personal or business UPI ID. When clients scan and pay via Google Pay, PhonePe, Paytm, or BHIM, 100% of the funds settle directly into your bank account.
-                    </div>
-                  </div>
-
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#34D399' }}>
-                      What happens when paid plans are introduced in the future?
-                    </div>
-                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,.6)', marginTop: 4 }}>
-                      You will never be surprised with sudden charges. Early users who joined during our public beta will receive generous grandfathered perks, free trial extensions, and priority discounts.
-                    </div>
-                  </div>
+                <div className="pt-4">
+                  <h4 className="text-xs font-semibold text-emerald-400">What happens when paid subscriptions launch in the future?</h4>
+                  <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
+                    Early beta community members will retain lifetime grandfathered benefits and receive advance notification prior to any commercial tier introductions.
+                  </p>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
-      </div>
+      </main>
 
-      {/* Native Zero-Fee UPI Payment Modal */}
+      {/* Native Zero-Fee UPI Payment Modal (Clean Production Standard) */}
       {upiModal && upiModal.open && (
-        <div className="bl-overlay" onClick={() => setUpiModal(null)}>
-          <div
-            className="bl-modal"
-            style={{ maxWidth: 440, padding: '32px 28px', textAlign: 'left' }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-white/[0.12] rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl">
+            <div className="flex items-start justify-between">
               <div>
-                <span
-                  style={{
-                    background: 'rgba(16,185,129,.15)',
-                    color: '#34D399',
-                    border: '1px solid rgba(16,185,129,.35)',
-                    padding: '3px 10px',
-                    borderRadius: 100,
-                    fontSize: 10,
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '.06em',
-                  }}
-                >
-                  ⚡ Direct 0% Fee UPI
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wide">
+                  <ShieldCheckIcon className="w-3.5 h-3.5" /> Direct Bank UPI
                 </span>
-                <div style={{ fontSize: 20, fontWeight: 800, color: '#FFF', marginTop: 8 }}>
-                  Upgrade to {upiModal.planId === 'agency' ? 'Agency Plan' : 'Pro Growth'}
-                </div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,.5)', marginTop: 2 }}>
+                <h3 className="text-lg font-semibold text-white mt-2">
+                  Upgrade to {upiModal.planId === 'agency' ? 'Agency License' : 'Pro Growth'}
+                </h3>
+                <p className="text-xs text-zinc-400">
                   {upiModal.cycle === 'yearly' ? 'Annual Subscription' : 'Monthly Subscription'}
-                </div>
+                </p>
               </div>
               <button
+                type="button"
                 onClick={() => setUpiModal(null)}
-                style={{
-                  background: 'rgba(255,255,255,.08)',
-                  border: 'none',
-                  color: 'rgba(255,255,255,.6)',
-                  width: 28,
-                  height: 28,
-                  borderRadius: '50%',
-                  cursor: 'pointer',
-                  fontSize: 14,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                className="text-zinc-400 hover:text-white p-1 rounded-md transition-colors"
               >
-                ✕
+                <CrossIcon className="w-4 h-4" />
               </button>
             </div>
 
-            {/* Amount Banner */}
-            <div
-              style={{
-                background: 'rgba(255,255,255,.04)',
-                border: '1px solid rgba(255,255,255,.08)',
-                borderRadius: 14,
-                padding: '12px 16px',
-                margin: '16px 0',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <span style={{ fontSize: 13, color: 'rgba(255,255,255,.7)' }}>Total Payable</span>
-              <span style={{ fontSize: 24, fontWeight: 900, color: '#34D399' }}>
+            <div className="bg-zinc-950/70 border border-white/[0.08] rounded-lg p-3.5 flex justify-between items-center">
+              <span className="text-xs text-zinc-400">Payable Amount</span>
+              <span className="text-lg font-bold text-emerald-400 tabular-nums">
                 {fmtINR(upiModal.amount)}
               </span>
             </div>
 
-            {/* Step 1: Scan QR */}
-            <div style={{ textAlign: 'center' }}>
-              <div
-                style={{
-                  background: '#FFFFFF',
-                  borderRadius: 16,
-                  padding: 12,
-                  display: 'inline-block',
-                  boxShadow: '0 8px 30px rgba(0,0,0,.5)',
-                }}
-              >
+            {/* QR Scan Area */}
+            <div className="text-center space-y-3">
+              <div className="bg-white p-3 rounded-xl inline-block shadow-md">
                 <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${encodeURIComponent(
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=2&data=${encodeURIComponent(
                     `upi://pay?pa=${upiModal.merchantUpi}&pn=${encodeURIComponent(
                       upiModal.merchantName
                     )}&am=${upiModal.amount}&cu=INR&tn=${encodeURIComponent(
@@ -896,33 +790,19 @@ export default function BillingPage({
                     )}`
                   )}`}
                   alt="Settlr UPI QR Code"
-                  width={200}
-                  height={200}
-                  style={{ display: 'block', borderRadius: 8 }}
+                  width={180}
+                  height={180}
+                  className="block rounded"
                 />
               </div>
 
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,.45)', marginTop: 8 }}>
-                Scan with Google Pay, PhonePe, Paytm, BHIM, Navi, or CRED
-              </div>
+              <p className="text-xs text-zinc-400">
+                Scan with Google Pay, PhonePe, Paytm, or BHIM
+              </p>
 
-              {/* UPI ID Row */}
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  background: 'rgba(255,255,255,.06)',
-                  border: '1px solid rgba(255,255,255,.1)',
-                  borderRadius: 100,
-                  padding: '5px 14px',
-                  marginTop: 8,
-                  fontSize: 12,
-                  color: '#F3F4F6',
-                }}
-              >
-                <span style={{ color: 'rgba(255,255,255,.5)' }}>UPI:</span>
-                <strong>{upiModal.merchantUpi}</strong>
+              <div className="inline-flex items-center gap-2 bg-zinc-800/80 border border-white/[0.08] rounded-full px-3 py-1 text-xs text-zinc-300">
+                <span className="text-zinc-500 font-mono">VPA:</span>
+                <strong className="font-mono text-zinc-200">{upiModal.merchantUpi}</strong>
                 <button
                   type="button"
                   onClick={() => {
@@ -930,43 +810,32 @@ export default function BillingPage({
                     setCopiedUpi(true)
                     setTimeout(() => setCopiedUpi(false), 2000)
                   }}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: copiedUpi ? '#34D399' : 'rgba(255,255,255,.6)',
-                    cursor: 'pointer',
-                    fontSize: 11,
-                    fontWeight: 700,
-                  }}
+                  className="text-xs text-emerald-400 font-medium ml-1 hover:underline flex items-center gap-1"
                 >
-                  {copiedUpi ? '✓ Copied' : 'Copy'}
+                  <CopyIcon className="w-3 h-3 text-emerald-400" />
+                  {copiedUpi ? 'Copied' : 'Copy'}
                 </button>
               </div>
 
-              {/* Mobile Pay Link */}
-              <div style={{ marginTop: 10 }}>
+              <div>
                 <a
                   href={`upi://pay?pa=${upiModal.merchantUpi}&pn=${encodeURIComponent(
                     upiModal.merchantName
                   )}&am=${upiModal.amount}&cu=INR&tn=${encodeURIComponent(
                     `Settlr-${upiModal.planId.toUpperCase()}-${upiModal.orderId.slice(-6)}`
                   )}`}
-                  style={{
-                    fontSize: 12,
-                    color: '#34D399',
-                    textDecoration: 'underline',
-                    fontWeight: 600,
-                  }}
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
                 >
-                  📱 Tap here to open directly in your UPI App
+                  <SmartphoneIcon className="w-3.5 h-3.5" />
+                  Tap to launch UPI app directly on mobile
                 </a>
               </div>
             </div>
 
-            {/* Step 2: Verification Input */}
-            <form onSubmit={handleVerifyUtr} style={{ marginTop: 18, borderTop: '1px solid rgba(255,255,255,.08)', paddingTop: 16 }}>
-              <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,.7)', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 6 }}>
-                Step 2: Enter 12-Digit UPI Ref / UTR
+            {/* UTR Verification Input */}
+            <form onSubmit={handleVerifyUtr} className="pt-4 border-t border-white/[0.08] space-y-3">
+              <label className="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wide">
+                12-Digit Transaction Reference (UTR)
               </label>
               <input
                 type="text"
@@ -974,82 +843,59 @@ export default function BillingPage({
                 value={utrInput}
                 onChange={(e) => setUtrInput(e.target.value.replace(/[^a-zA-Z0-9]/g, ''))}
                 maxLength={20}
-                style={{
-                  width: '100%',
-                  background: 'rgba(255,255,255,.06)',
-                  border: utrError ? '1px solid #EF4444' : '1px solid rgba(255,255,255,.15)',
-                  borderRadius: 10,
-                  padding: '10px 14px',
-                  color: '#FFF',
-                  fontSize: 14,
-                  fontFamily: 'monospace',
-                  letterSpacing: '.08em',
-                  outline: 'none',
-                }}
+                className={`w-full bg-zinc-950/80 border rounded-lg px-3.5 py-2 text-sm text-white font-mono tracking-wider outline-none transition-colors ${
+                  utrError ? 'border-red-500/80 focus:border-red-500' : 'border-white/[0.12] focus:border-emerald-500/80'
+                }`}
               />
+
               {utrError && (
-                <div style={{ fontSize: 11, color: '#EF4444', marginTop: 4 }}>
-                  ⚠️ {utrError}
+                <div className="flex items-center gap-1.5 text-xs text-red-400">
+                  <AlertTriangleIcon className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                  <span>{utrError}</span>
                 </div>
               )}
-              <div style={{ fontSize: 10, color: 'rgba(255,255,255,.4)', marginTop: 4 }}>
-                Found in your UPI app under &quot;UPI transaction ID&quot; or &quot;Bank reference number&quot;.
-              </div>
 
               <button
                 type="submit"
                 disabled={verifyingUtr}
-                style={{
-                  width: '100%',
-                  marginTop: 14,
-                  padding: 12,
-                  background: 'linear-gradient(135deg, #10B981, #059669)',
-                  border: 'none',
-                  borderRadius: 12,
-                  color: '#FFF',
-                  fontSize: 13,
-                  fontWeight: 700,
-                  cursor: verifyingUtr ? 'not-allowed' : 'pointer',
-                  opacity: verifyingUtr ? 0.7 : 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                  fontFamily: 'Outfit, sans-serif',
-                }}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-xs font-semibold bg-emerald-500 text-black hover:bg-emerald-400 disabled:opacity-50 transition-colors shadow-sm"
               >
-                {verifyingUtr ? 'Verifying Reference...' : '⚡ Verify & Unlock Pro License →'}
+                {verifyingUtr ? 'Verifying Reference...' : 'Verify Reference & Activate'}
+                <ArrowRightIcon className="w-3.5 h-3.5 text-black" />
               </button>
             </form>
           </div>
         </div>
       )}
 
-      {/* Success Confetti Modal */}
+      {/* Celebratory Activation Modal */}
       {showSuccessModal && (
-        <div className="bl-overlay" onClick={() => setShowSuccessModal(false)}>
-          <div className="bl-modal" onClick={(e) => e.stopPropagation()}>
-            <div style={{ fontSize: 48, marginBottom: 10 }}>🎉</div>
-            <div style={{ fontSize: 22, fontWeight: 800, color: '#FFF' }}>
-              Welcome to Settlr Pro!
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-white/[0.12] rounded-2xl max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
+              <SparklesIcon className="w-6 h-6 text-emerald-400" />
             </div>
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,.6)', marginTop: 8 }}>
-              Your account has been upgraded successfully. You now have unlimited invoices, AI contract risk redlines, and AI receipt scanning!
+
+            <div>
+              <h3 className="text-lg font-semibold text-white">Settlr Pro License Active</h3>
+              <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                Your privileges have updated. Unlimited GST invoices, AI contract risk scoring, and camera receipt scanning are immediately ready.
+              </p>
             </div>
 
             <button
-              className="kokonut-btn-primary"
-              style={{ width: '100%', justifyContent: 'center', marginTop: 24 }}
+              type="button"
               onClick={() => {
                 setShowSuccessModal(false)
                 router.push('/dashboard')
               }}
+              className="w-full py-2.5 px-4 rounded-lg text-xs font-semibold bg-emerald-500 text-black hover:bg-emerald-400 transition-colors"
             >
-              🚀 Launch Pro Dashboard
+              Continue to Workspace
             </button>
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }

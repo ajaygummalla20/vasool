@@ -262,7 +262,8 @@ export default function ClientDetailPage({
         .cd-edit-label{font-size:10px;font-weight:600;color:rgba(26,20,13,.45);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
         .cd-edit-input{width:100%;border:1px solid rgba(26,20,13,.12);border-radius:8px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:#1A140D;outline:none;transition:border-color .18s;background:white}
         .cd-edit-input:focus{border-color:#2D8A58;box-shadow:0 0 0 3px rgba(45,138,88,.09)}
-        .cd-edit-select{width:100%;border:1px solid rgba(26,20,13,.12);border-radius:8px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:#1A140D;outline:none;background:white;cursor:pointer}
+        .cd-edit-select{width:100%;border:1px solid rgba(26,20,13,.12);border-radius:8px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:#1A140D;outline:none;background:white;cursor:pointer;color-scheme:light}
+        .cd-edit-select option{background-color:#FFFFFF;color:#1A140D}
         .cd-edit-textarea{width:100%;border:1px solid rgba(26,20,13,.12);border-radius:8px;padding:8px 10px;font-family:'DM Sans',sans-serif;font-size:12px;color:#1A140D;outline:none;resize:vertical;min-height:60px;transition:border-color .18s}
         .cd-edit-textarea:focus{border-color:#2D8A58;box-shadow:0 0 0 3px rgba(45,138,88,.09)}
         .cd-edit-actions{display:flex;gap:8px;margin-top:8px;justify-content:flex-end}
@@ -338,7 +339,7 @@ export default function ClientDetailPage({
                 <>
                   <button className="cd-btn-cancel" onClick={cancelEdit}>Cancel</button>
                   <button className="cd-btn-save" onClick={handleSave} disabled={saving}>
-                    {saving ? 'Saving…' : saved ? '✓ Saved' : 'Save Changes'}
+                    {saving ? 'Saving…' : saved ? 'Saved' : 'Save Changes'}
                   </button>
                 </>
               )}
@@ -377,7 +378,9 @@ export default function ClientDetailPage({
 
                 {invoices.length === 0 ? (
                   <div className="cd-empty">
-                    <div className="cd-empty-icon">🧾</div>
+                    <div className="cd-empty-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: 12, background: 'rgba(26,20,13,0.06)', color: 'rgba(26,20,13,0.45)', margin: '0 auto 8px' }}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
                     <div className="cd-empty-title">No invoices yet</div>
                     <div className="cd-empty-sub">Create the first invoice for {client.name} to start tracking payments.</div>
                     <button className="cd-empty-btn" onClick={() => router.push(`/dashboard/invoices/new?client=${client.id}`)}>
@@ -440,15 +443,14 @@ export default function ClientDetailPage({
                     {!editing ? (
                       <>
                         {[
-                          { icon: '📧', label: 'Email', val: client.email },
-                          { icon: '📱', label: 'Phone', val: client.phone },
-                          { icon: '💬', label: 'WhatsApp', val: client.whatsapp },
-                          { icon: '🏢', label: 'GST', val: client.gst_number },
-                          { icon: '📍', label: 'Location', val: [client.city, client.state].filter(Boolean).join(', ') || null },
-                          { icon: '🏠', label: 'Address', val: client.address },
+                          { label: 'Email', val: client.email },
+                          { label: 'Phone', val: client.phone },
+                          { label: 'WhatsApp', val: client.whatsapp },
+                          { label: 'GST Number', val: client.gst_number },
+                          { label: 'Location', val: [client.city, client.state].filter(Boolean).join(', ') || null },
+                          { label: 'Street Address', val: client.address },
                         ].map(info => (
                           <div key={info.label} className="cd-info-row">
-                            <span className="cd-info-icon">{info.icon}</span>
                             <div style={{ flex: 1 }}>
                               <div className="cd-info-label">{info.label}</div>
                               {info.val ? (
@@ -461,9 +463,8 @@ export default function ClientDetailPage({
                         ))}
                         {client.notes && (
                           <div className="cd-info-row">
-                            <span className="cd-info-icon">📝</span>
                             <div>
-                              <div className="cd-info-label">Notes</div>
+                              <div className="cd-info-label">Internal Notes</div>
                               <div className="cd-info-val">{client.notes}</div>
                             </div>
                           </div>
@@ -524,7 +525,7 @@ export default function ClientDetailPage({
                         </div>
                         {saved && (
                           <div className="cd-saved">
-                            <span>✓</span> Client updated successfully
+                            Client updated successfully
                           </div>
                         )}
                         <div className="cd-edit-actions">

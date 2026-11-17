@@ -262,7 +262,9 @@ export default function RemindersLogPageClient({
             <div className="rl-card">
               {filteredReminders.length === 0 ? (
                 <div className="rl-empty">
-                  <div className="rl-empty-icon">📋</div>
+                  <div className="rl-empty-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: 12, background: 'rgba(26,20,13,0.06)', color: 'rgba(26,20,13,0.45)', margin: '0 auto 8px' }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  </div>
                   <div className="rl-empty-title">No reminder logs found</div>
                   <div className="rl-empty-sub">
                     {search ? 'Try adjusting your search query.' : 'Reminders automatically record here when sent or scheduled for overdue invoices.'}
@@ -312,7 +314,7 @@ export default function RemindersLogPageClient({
                           </td>
                           <td className="rl-td">
                             <span style={{ fontSize: 11, fontWeight: 500 }}>
-                              💬 {r.channel.toUpperCase()}
+                              {r.channel.toUpperCase()}
                             </span>
                           </td>
                           <td className="rl-td">

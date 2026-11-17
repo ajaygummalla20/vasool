@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+@import "tailwindcss";
 
 :root {
+  color-scheme: dark;
   --bg-dark: #080E0A;
   --bg-card: rgba(16, 26, 19, 0.75);
   --bg-card-hover: rgba(22, 36, 26, 0.85);
@@ -12,19 +14,38 @@
   --text-muted: rgba(243, 244, 246, 0.55);
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body {
+html,
+body {
+  color-scheme: dark;
   min-height: 100vh;
   font-family: 'Outfit', 'DM Sans', sans-serif;
   background-color: var(--bg-dark);
   color: var(--text-main);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Native form controls dark theme & dropdown option visibility */
+input, select, textarea {
+  color-scheme: dark;
+}
+
+select option {
+  background-color: #121E16;
+  color: #FFFFFF;
+}
+
+select option:checked {
+  background-color: #10B981;
+  color: #FFFFFF;
 }
 
 /* Ambient Background Mesh (Kokonut / Motion style) */
@@ -35,7 +56,7 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
+  background:
     radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.12) 0%, transparent 45%),
     radial-gradient(circle at 85% 85%, rgba(5, 150, 105, 0.08) 0%, transparent 45%),
     radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.04) 0%, transparent 60%);
@@ -49,30 +70,30 @@ body::before {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 14px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .kokonut-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(16, 185, 129, 0.35);
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 20px 0 rgba(16, 185, 129, 0.15);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
 }
 
-/* Neon Gradient Buttons */
+/* Core Developed Buttons */
 .kokonut-btn-primary {
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  background: #10B981;
   color: #FFFFFF;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'DM Sans', sans-serif;
   font-weight: 600;
   font-size: 13px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: all 0.15s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -80,70 +101,63 @@ body::before {
 }
 
 .kokonut-btn-primary:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+  background: #059669;
+  transform: translateY(-1px);
 }
 
 .kokonut-btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(10px);
   color: #F3F4F6;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
   font-size: 13px;
-  padding: 10px 18px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .kokonut-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(16, 185, 129, 0.4);
-  color: #10B981;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
   transform: translateY(-1px);
 }
 
 /* Gradient Text Effect */
 .kokonut-gradient-text {
-  background: linear-gradient(135deg, #FFFFFF 0%, #10B981 50%, #34D399 100%);
+  background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.75) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Glowing Pill Badge */
+/* Sleek Pill Badge */
 .kokonut-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 12px;
+  padding: 3px 10px;
   border-radius: 100px;
   font-size: 11px;
-  font-weight: 600;
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #34D399;
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.85);
 }
 
-/* Pulse Dot Animation */
+/* Status Dot */
 .kokonut-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background-color: #10B981;
-  box-shadow: 0 0 8px #10B981;
-  animation: kokonut-pulse 2s infinite;
-}
-
-@keyframes kokonut-pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.4); opacity: 0.5; }
 }
 
 /* Custom Scrollbar */
@@ -151,32 +165,26 @@ body::before {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: rgba(8, 14, 10, 0.8);
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #10B981;
 }
 
-/* ── Kokonut / Motion Shimmer Animations ── */
-@keyframes kokonut-shimmer-slide {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
+/* ── Precision Skeleton Loaders ── */
 .kokonut-skeleton {
   position: relative;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
@@ -190,10 +198,15 @@ body::before {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(16, 185, 129, 0.12) 50%,
+    rgba(255, 255, 255, 0.06) 50%,
     transparent 100%
   );
   animation: kokonut-shimmer-slide 1.8s infinite ease-in-out;
+}
+
+@keyframes kokonut-shimmer-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 /* Top Progress Beam for Navigation */
@@ -202,16 +215,32 @@ body::before {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   z-index: 99999;
-  background: linear-gradient(90deg, #10B981, #34D399, #60A5FA, #10B981);
-  background-size: 200% 100%;
-  animation: kokonut-beam 1.5s infinite linear;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.8), 0 0 20px rgba(16, 185, 129, 0.4);
+  background: #10B981;
 }
 
-@keyframes kokonut-beam {
-  0% { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
-}
+/* ── Strict SVG Icon Sizing & Alignment Safeguards ── */
+svg.w-3, svg[class*="w-3 "] { width: 12px; height: 12px; }
+svg.w-3\.5, svg[class*="w-3.5"] { width: 14px; height: 14px; }
+svg.w-4, svg[class*="w-4 "] { width: 16px; height: 16px; }
+svg.w-5, svg[class*="w-5 "] { width: 20px; height: 20px; }
+svg.w-6, svg[class*="w-6 "] { width: 24px; height: 24px; }
+svg.w-7, svg[class*="w-7 "] { width: 28px; height: 28px; }
+svg.w-8, svg[class*="w-8 "] { width: 32px; height: 32px; }
+svg.w-10, svg[class*="w-10 "] { width: 40px; height: 40px; }
+svg.w-12, svg[class*="w-12 "] { width: 48px; height: 48px; }
+svg.h-3, svg[class*="h-3 "] { height: 12px; }
+svg.h-3\.5, svg[class*="h-3.5"] { height: 14px; }
+svg.h-4, svg[class*="h-4 "] { height: 16px; }
+svg.h-5, svg[class*="h-5 "] { height: 20px; }
+svg.h-6, svg[class*="h-6 "] { height: 24px; }
+svg.h-7, svg[class*="h-7 "] { height: 28px; }
+svg.h-8, svg[class*="h-8 "] { height: 32px; }
+svg.h-10, svg[class*="h-10 "] { height: 40px; }
+svg.h-12, svg[class*="h-12 "] { height: 48px; }
 
+/* Keep icon alignment crisp and vertically centered inside flex/button containers */
+button > svg, a > svg {
+  flex-shrink: 0;
+}

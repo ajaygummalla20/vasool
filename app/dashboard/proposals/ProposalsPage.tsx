@@ -72,14 +72,17 @@ export default function ProposalsPage({ proposals: initialProposals, clients, us
       const sb = getSupabase()
       const filteredItems = items.filter(i => i.description)
       const { data, error } = await sb.from('proposals').insert({
-        user_id: userId, proposal_number: previewNumber, title: form.title,
-        client_id: form.client_id || null, total_amount: totalAmount,
-        valid_until: form.valid_until || null, items: filteredItems,
-        deliverables: filteredItems,
+        user_id: userId,
+        proposal_number: previewNumber,
+        title: form.title,
+        client_id: form.client_id || null,
+        total_amount: totalAmount,
+        valid_until: form.valid_until || null,
+        items: filteredItems,
         scope_of_work: form.scope_of_work || null,
-        scope_summary: form.scope_of_work || null,
         terms: form.terms || null,
-        notes: form.notes || null, status: 'draft',
+        notes: form.notes || null,
+        status: 'draft',
       }).select('*, clients ( name )').single()
 
       if (error) throw error
@@ -87,7 +90,10 @@ export default function ProposalsPage({ proposals: initialProposals, clients, us
       setShowModal(false)
       setForm({ title: '', client_id: '', scope_of_work: '', valid_until: (() => { const d = new Date(); d.setDate(d.getDate() + 30); return d.toISOString().split('T')[0] })(), terms: '', notes: '' })
       setItems([{ id: uid(), description: '', qty: 1, rate: 0 }])
-    } catch (e) { console.error(e); alert('Failed to save. Make sure the proposals table exists in Supabase.') }
+    } catch (e: any) {
+      console.error('Failed to save proposal:', e)
+      alert(e?.message || 'Failed to save proposal. Please check table permissions.')
+    }
     finally { setSaving(false) }
   }
 
@@ -165,6 +171,8 @@ export default function ProposalsPage({ proposals: initialProposals, clients, us
         .pp-input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;font-size:13px;color:#FFF;font-family:'Outfit',sans-serif;outline:none;transition:border .2s}
         .pp-input:focus{border-color:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.2)}
         .pp-input::placeholder{color:rgba(255,255,255,.3)}
+        select.pp-input{cursor:pointer;color-scheme:dark}
+        select.pp-input option{background-color:#121E16 !important;color:#FFFFFF !important;padding:8px}
         .pp-textarea{min-height:80px;resize:vertical}
         .pp-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
@@ -256,17 +264,19 @@ export default function ProposalsPage({ proposals: initialProposals, clients, us
                       </div>
                       <div className="pp-card-actions">
                         {p.status === 'draft' && (
-                          <button className="pp-action" onClick={() => handleMarkSent(p.id)}>📤 Mark Sent</button>
+                          <button className="pp-action" onClick={() => handleMarkSent(p.id)}>Mark Sent</button>
                         )}
                         {p.status === 'sent' && (
-                          <button className="pp-action primary" onClick={() => handleMarkAccepted(p.id)}>✅ Mark Accepted</button>
+                          <button className="pp-action primary" onClick={() => handleMarkAccepted(p.id)}>Mark Accepted</button>
                         )}
                         {(p.status === 'accepted' || p.status === 'sent') && (
                           <button className="pp-action primary" onClick={() => handleConvertToInvoice(p)} disabled={!!converting}>
-                            {converting === p.id ? 'Converting...' : '🧾 Convert to Invoice'}
+                            {converting === p.id ? 'Converting...' : 'Convert to Invoice'}
                           </button>
                         )}
-                        <button className="pp-action danger" onClick={() => handleDelete(p.id)}>🗑</button>
+                        <button className="pp-action danger" onClick={() => handleDelete(p.id)} title="Delete Proposal">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto', display: 'block' }}><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
                       </div>
                     </div>
                   )
@@ -290,9 +300,9 @@ export default function ProposalsPage({ proposals: initialProposals, clients, us
             <div className="pp-row2">
               <div>
                 <div className="pp-field-label">Client</div>
-                <select className="pp-input" value={form.client_id} onChange={e => setForm(f => ({ ...f, client_id: e.target.value }))}>
-                  <option value="">Select client...</option>
-                  {clients.map(c => <option key={c.id} value={c.id}>{c.name} {c.company_name ? `(${c.company_name})` : ''}</option>)}
+                <select className="pp-input" value={form.client_id} onChange={e => setForm(f => ({ ...f, client_id: e.target.value }))} style={{ colorScheme: 'dark' }}>
+                  <option value="" style={{ backgroundColor: '#121E16', color: '#FFFFFF' }}>Select client...</option>
+                  {clients.map(c => <option key={c.id} value={c.id} style={{ backgroundColor: '#121E16', color: '#FFFFFF' }}>{c.name} {c.company_name ? `(${c.company_name})` : ''}</option>)}
                 </select>
               </div>
               <div>
@@ -325,7 +335,7 @@ export default function ProposalsPage({ proposals: initialProposals, clients, us
             <div className="pp-modal-actions">
               <button className="pp-modal-cancel" onClick={() => setShowModal(false)}>Cancel</button>
               <button className="pp-modal-save" onClick={handleSave} disabled={saving || !form.title}>
-                {saving ? 'Saving...' : '✓ Create Proposal'}
+                {saving ? 'Saving...' : 'Create Proposal'}
               </button>
             </div>
           </div>

@@ -725,7 +725,7 @@ Authorized Signatory`
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" />
                 </svg>
-                {linkCopied ? '✓ Copied!' : 'Share Link'}
+                {linkCopied ? 'Copied' : 'Share Link'}
               </button>
               {invoice.invoice_number.startsWith('PI-') && (
                 <button
@@ -752,7 +752,7 @@ Authorized Signatory`
                   }}
                   disabled={convertingPi}
                 >
-                  ⚡ Convert to Tax Invoice
+                  Convert to Tax Invoice
                 </button>
               )}
               <button
@@ -760,7 +760,7 @@ Authorized Signatory`
                 onClick={() => router.push(`/dashboard/invoices/new?type=credit_note&ref=${invoice.invoice_number}&clientId=${client?.id || ''}`)}
                 title="Issue GST Credit Note under Section 34"
               >
-                📄 Issue Credit Note
+                Issue Credit Note
               </button>
               {!isPaid && (
                 <button className="id-btn-wa" onClick={sendReminder}>
@@ -784,7 +784,7 @@ Authorized Signatory`
           {/* Proforma Banner */}
           {invoice.invoice_number.startsWith('PI-') && (
             <div className="id-banner" style={{ background: '#E6F1FB', borderColor: '#B3D4F0', color: '#0C447C' }}>
-              <span>📑</span>
+              <span className="w-2 h-2 rounded-full bg-blue-600 inline-block mr-2" />
               <span className="id-banner-text" style={{ color: '#0C447C' }}>
                 <strong>Proforma Invoice (Advance Estimate)</strong>: Zero GST output liability until advance payment is settled.
               </span>
@@ -949,7 +949,8 @@ Authorized Signatory`
                 <div className="id-card" style={{ border: '1px solid rgba(27,94,59,.2)', background: 'linear-gradient(135deg, rgba(27,94,59,.04), rgba(27,94,59,.01))' }}>
                   <div className="id-card-hdr" style={{ borderBottom: '1px solid rgba(27,94,59,.1)' }}>
                     <span className="id-card-title" style={{ color: '#1B5E3B', display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <span>📱</span> Instant Scan & Pay (UPI)
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                      Instant Scan & Pay (UPI)
                     </span>
                   </div>
                   <div className="id-card-body" style={{ textAlign: 'center' }}>
@@ -979,7 +980,7 @@ Authorized Signatory`
                               href={upiUri}
                               style={{ flex: 1, padding: '6px 10px', fontSize: 10, fontWeight: 700, borderRadius: 6, border: 'none', background: '#1B5E3B', color: 'white', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif" }}
                             >
-                              ⚡ Pay on App
+                              Pay on App
                             </a>
                           )}
                         </div>
@@ -988,7 +989,7 @@ Authorized Signatory`
                             style={{ background: 'none', border: 'none', color: '#1B5E3B', fontSize: 10, fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}
                             onClick={() => setShowAccountModal(true)}
                           >
-                            ⚙️ Edit UPI / Bank Details
+                            Edit UPI / Bank Details
                           </button>
                         </div>
                       </div>
@@ -1019,7 +1020,8 @@ Authorized Signatory`
               <div className="id-card" style={{ border: daysPast45 > 0 ? '1px solid rgba(192,57,43,.25)' : '1px solid rgba(26,20,13,.08)' }}>
                 <div className="id-card-hdr" style={{ background: daysPast45 > 0 ? 'rgba(192,57,43,.04)' : undefined }}>
                   <span className="id-card-title" style={{ display: 'flex', alignItems: 'center', gap: 6, color: daysPast45 > 0 ? '#C0392B' : '#1A140D' }}>
-                    <span>🛡️</span> MSMED Act (Section 15 & 16)
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                    MSMED Act (Section 15 & 16)
                   </span>
                 </div>
                 <div className="id-card-body">
@@ -1027,7 +1029,7 @@ Authorized Signatory`
                     {daysPast45 > 0 ? (
                       <div>
                         <div style={{ color: '#C0392B', fontWeight: 700, marginBottom: 4 }}>
-                          ⚠️ 45-Day Statutory Cap Breached ({daysPast45} days overdue)
+                          45-Day Statutory Cap Breached ({daysPast45} days overdue)
                         </div>
                         <div>Legally accrues compound interest @ <strong>20.25% p.a. (3x RBI Bank Rate)</strong> under Section 16.</div>
                         <div style={{ background: 'rgba(192,57,43,.06)', border: '1px solid rgba(192,57,43,.15)', borderRadius: 8, padding: 10, marginTop: 8 }}>
@@ -1044,7 +1046,7 @@ Authorized Signatory`
                           style={{ width: '100%', marginTop: 10, padding: '8px 12px', borderRadius: 8, border: '1px solid #C0392B', background: '#C0392B', color: 'white', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", boxShadow: '0 2px 8px rgba(192,57,43,.2)' }}
                           onClick={() => setShowMsmeModal(true)}
                         >
-                          📜 Generate MSME Legal Notice
+                          Generate MSME Legal Notice
                         </button>
                       </div>
                     ) : (
@@ -1135,7 +1137,9 @@ Authorized Signatory`
                   <div className="id-card-body">
                     {paymentsList.map(p => (
                       <div key={p.id} className="id-pay-row">
-                        <div className="id-pay-icon">💳</div>
+                        <div className="id-pay-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                        </div>
                         <div>
                           <div className="id-pay-method">{METHOD_LABELS[p.method] || p.method}</div>
                           <div className="id-pay-date">{fmtDate(p.paid_at)}</div>
@@ -1172,7 +1176,7 @@ Authorized Signatory`
                       return (
                         <div key={r.id} className="id-rem-row">
                           <div className={`id-rem-icon ${isSent ? 'id-rem-sent' : isSched ? 'id-rem-sched' : 'id-rem-skip'}`}>
-                            {isSent ? '✓' : isSched ? '⏰' : '—'}
+                            {isSent ? '✓' : isSched ? '•' : '—'}
                           </div>
                           <div>
                             <div className="id-rem-label">
@@ -1374,7 +1378,8 @@ Authorized Signatory`
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
               <div>
                 <div className="id-modal-title" style={{ color: '#C0392B', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span>📜</span> MSMED Statutory Demand Notice
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C0392B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                  MSMED Statutory Demand Notice
                 </div>
                 <div className="id-modal-sub">
                   Formal pre-filing legal notice under Sections 15, 16 & 18 of the MSMED Act, 2006
@@ -1407,7 +1412,7 @@ Authorized Signatory`
                   a.click()
                 }}
               >
-                💾 Download Notice (.txt)
+                Download Notice (.txt)
               </button>
               <button
                 style={{ flex: 2, padding: 10, borderRadius: 8, border: 'none', background: 'linear-gradient(135deg,#C0392B,#962D22)', color: 'white', fontWeight: 700, fontSize: 12, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", boxShadow: '0 4px 14px rgba(192,57,43,.3)' }}
@@ -1417,7 +1422,7 @@ Authorized Signatory`
                   setTimeout(() => setCopiedNotice(false), 2500)
                 }}
               >
-                {copiedNotice ? '✓ Copied to Clipboard!' : '📋 Copy Legal Notice'}
+                {copiedNotice ? 'Copied to Clipboard' : 'Copy Legal Notice'}
               </button>
             </div>
           </div>
@@ -1436,17 +1441,17 @@ Authorized Signatory`
             <div className="id-modal-label">Payment Method</div>
             <div className="id-method-grid">
               {([
-                { v: 'upi', label: 'UPI', icon: '📱' },
-                { v: 'bank_transfer', label: 'Bank Transfer', icon: '🏦' },
-                { v: 'cash', label: 'Cash', icon: '💵' },
-                { v: 'cheque', label: 'Cheque', icon: '📄' },
+                { v: 'upi', label: 'UPI' },
+                { v: 'bank_transfer', label: 'Bank Transfer' },
+                { v: 'cash', label: 'Cash' },
+                { v: 'cheque', label: 'Cheque' },
               ] as const).map(m => (
                 <button
                   key={m.v}
                   className={`id-method-btn${paidMethod === m.v ? ' sel' : ''}`}
                   onClick={() => setPaidMethod(m.v)}
                 >
-                  <span>{m.icon}</span>{m.label}
+                  {m.label}
                 </button>
               ))}
             </div>
@@ -1475,13 +1480,13 @@ Authorized Signatory`
                 <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px dashed rgba(26,20,13,.12)' }}>
                   <div className="id-modal-label" style={{ marginTop: 0 }}>TDS Section & Rate</div>
                   <select
-                    style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid rgba(26,20,13,.15)', background: 'white', fontSize: 12, fontFamily: 'inherit', color: '#1A140D' }}
+                    style={{ width: '100%', padding: '8px 10px', borderRadius: 8, border: '1px solid rgba(26,20,13,.15)', background: 'white', fontSize: 12, fontFamily: 'inherit', color: '#1A140D', colorScheme: 'light' }}
                     value={tdsSection}
                     onChange={e => setTdsSection(e.target.value as any)}
                   >
-                    <option value="194J_10">Section 194J — 10% (Technical / Professional Services)</option>
-                    <option value="194J_2">Section 194J — 2% (Call Center / Software)</option>
-                    <option value="194C_1">Section 194C — 1% (Contractor / Works)</option>
+                    <option value="194J_10" style={{ backgroundColor: '#FFFFFF', color: '#1A140D' }}>Section 194J — 10% (Technical / Professional Services)</option>
+                    <option value="194J_2" style={{ backgroundColor: '#FFFFFF', color: '#1A140D' }}>Section 194J — 2% (Call Center / Software)</option>
+                    <option value="194C_1" style={{ backgroundColor: '#FFFFFF', color: '#1A140D' }}>Section 194C — 1% (Contractor / Works)</option>
                   </select>
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#633806', marginTop: 8, background: '#FAEEDA', padding: '6px 10px', borderRadius: 6 }}>
@@ -1501,7 +1506,7 @@ Authorized Signatory`
             <div className="id-modal-actions">
               <button className="id-modal-cancel" onClick={() => setShowPaidModal(false)}>Cancel</button>
               <button className="id-modal-confirm" onClick={handleMarkPaid} disabled={marking}>
-                {marking ? 'Saving...' : '✓ Confirm Payment'}
+                {marking ? 'Saving...' : 'Confirm Payment'}
               </button>
             </div>
           </div>
@@ -1512,7 +1517,7 @@ Authorized Signatory`
       {showAccountModal && (
         <div className="id-modal-overlay" onClick={() => setShowAccountModal(false)}>
           <div className="id-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 460 }}>
-            <div className="id-modal-title">💳 Bank & UPI Account Details</div>
+            <div className="id-modal-title">Bank & UPI Account Details</div>
             <div className="id-modal-sub">
               Configure your settlement accounts. Dynamic scan-to-pay QR code on this invoice will be updated immediately.
             </div>
@@ -1590,7 +1595,7 @@ Authorized Signatory`
                   Cancel
                 </button>
                 <button type="submit" className="id-modal-confirm" disabled={savingAccount}>
-                  {savingAccount ? 'Saving...' : '✓ Save & Update QR Code'}
+                  {savingAccount ? 'Saving...' : 'Save & Update QR Code'}
                 </button>
               </div>
             </form>

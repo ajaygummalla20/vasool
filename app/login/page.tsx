@@ -49,12 +49,19 @@ export default function LoginPage() {
     n >= 100000 ? `₹${(n / 100000).toFixed(1)}L` :
     n >= 1000   ? `₹${Math.floor(n / 1000)}K` : `₹${n}`
 
+  const getRedirectUrl = () => {
+    const origin = typeof window !== 'undefined' && window.location.origin
+      ? window.location.origin
+      : (process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000')
+    return `${origin}/auth/callback`
+  }
+
   const signInGoogle = async () => {
     setLoading(true); setError('')
     try {
       const { error } = await getSupabase().auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: `${window.location.origin}/auth/callback` },
+        options: { redirectTo: getRedirectUrl() },
       })
       if (error) throw error
     } catch (e: unknown) {
@@ -69,7 +76,7 @@ export default function LoginPage() {
     try {
       const { error } = await getSupabase().auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+        options: { emailRedirectTo: getRedirectUrl() },
       })
       if (error) throw error
       setSent(true)
@@ -100,30 +107,19 @@ export default function LoginPage() {
         }
         .L.in { opacity: 1; transform: translateX(0); }
 
-        /* Ambient Glowing Animated Orbs */
+        /* Precision dark canvas */
         .L::before {
           content: '';
           position: absolute; inset: -100px; pointer-events: none;
-          background:
-            radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.18) 0%, transparent 45%),
-            radial-gradient(circle at 80% 80%, rgba(5, 150, 105, 0.12) 0%, transparent 45%),
-            radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.05) 0%, transparent 55%);
-          animation: kokonut-orb-float 12s ease-in-out infinite alternate;
-        }
-
-        @keyframes kokonut-orb-float {
-          0% { transform: scale(1) translate(0, 0); }
-          100% { transform: scale(1.1) translate(15px, -15px); }
+          background: radial-gradient(ellipse at 30% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
         }
 
         /* Subtle grid lines */
         .L::after {
           content: '';
           position: absolute; inset: 0; pointer-events: none;
-          background-image:
-            linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-          background-size: 40px 40px;
+          background-image: radial-gradient(rgba(255,255,255,.05) 1px, transparent 1px);
+          background-size: 32px 32px;
         }
 
         .z { position: relative; z-index: 1; }
@@ -131,24 +127,23 @@ export default function LoginPage() {
         /* Logo */
         .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; flex-shrink: 0; }
         .logo-mark {
-          width: 42px; height: 42px; border-radius: 12px;
-          background: linear-gradient(135deg, #10B981, #059669); flex-shrink: 0;
+          width: 38px; height: 38px; border-radius: 10px;
+          background: #10B981; flex-shrink: 0;
           display: flex; align-items: center; justify-content: center;
-          box-shadow: 0 0 20px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.15);
         }
-        .logo-name { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #FFFFFF; letter-spacing: -.02em; line-height: 1; }
+        .logo-name { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; color: #FFFFFF; letter-spacing: -.02em; line-height: 1; }
         .logo-sub  { font-size: 10px; color: rgba(255,255,255,.45); margin-top: 2px; font-weight: 500; }
 
         /* Tag Pill */
         .tag {
           display: inline-flex; align-items: center; gap: 8px;
-          border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 100px;
-          padding: 5px 14px; font-size: 11px; font-weight: 600; color: #34D399;
+          border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 100px;
+          padding: 4px 12px; font-size: 11px; font-weight: 500; color: rgba(255, 255, 255, 0.85);
           width: fit-content; margin-bottom: 18px; flex-shrink: 0;
-          background: rgba(16, 185, 129, 0.1); backdrop-filter: blur(10px);
-          box-shadow: 0 0 16px rgba(16, 185, 129, 0.15);
+          background: rgba(255, 255, 255, 0.04);
         }
-        .tag-dot { width: 6px; height: 6px; border-radius: 50%; background: #10B981; box-shadow: 0 0 8px #10B981; animation: kokonut-pulse 2s infinite; }
+        .tag-dot { width: 6px; height: 6px; border-radius: 50%; background: #10B981; }
 
         /* Headline */
         .h1 {
@@ -240,9 +235,9 @@ export default function LoginPage() {
         .testi-name { font-size: 10px; font-weight: 600; color: #FFFFFF; }
         .testi-role { font-size: 8px; color: rgba(255,255,255,.4); margin-top: 1px; }
 
-        /* ─────────── RIGHT FORM PANEL (Glossy Kokonut Card) ─────────── */
+        /* ─────────── RIGHT FORM PANEL ─────────── */
         .R {
-          background: rgba(12, 22, 15, 0.95);
+          background: rgba(12, 16, 14, 0.95);
           backdrop-filter: blur(24px);
           -webkit-backdrop-filter: blur(24px);
           display: flex; flex-direction: column; justify-content: center;
@@ -255,12 +250,11 @@ export default function LoginPage() {
         }
         .R.in { opacity: 1; transform: translateX(0); }
 
-        /* Glowing Neon Top Bar */
+        /* Subtle Top Border Highlight */
         .R::before {
           content: '';
-          position: absolute; top: 0; left: 0; right: 0; height: 3px;
-          background: linear-gradient(90deg, #10B981 0%, #34D399 50%, #F59E0B 100%);
-          box-shadow: 0 0 12px #10B981;
+          position: absolute; top: 0; left: 0; right: 0; height: 2px;
+          background: #10B981;
         }
 
         .rf { position: relative; z-index: 1; }
@@ -269,48 +263,42 @@ export default function LoginPage() {
         .lang {
           position: absolute; top: 20px; right: 20px; z-index: 2;
           display: flex; gap: 2px;
-          background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 100px; padding: 3px;
+          background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 100px; padding: 2px;
         }
         .lang button {
-          padding: 4px 12px; border-radius: 100px; border: none;
-          font-size: 10px; font-weight: 600; cursor: pointer;
-          transition: all .2s; font-family: 'Outfit', sans-serif;
-          background: transparent; color: rgba(255,255,255,.4);
+          padding: 4px 10px; border-radius: 100px; border: none;
+          font-size: 10px; font-weight: 500; cursor: pointer;
+          transition: all .15s; font-family: 'DM Sans', sans-serif;
+          background: transparent; color: rgba(255,255,255,.45);
         }
-        .lang button.on { background: #10B981; color: white; box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+        .lang button.on { background: rgba(255, 255, 255, 0.1); color: #FFFFFF; }
 
         /* Form Header */
-        .f-ey   { font-size: 10px; font-weight: 700; color: #34D399; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 8px; }
-        .f-h2   { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; color: #FFFFFF; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 4px; }
+        .f-ey   { font-size: 10px; font-weight: 600; color: #10B981; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+        .f-h2   { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 700; color: #FFFFFF; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 4px; }
         .f-desc { font-size: 13px; font-weight: 400; color: rgba(255,255,255,.55); line-height: 1.55; margin-bottom: 20px; }
 
         /* Feature Pills */
         .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
-        .pill  { display: flex; align-items: center; gap: 5px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 100px; padding: 4px 10px; font-size: 10px; font-weight: 600; color: rgba(255, 255, 255, 0.7); }
-        .pill-dot { width: 4px; height: 4px; border-radius: 50%; background: #10B981; box-shadow: 0 0 6px #10B981; }
+        .pill  { display: flex; align-items: center; gap: 5px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 100px; padding: 3px 9px; font-size: 10px; font-weight: 500; color: rgba(255, 255, 255, 0.7); }
+        .pill-dot { width: 4px; height: 4px; border-radius: 50%; background: #10B981; }
 
-        /* Glossy Google OAuth Button with Shimmer */
+        /* Tactile Google OAuth Button */
         .g-btn {
           width: 100%; display: flex; align-items: center; gap: 10px;
-          background: white; border: none;
-          border-radius: 12px; padding: 12px 16px; cursor: pointer;
-          transition: all .2s cubic-bezier(0.16,1,0.3,1); margin-bottom: 14px;
-          font-family: 'Outfit', sans-serif;
-          box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
+          background: #FFFFFF; border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 9px; padding: 11px 16px; cursor: pointer;
+          transition: all .15s cubic-bezier(0.16,1,0.3,1); margin-bottom: 14px;
+          font-family: 'DM Sans', sans-serif;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9);
           position: relative; overflow: hidden;
         }
-        .g-btn::after {
-          content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-          background: linear-gradient(60deg, transparent, rgba(255,255,255,0.4), transparent);
-          transform: rotate(30deg); animation: kokonut-shimmer 3s infinite;
-        }
-        @keyframes kokonut-shimmer { 0% { transform: translate(-100%, -100%) rotate(30deg); } 100% { transform: translate(100%, 100%) rotate(30deg); } }
 
-        .g-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 255, 255, 0.2); }
+        .g-btn:hover:not(:disabled) { background: #EDEDED; transform: translateY(-1px); }
         .g-btn:disabled { opacity: .68; cursor: not-allowed; }
-        .g-label { font-size: 13px; font-weight: 600; color: #111827; flex: 1; text-align: left; }
-        .g-badge { font-size: 9px; font-weight: 700; background: rgba(16, 185, 129, 0.15); color: #059669; padding: 2px 8px; border-radius: 100px; }
+        .g-label { font-size: 13px; font-weight: 600; color: #08090B; flex: 1; text-align: left; }
+        .g-badge { font-size: 9px; font-weight: 600; background: rgba(16, 185, 129, 0.12); color: #059669; padding: 2px 8px; border-radius: 100px; }
 
         /* Divider */
         .or      { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
@@ -319,7 +307,7 @@ export default function LoginPage() {
 
         /* Input */
         .inp-wrap { position: relative; margin-bottom: 10px; }
-        .inp-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,.3); font-size: 14px; pointer-events: none; }
+        .inp-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,.4); display: flex; align-items: center; justify-content: center; width: 16px; height: 16px; pointer-events: none; }
         .inp {
           width: 100%; background: rgba(255, 255, 255, 0.05);
           border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px;
@@ -458,9 +446,9 @@ export default function LoginPage() {
             </p>
 
             <div className="pills">
-              <span className="pill"><span className="pill-dot" /> 💬 WhatsApp Reminders</span>
-              <span className="pill"><span className="pill-dot" /> 🛡️ Contract Redlines</span>
-              <span className="pill"><span className="pill-dot" /> 🧾 GSTR-1 JSON</span>
+              <span className="pill"><span className="pill-dot" /> WhatsApp Reminders</span>
+              <span className="pill"><span className="pill-dot" /> Contract Redlines</span>
+              <span className="pill"><span className="pill-dot" /> GSTR-1 JSON</span>
             </div>
 
             {/* Google OAuth Button */}
@@ -481,17 +469,24 @@ export default function LoginPage() {
               <div className="or-line" />
             </div>
 
-            {error && <div className="err">⚠️ {error}</div>}
+            {error && (
+              <div className="err" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                <span>{error}</span>
+              </div>
+            )}
 
             {sent ? (
               <div className="sent-box">
-                <span>✉️</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 8px', display: 'block' }}><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 <p>Login link sent to {email}! Check your inbox.</p>
               </div>
             ) : (
               <>
                 <div className="inp-wrap">
-                  <span className="inp-icon">📧</span>
+                  <span className="inp-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                  </span>
                   <input
                     className="inp"
                     type="email"

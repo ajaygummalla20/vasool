@@ -83,9 +83,9 @@ function fmtDate(d: string | null) {
 }
 
 const RISK_CFG = {
-  high:   { emoji: '🔴', bg: 'rgba(192,57,43,.06)', border: 'rgba(192,57,43,.18)', color: '#791F1F', label: 'High Risk' },
-  medium: { emoji: '🟡', bg: 'rgba(186,117,23,.06)', border: 'rgba(186,117,23,.18)', color: '#633806', label: 'Medium Risk' },
-  low:    { emoji: '🟢', bg: 'rgba(27,94,59,.05)',    border: 'rgba(27,94,59,.15)',   color: '#085041', label: 'Low Risk' },
+  high: { dotColor: '#EF4444', bg: 'rgba(192,57,43,.06)', border: 'rgba(192,57,43,.18)', color: '#791F1F', label: 'High Risk' },
+  medium: { dotColor: '#F59E0B', bg: 'rgba(186,117,23,.06)', border: 'rgba(186,117,23,.18)', color: '#633806', label: 'Medium Risk' },
+  low: { dotColor: '#10B981', bg: 'rgba(27,94,59,.05)', border: 'rgba(27,94,59,.15)', color: '#085041', label: 'Low Risk' },
 }
 
 export default function ContractDetailPageClient({
@@ -266,7 +266,7 @@ export default function ContractDetailPageClient({
               <div className="cd-top-title">
                 {contract.title}
                 <span style={{ fontSize: 10, fontWeight: 700, background: 'rgba(27,94,59,.08)', color: '#1B5E3B', padding: '3px 8px', borderRadius: 100 }}>
-                  ✨ AI Verified
+                  AI Verified
                 </span>
               </div>
             </div>
@@ -276,7 +276,7 @@ export default function ContractDetailPageClient({
                 className="cd-btn-secondary"
                 onClick={() => router.push(`/dashboard/invoices/new?client=${contract.client_id || ''}&contract=${contract.id}`)}
               >
-                📄 Create Invoice from Contract
+                Create Invoice from Contract
               </button>
               <a
                 className="cd-btn-primary"
@@ -284,7 +284,7 @@ export default function ContractDetailPageClient({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                💬 Open WhatsApp Negotiation
+                Open WhatsApp Negotiation
               </a>
             </div>
           </div>
@@ -313,7 +313,7 @@ export default function ContractDetailPageClient({
                   </div>
                 ) : (
                   <div style={{ fontSize: 11, color: '#E8692A', background: 'rgba(232,105,42,.08)', padding: '8px 12px', borderRadius: 8 }}>
-                    ⚠️ No client linked to this contract yet
+                    No client linked to this contract yet
                   </div>
                 )}
               </div>
@@ -341,27 +341,27 @@ export default function ContractDetailPageClient({
 
             {/* Right Main Workspace */}
             <div className="cd-workspace">
-              {/* Kokonut UI Tab Deck */}
+              {/* Tab Deck */}
               <div className="cd-tabs-deck">
                 <button
                   className={`cd-tab-btn ${activeTab === 'redlines' ? 'active' : ''}`}
                   onClick={() => setActiveTab('redlines')}
                 >
-                  🛡️ MSME Counter-Proposals
+                  MSME Counter-Proposals
                   {redlines.length > 0 && <span className="cd-count-pill green">{redlines.length}</span>}
                 </button>
                 <button
                   className={`cd-tab-btn ${activeTab === 'risks' ? 'active' : ''}`}
                   onClick={() => setActiveTab('risks')}
                 >
-                  ⚠️ Legal Risks & Missing Clauses
+                  Legal Risks & Missing Clauses
                   {(highRisks > 0 || medRisks > 0) && <span className="cd-count-pill red">{highRisks + medRisks}</span>}
                 </button>
                 <button
                   className={`cd-tab-btn ${activeTab === 'negotiation' ? 'active' : ''}`}
                   onClick={() => setActiveTab('negotiation')}
                 >
-                  ✉️ Client Negotiation Draft
+                  Client Negotiation Draft
                 </button>
               </div>
 
@@ -369,7 +369,7 @@ export default function ContractDetailPageClient({
               <div className="cd-panel">
                 {summary && (
                   <div className="cd-summary-banner">
-                    <div className="cd-summary-hdr">✨ Executive AI Summary</div>
+                    <div className="cd-summary-hdr">Executive Summary</div>
                     <div className="cd-summary-text">{summary}</div>
                   </div>
                 )}
@@ -380,7 +380,7 @@ export default function ContractDetailPageClient({
                     {redlines.length > 0 && (
                       <div>
                         <div style={{ fontSize: 11, fontWeight: 700, color: '#1B5E3B', textTransform: 'uppercase', letterSpacing: '.07em', marginBottom: 10 }}>
-                          🛡️ Ready-to-Copy Counter Clauses for Client Negotiation
+                          Ready-to-Copy Counter Clauses for Client Negotiation
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                           {redlines.map((r, idx) => (
@@ -391,7 +391,7 @@ export default function ContractDetailPageClient({
                                   className={`cd-copy-btn ${copiedClauseIdx === idx ? 'copied' : ''}`}
                                   onClick={() => handleCopyClause(r.proposed_clause, idx)}
                                 >
-                                  {copiedClauseIdx === idx ? '✓ Wording Copied' : '📋 Copy Clause Wording'}
+                                  {copiedClauseIdx === idx ? 'Copied' : 'Copy Clause Wording'}
                                 </button>
                               </div>
 
@@ -405,7 +405,6 @@ export default function ContractDetailPageClient({
                               </div>
 
                               <div className="cd-winwin">
-                                <span>🤝</span>
                                 <div><strong>Win-Win Justification:</strong> {r.win_win_justification}</div>
                               </div>
                             </div>
@@ -418,7 +417,7 @@ export default function ContractDetailPageClient({
                     {msmeRights.length > 0 && (
                       <div style={{ marginTop: 10 }}>
                         <div style={{ fontSize: 11, fontWeight: 700, color: '#185FA5', textTransform: 'uppercase', letterSpacing: '.07em', marginBottom: 10 }}>
-                          ⚖️ Statutory Indian MSME Rights (MSMED Act 2006)
+                          Statutory Indian MSME Rights (MSMED Act 2006)
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                           {msmeRights.map((m, idx) => (
@@ -446,7 +445,7 @@ export default function ContractDetailPageClient({
                     {risks.length > 0 && (
                       <div>
                         <div style={{ fontSize: 11, fontWeight: 700, color: '#791F1F', textTransform: 'uppercase', letterSpacing: '.07em', marginBottom: 10 }}>
-                          ⚠️ Identified Contract Risks & Loopholes
+                          Identified Contract Risks & Loopholes
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                           {risks.map((r, i) => {
@@ -454,13 +453,13 @@ export default function ContractDetailPageClient({
                             return (
                               <div key={i} style={{ background: cfg.bg, border: `1px solid ${cfg.border}`, borderRadius: 12, padding: '12px 14px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                                  <span>{cfg.emoji}</span>
+                                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: cfg.dotColor, display: 'inline-block' }} />
                                   <span style={{ fontSize: 11, fontWeight: 700, color: cfg.color }}>{cfg.label}</span>
                                   <span style={{ fontSize: 11, color: 'rgba(26,20,13,.5)', marginLeft: 'auto', fontWeight: 600 }}>{r.clause}</span>
                                 </div>
                                 <div style={{ fontSize: 12, color: '#1A140D', lineHeight: 1.5, marginBottom: 8 }}>{r.description}</div>
                                 <div style={{ fontSize: 11, color: '#1B5E3B', fontWeight: 600, display: 'flex', alignItems: 'flex-start', gap: 4 }}>
-                                  <span>💡</span> {r.recommendation}
+                                  <span style={{ fontWeight: 700 }}>Recommendation:</span> {r.recommendation}
                                 </div>
                               </div>
                             )
@@ -472,12 +471,11 @@ export default function ContractDetailPageClient({
                     {missing.length > 0 && (
                       <div style={{ marginTop: 10 }}>
                         <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(26,20,13,.45)', textTransform: 'uppercase', letterSpacing: '.07em', marginBottom: 10 }}>
-                          📋 Missing Standard Clauses
+                          Missing Standard Clauses
                         </div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                           {missing.map((m, i) => (
                             <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 12px', background: 'white', border: '1px solid rgba(26,20,13,.08)', borderRadius: 10 }}>
-                              <span style={{ fontSize: 14 }}>📑</span>
                               <div>
                                 <div style={{ fontSize: 12, fontWeight: 700, color: '#1A140D' }}>{m.clause}</div>
                                 <div style={{ fontSize: 11, color: 'rgba(26,20,13,.55)', marginTop: 2, lineHeight: 1.45 }}>{m.description}</div>
@@ -502,7 +500,7 @@ export default function ContractDetailPageClient({
                         className={`cd-copy-btn ${copiedMsg ? 'copied' : ''}`}
                         onClick={handleCopyNegotiationMsg}
                       >
-                        {copiedMsg ? '✓ Message Copied' : '📋 Copy Full Message'}
+                        {copiedMsg ? 'Copied' : 'Copy Full Message'}
                       </button>
                     </div>
 

@@ -29,7 +29,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const origin = request.nextUrl.origin
+  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || request.nextUrl.host
+  const proto = request.headers.get('x-forwarded-proto') || (request.nextUrl.protocol.replace(':', ''))
+  const origin = `${proto}://${host}`
   const response = NextResponse.redirect(`${origin}/login`)
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://xkeyonsreywpzigqmnuk.supabase.co'

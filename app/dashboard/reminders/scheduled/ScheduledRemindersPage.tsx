@@ -46,10 +46,10 @@ function getSupabase() {
   )
 }
 
-const DAY_CFG: Record<number, { label: string; emoji: string; color: string; bg: string }> = {
-  7:  { label: 'Polite Reminder', emoji: '💬', color: '#185FA5', bg: 'rgba(24,95,165,.08)' },
-  14: { label: 'Follow-up + PDF', emoji: '📎', color: '#C85A1A', bg: 'rgba(200,90,26,.08)' },
-  30: { label: 'Firm Reminder',   emoji: '⚖️', color: '#7C3AED', bg: 'rgba(124,58,237,.08)' },
+const DAY_CFG: Record<number, { label: string; color: string; bg: string }> = {
+  7:  { label: 'Polite Reminder', color: '#185FA5', bg: 'rgba(24,95,165,.08)' },
+  14: { label: 'Follow-up + PDF', color: '#C85A1A', bg: 'rgba(200,90,26,.08)' },
+  30: { label: 'Firm Reminder',   color: '#7C3AED', bg: 'rgba(124,58,237,.08)' },
 }
 
 export default function ScheduledRemindersClient({
@@ -86,10 +86,10 @@ export default function ScheduledRemindersClient({
     })
 
     return [
-      { title: '⚡ Overdue', items: overdue, accent: '#C0392B' },
-      { title: '📌 Today', items: today, accent: '#E8692A' },
-      { title: '📅 Next 7 Days', items: thisWeek, accent: '#185FA5' },
-      { title: '🗓️ Later', items: later, accent: 'rgba(26,20,13,.40)' },
+      { title: 'Overdue', items: overdue, accent: '#C0392B' },
+      { title: 'Today', items: today, accent: '#E8692A' },
+      { title: 'Next 7 Days', items: thisWeek, accent: '#185FA5' },
+      { title: 'Later', items: later, accent: 'rgba(26,20,13,.40)' },
     ].filter(g => g.items.length > 0)
   }, [filtered])
 
@@ -225,7 +225,9 @@ export default function ScheduledRemindersClient({
             {/* Groups */}
             {groups.length === 0 ? (
               <div className="sr-empty">
-                <div className="sr-empty-icon">✅</div>
+                <div className="sr-empty-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 40, borderRadius: 12, background: 'rgba(27,94,59,0.08)', color: '#1B5E3B', margin: '0 auto 8px' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+                </div>
                 <div className="sr-empty-title">No scheduled reminders</div>
                 <div className="sr-empty-sub">
                   {search ? 'No matches for your search.' : 'All clear! Reminders are automatically created when invoices are sent.'}
@@ -247,7 +249,6 @@ export default function ScheduledRemindersClient({
                       return (
                         <div className="sr-card" key={r.id}>
                           <div className="sr-day-badge" style={{ background: dayCfg.bg }}>
-                            <span className="sr-day-badge-emoji">{dayCfg.emoji}</span>
                             <span className="sr-day-badge-label" style={{ color: dayCfg.color }}>Day {r.days_overdue || '?'}</span>
                           </div>
 
@@ -259,8 +260,8 @@ export default function ScheduledRemindersClient({
                                   {inv.invoice_number}
                                 </span>
                               )}
-                              <span>💬 WhatsApp</span>
-                              {r.used_contract_context && <span style={{ color: '#1B5E3B', fontWeight: 500 }}>📜 Contract clause</span>}
+                              <span>WhatsApp</span>
+                              {r.used_contract_context && <span style={{ color: '#1B5E3B', fontWeight: 500 }}>Contract clause</span>}
                             </div>
                           </div>
 

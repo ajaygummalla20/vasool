@@ -26,15 +26,15 @@ interface Props {
 }
 
 const CATEGORIES = [
-  { value: 'office', label: 'Office & Rent', icon: '🏢' },
-  { value: 'travel', label: 'Travel & Fuel', icon: '✈️' },
-  { value: 'software', label: 'Software & Tools', icon: '💻' },
-  { value: 'hardware', label: 'Hardware', icon: '🖥️' },
-  { value: 'salaries', label: 'Salaries & Payroll', icon: '👥' },
-  { value: 'marketing', label: 'Marketing & Ads', icon: '📢' },
-  { value: 'professional', label: 'Professional Services', icon: '⚖️' },
-  { value: 'utilities', label: 'Utilities & Internet', icon: '🔌' },
-  { value: 'general', label: 'General / Other', icon: '📦' },
+  { value: 'office', label: 'Office & Rent' },
+  { value: 'travel', label: 'Travel & Fuel' },
+  { value: 'software', label: 'Software & Tools' },
+  { value: 'hardware', label: 'Hardware' },
+  { value: 'salaries', label: 'Salaries & Payroll' },
+  { value: 'marketing', label: 'Marketing & Ads' },
+  { value: 'professional', label: 'Professional Services' },
+  { value: 'utilities', label: 'Utilities & Internet' },
+  { value: 'general', label: 'General / Other' },
 ]
 
 const METHODS = [
@@ -234,7 +234,6 @@ export default function ExpensesPage({
     setExpenses((prev) => prev.filter((e) => e.id !== id))
   }
 
-  const catIcon = (cat: string) => CATEGORIES.find((c) => c.value === cat)?.icon || '📦'
   const catLabel = (cat: string) => CATEGORIES.find((c) => c.value === cat)?.label || cat
 
   return (
@@ -381,14 +380,23 @@ export default function ExpensesPage({
                 onClick={() => cameraInputRef.current?.click()}
                 title="Capture receipt photo on mobile"
               >
-                📷 Take Photo
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+                Take Photo
               </button>
               <button
                 className="kokonut-btn-secondary"
                 onClick={() => fileInputRef.current?.click()}
                 title="Upload receipt PDF or image"
               >
-                📸 Scan Bill / Receipt
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="16 16 12 12 8 16" />
+                  <line x1="12" y1="12" x2="12" y2="21" />
+                  <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                </svg>
+                Scan Bill / Receipt
               </button>
               <button className="kokonut-btn-primary" onClick={() => setShowModal(true)}>
                 + Add Expense
@@ -401,11 +409,11 @@ export default function ExpensesPage({
             <div className="ex-scan-banner">
               <div>
                 <div className="ex-scan-title">
-                  <span>📸 AI Instant Bill & Receipt Scanner</span>
+                  <span>AI Instant Bill & Receipt Scanner</span>
                   <span style={{ fontSize: 10, background: '#10B981', color: '#000', padding: '2px 8px', borderRadius: 100, fontWeight: 800 }}>AI OCR</span>
                 </div>
                 <div className="ex-scan-desc">
-                  Snap a photo on your mobile phone or upload any paper invoice/fuel bill. AI will automatically extract the vendor, date, GST amount, and category in seconds!
+                  Capture a photo on mobile or upload any tax invoice/fuel receipt. AI will automatically extract the vendor, date, GST amount, and category in seconds.
                 </div>
               </div>
 
@@ -414,13 +422,22 @@ export default function ExpensesPage({
                   className="kokonut-btn-primary"
                   onClick={() => cameraInputRef.current?.click()}
                 >
-                  📷 Camera Snap
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                    <circle cx="12" cy="13" r="4" />
+                  </svg>
+                  Camera Snap
                 </button>
                 <button
                   className="kokonut-btn-secondary"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  📁 Upload Bill
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="16 16 12 12 8 16" />
+                    <line x1="12" y1="12" x2="12" y2="21" />
+                    <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                  </svg>
+                  Upload Bill
                 </button>
               </div>
             </div>
@@ -444,7 +461,7 @@ export default function ExpensesPage({
               </div>
               <div className="ex-stat">
                 <div className="ex-stat-label">Top Category</div>
-                <div className="ex-stat-val" style={{ fontSize: 16 }}>{catBreakdown[0] ? `${catIcon(catBreakdown[0][0])} ${catLabel(catBreakdown[0][0])}` : '—'}</div>
+                <div className="ex-stat-val" style={{ fontSize: 16 }}>{catBreakdown[0] ? catLabel(catBreakdown[0][0]) : '—'}</div>
                 <div className="ex-stat-sub">{catBreakdown[0] ? fmtINR(catBreakdown[0][1]) : 'No expenses yet'}</div>
               </div>
             </div>
@@ -454,7 +471,7 @@ export default function ExpensesPage({
               <button className={`ex-filter-btn ${filterCat === 'all' ? 'active' : ''}`} onClick={() => setFilterCat('all')}>All</button>
               {CATEGORIES.map(c => (
                 <button key={c.value} className={`ex-filter-btn ${filterCat === c.value ? 'active' : ''}`} onClick={() => setFilterCat(c.value)}>
-                  {c.icon} {c.label}
+                  {c.label}
                 </button>
               ))}
             </div>
@@ -483,7 +500,7 @@ export default function ExpensesPage({
                     {filtered.map(exp => (
                       <tr key={exp.id} className="ex-tr">
                         <td className="ex-td" style={{ whiteSpace: 'nowrap' }}>{fmtDate(exp.expense_date)}</td>
-                        <td className="ex-td"><span className="ex-cat-badge">{catIcon(exp.category)} {catLabel(exp.category)}</span></td>
+                        <td className="ex-td"><span className="ex-cat-badge">{catLabel(exp.category)}</span></td>
                         <td className="ex-td" style={{ fontWeight: 600 }}>{exp.description}</td>
                         <td className="ex-td" style={{ color: 'rgba(255,255,255,.5)' }}>{exp.vendor_name || '—'}</td>
                         <td className="ex-td" style={{ color: 'rgba(255,255,255,.5)', fontSize: 11 }}>{METHODS.find(m => m.value === exp.payment_method)?.label || exp.payment_method}</td>
@@ -508,7 +525,7 @@ export default function ExpensesPage({
               {scanPreview ? (
                 <img src={scanPreview} alt="Receipt preview" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }} />
               ) : (
-                <span style={{ fontSize: 40 }}>🧾</span>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
               )}
               <div className="ex-laser-line" />
             </div>
@@ -525,17 +542,17 @@ export default function ExpensesPage({
         <div className="ex-overlay" onClick={() => setShowModal(false)}>
           <div className="ex-modal" onClick={e => e.stopPropagation()}>
             <div className="ex-modal-title">
-              {aiExtracted ? '✨ Review Scanned Expense' : 'Add New Expense'}
+              {aiExtracted ? 'Review Scanned Expense' : 'Add New Expense'}
             </div>
             <div className="ex-modal-sub">
               {aiExtracted
-                ? 'AI automatically extracted these details. Review and save.'
+                ? 'Details extracted automatically. Review and confirm.'
                 : 'Record a business expense for tracking and GST ITC claims'}
             </div>
 
             {aiExtracted && (
               <div className="ex-ai-badge">
-                <span>✨ Auto-Extracted via AI OCR</span>
+                <span>Auto-Extracted via AI OCR</span>
               </div>
             )}
 
@@ -543,7 +560,7 @@ export default function ExpensesPage({
             <div className="ex-cat-grid">
               {CATEGORIES.map(c => (
                 <button key={c.value} className={`ex-cat-btn ${form.category === c.value ? 'sel' : ''}`} onClick={() => setForm(f => ({ ...f, category: c.value }))}>
-                  {c.icon} {c.label}
+                  {c.label}
                 </button>
               ))}
             </div>
@@ -588,7 +605,7 @@ export default function ExpensesPage({
             <div className="ex-modal-actions">
               <button className="ex-modal-cancel" onClick={() => setShowModal(false)}>Cancel</button>
               <button className="ex-modal-save" onClick={handleSave} disabled={saving || !form.description || !form.amount}>
-                {saving ? 'Saving...' : '✓ Confirm & Save Expense'}
+                {saving ? 'Saving...' : 'Confirm & Save Expense'}
               </button>
             </div>
           </div>

@@ -260,8 +260,10 @@ export default function RecurringPage({
         .rc-modal-title{font-size:18px;font-weight:800;color:#FFF;margin-bottom:4px}
         .rc-modal-sub{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:20px}
         .rc-field-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;margin-top:14px}
-        .rc-input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;font-size:13px;color:#FFF;font-family:'Outfit',sans-serif;outline:none}
-        .rc-input:focus{border-color:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.2)}
+        .rc-input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px 14px;font-size:13px;color:#FFF;font-family:'Outfit',sans-serif;outline:none;transition:all .15s ease}
+        .rc-input:focus{border-color:#10B981;box-shadow:0 0 0 3px rgba(16,185,129,.2);background:rgba(255,255,255,.08)}
+        select.rc-input{cursor:pointer;color-scheme:dark}
+        select.rc-input option{background-color:#121E16 !important;color:#FFFFFF !important;padding:10px}
         .rc-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
         @media(max-width:1024px){
@@ -387,20 +389,20 @@ export default function RecurringPage({
                         onClick={() => handleGenerateInvoice(tpl)}
                         disabled={generatingId === tpl.id}
                       >
-                        {generatingId === tpl.id ? 'Creating...' : '⚡ Generate Invoice Now'}
+                        {generatingId === tpl.id ? 'Creating...' : 'Generate Invoice Now'}
                       </button>
                       <button
                         className="rc-btn-toggle"
                         onClick={() => handleToggleActive(tpl)}
                       >
-                        {tpl.is_active ? '⏸ Pause' : '▶ Resume'}
+                        {tpl.is_active ? 'Pause' : 'Resume'}
                       </button>
                       <button
                         className="rc-btn-del"
                         onClick={() => handleDelete(tpl.id)}
                         title="Delete schedule"
                       >
-                        🗑
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto', display: 'block' }}><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                       </button>
                     </div>
                   </div>
@@ -433,10 +435,11 @@ export default function RecurringPage({
                   className="rc-input"
                   value={form.client_id}
                   onChange={(e) => setForm((f) => ({ ...f, client_id: e.target.value }))}
+                  style={{ colorScheme: 'dark' }}
                 >
-                  <option value="">Select client...</option>
+                  <option value="" style={{ backgroundColor: '#121E16', color: '#FFFFFF' }}>Select client...</option>
                   {clients.map((c) => (
-                    <option key={c.id} value={c.id}>
+                    <option key={c.id} value={c.id} style={{ backgroundColor: '#121E16', color: '#FFFFFF' }}>
                       {c.name} {c.company_name ? `(${c.company_name})` : ''}
                     </option>
                   ))}
@@ -453,11 +456,12 @@ export default function RecurringPage({
                       frequency: e.target.value as any,
                     }))
                   }
+                  style={{ colorScheme: 'dark' }}
                 >
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
-                  <option value="quarterly">Quarterly</option>
-                  <option value="yearly">Yearly</option>
+                  <option value="weekly" style={{ backgroundColor: '#121E16', color: '#FFFFFF' }}>Weekly</option>
+                  <option value="monthly" style={{ backgroundColor: '#121E16', color: '#FFFFFF' }}>Monthly</option>
+                  <option value="quarterly" style={{ backgroundColor: '#121E16', color: '#FFFFFF' }}>Quarterly</option>
+                  <option value="yearly" style={{ backgroundColor: '#121E16', color: '#FFFFFF' }}>Yearly</option>
                 </select>
               </div>
             </div>
@@ -600,7 +604,7 @@ export default function RecurringPage({
                 onClick={handleSave}
                 disabled={saving || !form.title}
               >
-                {saving ? 'Saving...' : '✓ Create Retainer Schedule'}
+                {saving ? 'Saving...' : 'Create Retainer Schedule'}
               </button>
             </div>
           </div>

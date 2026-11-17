@@ -54,7 +54,9 @@ export default function PublicInvoicePage({ invoiceId }: { invoiceId: string }) 
 
   if (error || !data) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#F8F7F4', fontFamily: "'DM Sans', sans-serif", flexDirection: 'column', gap: 12 }}>
-      <div style={{ fontSize: 48 }}>📄</div>
+      <div style={{ width: 48, height: 48, borderRadius: 12, background: 'rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666' }}>
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      </div>
       <div style={{ fontSize: 18, fontWeight: 700 }}>Invoice Not Found</div>
       <div style={{ color: '#888' }}>{error}</div>
     </div>
@@ -150,7 +152,10 @@ export default function PublicInvoicePage({ invoiceId }: { invoiceId: string }) 
             <span>Settlr</span>
           </div>
           <div className="pub-topbar-actions">
-            <button className="pub-btn pub-btn-print" onClick={() => window.print()}>🖨 Download PDF</button>
+            <button className="pub-btn pub-btn-print" onClick={() => window.print()}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6 }}><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+              Download PDF
+            </button>
           </div>
         </div>
 
@@ -179,7 +184,7 @@ export default function PublicInvoicePage({ invoiceId }: { invoiceId: string }) 
                 <div className="pub-name">{sender.name}</div>
                 {sender.gst && <div className="pub-line">GSTIN: {sender.gst}</div>}
                 {sender.address && <div className="pub-line">{sender.address}</div>}
-                {sender.phone && <div className="pub-line">📞 {sender.phone}</div>}
+                {sender.phone && <div className="pub-line">Phone: {sender.phone}</div>}
               </div>
               <div>
                 <div className="pub-label">To</div>
@@ -253,7 +258,8 @@ export default function PublicInvoicePage({ invoiceId }: { invoiceId: string }) 
               <div style={{ background: 'linear-gradient(135deg, rgba(27,94,59,.06), rgba(27,94,59,.02))', border: '1px solid rgba(27,94,59,.2)', borderRadius: 12, padding: '18px 22px', margin: '20px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
                 <div>
                   <div style={{ fontSize: 11, fontWeight: 700, color: '#1B5E3B', textTransform: 'uppercase', letterSpacing: '.06em', display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span>📱</span> Pay via UPI / Bank Wire
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                    Pay via UPI / Bank Wire
                   </div>
                   {sender.upiId && (
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#1A140D', marginTop: 6 }}>
@@ -267,7 +273,7 @@ export default function PublicInvoicePage({ invoiceId }: { invoiceId: string }) 
                   )}
                   {sender.msmeUdyam && (
                     <div style={{ fontSize: 10, color: '#666', marginTop: 4 }}>
-                      🛡️ Protected MSME Supplier · URN: {sender.msmeUdyam}
+                      Protected MSME Supplier · URN: {sender.msmeUdyam}
                     </div>
                   )}
                   {sender.upiId && (
@@ -282,13 +288,13 @@ export default function PublicInvoicePage({ invoiceId }: { invoiceId: string }) 
                           }
                         }}
                       >
-                        {copied ? '✓ Copied!' : 'Copy UPI ID'}
+                        {copied ? 'Copied' : 'Copy UPI ID'}
                       </button>
                       <a
                         href={`upi://pay?pa=${sender.upiId}&pn=${encodeURIComponent(sender.name)}&am=${invoice.amount_due || invoice.total_amount}&cu=INR&tn=Inv-${invoice.invoice_number}`}
                         style={{ padding: '6px 14px', fontSize: 11, fontWeight: 700, borderRadius: 6, border: 'none', background: '#1B5E3B', color: 'white', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', fontFamily: "'DM Sans', sans-serif" }}
                       >
-                        ⚡ Pay on UPI App
+                        Pay on UPI App
                       </a>
                     </div>
                   )}

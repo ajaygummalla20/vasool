@@ -214,7 +214,7 @@ export default function CashflowPage({
         <div className="cf-main">
           <div className="cf-top">
             <div>
-              <div className="cf-title">📈 90-Day Cashflow Runway & Working Capital Forecast</div>
+              <div className="cf-title">90-Day Cashflow Runway & Working Capital Forecast</div>
               <div className="cf-sub">Forward-looking cash projections based on invoice due dates, retainers, and operational burn</div>
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
@@ -240,7 +240,7 @@ export default function CashflowPage({
                       isHealthy ? 'cf-healthy' : isCaution ? 'cf-caution' : 'cf-critical'
                     }`}
                   >
-                    {isHealthy ? '🟢 Healthy Cash Runway' : isCaution ? '🟡 Tight Working Capital' : '🔴 Cash Deficit Risk'}
+                    {isHealthy ? 'Healthy Cash Runway' : isCaution ? 'Tight Working Capital' : 'Cash Deficit Risk'}
                   </span>
                   <span style={{ fontSize: 11, color: 'rgba(255,255,255,.5)' }}>
                     Horizon: Next {selectedHorizon} Days
@@ -284,7 +284,7 @@ export default function CashflowPage({
                   {dsoDays} Days
                 </div>
                 <div style={{ fontSize: 10, color: dsoDays <= 30 ? '#34D399' : dsoDays <= 45 ? '#FBBF24' : '#F87171', marginTop: 2 }}>
-                  {dsoDays <= 30 ? '🟢 Optimal collection cycle' : dsoDays <= 45 ? '🟡 Standard (Under 45D cap)' : '🔴 High MSME delay risk'}
+                  {dsoDays <= 30 ? 'Optimal collection cycle' : dsoDays <= 45 ? 'Standard (Under 45D statutory cap)' : 'High MSME delay risk'}
                 </div>
               </div>
 
@@ -444,14 +444,15 @@ export default function CashflowPage({
             {/* CFO Recommendations Box */}
             <div className="kokonut-card" style={{ padding: '24px 28px' }}>
               <div style={{ fontSize: 16, fontWeight: 800, color: '#FFF', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span>💡</span> CFO Cashflow Action Plan
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                CFO Cashflow Action Plan
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {bucket30Invoices.length > 0 && (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,.03)', padding: '10px 14px', borderRadius: 10 }}>
                     <span style={{ fontSize: 12, color: 'rgba(255,255,255,.8)' }}>
-                      ⚡ <strong>{bucket30Invoices.length} invoice(s)</strong> due in the next 30 days ({fmtINR(invSum30)}). Send automated WhatsApp reminders 3 days before due date.
+                      <strong>{bucket30Invoices.length} invoice(s)</strong> due in the next 30 days ({fmtINR(invSum30)}). Automated WhatsApp reminders trigger 3 days before due date.
                     </span>
                     <button
                       style={{ padding: '6px 12px', fontSize: 11, fontWeight: 700, borderRadius: 6, border: '1px solid #10B981', background: 'rgba(16,185,129,.15)', color: '#34D399', cursor: 'pointer', fontFamily: 'inherit' }}
@@ -465,7 +466,7 @@ export default function CashflowPage({
                 {recurring.length === 0 && (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,.03)', padding: '10px 14px', borderRadius: 10 }}>
                     <span style={{ fontSize: 12, color: 'rgba(255,255,255,.8)' }}>
-                      🔄 Convert 1 or 2 high-value clients into <strong>Monthly Retainers</strong> to build a predictable baseline MRR.
+                      Convert high-value clients into <strong>Monthly Retainers</strong> to build a predictable baseline MRR.
                     </span>
                     <button
                       style={{ padding: '6px 12px', fontSize: 11, fontWeight: 700, borderRadius: 6, border: '1px solid #3B82F6', background: 'rgba(59,130,246,.15)', color: '#60A5FA', cursor: 'pointer', fontFamily: 'inherit' }}

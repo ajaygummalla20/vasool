@@ -379,8 +379,12 @@ export default function InvoicesListPage({
               {/* Rows */}
               {filtered.length === 0 ? (
                 <div className="il-empty">
-                  <div className="il-empty-icon">
-                    {search || filter !== 'All' ? '🔍' : '🧾'}
+                  <div className="il-empty-icon" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44, borderRadius: 12, background: 'rgba(26,20,13,0.06)', color: 'rgba(26,20,13,0.45)', margin: '0 auto 8px' }}>
+                    {search || filter !== 'All' ? (
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
+                    ) : (
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    )}
                   </div>
                   <div className="il-empty-title">
                     {search ? `No results for "${search}"` :

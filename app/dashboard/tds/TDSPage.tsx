@@ -231,7 +231,8 @@ export default function TDSPage({
 
         /* Filters Bar */
         .tds-filter-bar{display:flex;justify-content:space-between;align-items:center;background:rgba(18,30,22,.75);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:12px 18px;gap:12px;flex-wrap:wrap}
-        .tds-fy-select{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#FFF;padding:8px 14px;border-radius:10px;font-size:12px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer}
+        .tds-fy-select{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#FFF;padding:8px 14px;border-radius:10px;font-size:12px;font-weight:600;font-family:'Outfit',sans-serif;cursor:pointer;color-scheme:dark}
+        .tds-fy-select option{background-color:#121E16 !important;color:#FFFFFF !important}
         .tds-search{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#FFF;padding:8px 14px;border-radius:10px;font-size:12px;width:240px;outline:none;font-family:'Outfit',sans-serif}
 
         /* Table */
@@ -267,15 +268,16 @@ export default function TDSPage({
         <div className="tds-main">
           <div className="tds-top">
             <div>
-              <div className="tds-title">🧾 TDS Asset Ledger & Form 16A Tracker</div>
+              <div className="tds-title">TDS Asset Ledger & Form 16A Tracker</div>
               <div className="tds-sub">Track client tax withholdings, claim Form 16A certificates, and reconcile Form 26AS</div>
             </div>
             <button
               className="kokonut-btn-primary"
-              style={{ padding: '8px 16px', fontSize: 12 }}
+              style={{ padding: '8px 16px', fontSize: 12, display: 'inline-flex', alignItems: 'center', gap: 6 }}
               onClick={handleExportCSV}
             >
-              📥 Export CA ITR Report (.csv)
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              Export CA ITR Report (.csv)
             </button>
           </div>
 
@@ -309,7 +311,7 @@ export default function TDSPage({
 
             {/* Statutory Reconciliation Banner */}
             <div style={{ background: 'rgba(245,158,11,.08)', border: '1px solid rgba(245,158,11,.25)', borderRadius: 12, padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 12, color: '#FCD34D' }}>
-              <span>ℹ️</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               <span><strong>Statutory Reconciliation Note:</strong> TDS amounts shown here are estimated deductions based on statutory slabs (Sec 194J/194C). To claim tax credits in your ITR, ensure client certificates match your official Form 26AS / AIS records on TRACES.</span>
             </div>
 
@@ -344,7 +346,7 @@ export default function TDSPage({
               <input
                 type="text"
                 className="tds-search"
-                placeholder="🔍 Search client or invoice..."
+                placeholder="Search client or invoice..."
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
               />
@@ -422,19 +424,20 @@ export default function TDSPage({
                             value={rec.form16Status}
                             onChange={e => handleStatusChange(rec.id, e.target.value as any)}
                           >
-                            <option value="pending" style={{ background: '#121E16' }}>⏳ Pending Form 16A</option>
-                            <option value="received" style={{ background: '#121E16' }}>📥 Received Certificate</option>
-                            <option value="verified" style={{ background: '#121E16' }}>✓ Verified in 26AS</option>
+                            <option value="pending" style={{ background: '#121E16' }}>Pending Form 16A</option>
+                            <option value="received" style={{ background: '#121E16' }}>Received Certificate</option>
+                            <option value="verified" style={{ background: '#121E16' }}>Verified in 26AS</option>
                           </select>
                         </td>
 
                         <td className="tds-td r">
                           <button
-                            style={{ padding: '4px 10px', fontSize: 10, fontWeight: 700, borderRadius: 6, border: '1px solid #25D366', background: 'rgba(37,211,102,.1)', color: '#25D366', cursor: 'pointer', fontFamily: 'inherit' }}
+                            style={{ padding: '4px 10px', fontSize: 10, fontWeight: 700, borderRadius: 6, border: '1px solid #25D366', background: 'rgba(37,211,102,.1)', color: '#25D366', cursor: 'pointer', fontFamily: 'inherit', display: 'inline-flex', alignItems: 'center', gap: 4 }}
                             onClick={() => handleSendForm16Reminder(rec)}
                             title="Send WhatsApp request for Form 16A"
                           >
-                            📱 Request 16A
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.586-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.074-2.147-.532-1.748-.732-2.883-2.508-2.97-2.624-.088-.117-.716-.953-.716-1.819 0-.866.455-1.292.617-1.468.162-.176.353-.22.47-.22.118 0 .236.002.338.007.108.005.253-.041.396.303.147.353.5 1.22.544 1.309.044.088.074.191.015.308-.059.118-.088.191-.176.294-.088.103-.186.23-.265.309-.088.088-.18.184-.077.36.103.176.457.753.98 1.218.674.598 1.242.784 1.418.872.176.088.279.074.382-.044.103-.118.441-.515.559-.691.118-.176.235-.147.397-.088.162.059 1.029.485 1.206.574.176.088.294.132.338.206.044.074.044.426-.1.831z"/></svg>
+                            Request 16A
                           </button>
                         </td>
                       </tr>
